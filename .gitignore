@@ -311,3 +311,6 @@ _deps
 
 # vstgui4
 vstgui4
+
+# RackAFX
+**/build/
