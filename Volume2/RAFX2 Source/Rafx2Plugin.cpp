@@ -393,7 +393,7 @@ void Rafx2Plugin::setupTrackPad()
 	joystick_X_Control.joystickValue = 0.0;
 	joystick_X_Control.korgVectorJoystickOrientation = false;
 	joystick_X_Control.enableParamSmoothing = false;
-	joystick_X_Control.smoothingTimeInMs = 100.00;
+	joystick_X_Control.smoothingTimeInMs = 20.00;
 
 	joystick_Y_Control.trackpadIndex = -1;
 	joystick_Y_Control.midiControl = false;
@@ -403,7 +403,7 @@ void Rafx2Plugin::setupTrackPad()
 	joystick_Y_Control.joystickValue = 0.0;
 	joystick_Y_Control.korgVectorJoystickOrientation = false;
 	joystick_Y_Control.enableParamSmoothing = false;
-	joystick_Y_Control.smoothingTimeInMs = 100.00;
+	joystick_Y_Control.smoothingTimeInMs = 20.00;
 
 	// **--0x8F8F--**
 }

@@ -314,3 +314,5 @@ vstgui4
 
 # RackAFX
 **/build/
+**/xmlcache/
+
