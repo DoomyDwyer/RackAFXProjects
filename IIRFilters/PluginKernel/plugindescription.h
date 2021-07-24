@@ -44,32 +44,6 @@ inline static const char* getPluginDescBundleName()
 	return kPluginName;
 }
 
-
-
-const char* kAAXBundleName = "IIRFilters";
-const char* kVSTBundleName = "IIRFilters";
-
-inline static const char* getPluginDescBundleName()
-{
-#ifdef AUPLUGIN
-	return kAUBundleName;
-#endif
-
-#ifdef AAXPLUGIN
-	return kAAXBundleName;
-#endif
-
-#ifdef VSTPLUGIN
-	return kVSTBundleName;
-#endif
-
-	// --- should never get here
-	return kPluginName;
-}
-
-
-
-
 // --- Plugin Type 
 const pluginType kPluginType = pluginType::kFXPlugin;
 
