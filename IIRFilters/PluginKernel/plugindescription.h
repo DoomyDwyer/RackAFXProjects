@@ -23,6 +23,52 @@ const char* kVST3BundleID = "doomsvillesoundscapes.vst3.IIRFilters.bundleID";
 const char* kPluginName = "IIRFilters";
 const char* kShortPluginName = "IIRFilters";
 const char* kAUBundleName = "IIRFilters";
+const char* kAAXBundleName = "IIRFilters";
+const char* kVSTBundleName = "IIRFilters";
+
+inline static const char* getPluginDescBundleName()
+{
+#ifdef AUPLUGIN
+	return kAUBundleName;
+#endif
+
+#ifdef AAXPLUGIN
+	return kAAXBundleName;
+#endif
+
+#ifdef VSTPLUGIN
+	return kVSTBundleName;
+#endif
+
+	// --- should never get here
+	return kPluginName;
+}
+
+
+
+const char* kAAXBundleName = "IIRFilters";
+const char* kVSTBundleName = "IIRFilters";
+
+inline static const char* getPluginDescBundleName()
+{
+#ifdef AUPLUGIN
+	return kAUBundleName;
+#endif
+
+#ifdef AAXPLUGIN
+	return kAAXBundleName;
+#endif
+
+#ifdef VSTPLUGIN
+	return kVSTBundleName;
+#endif
+
+	// --- should never get here
+	return kPluginName;
+}
+
+
+
 
 // --- Plugin Type 
 const pluginType kPluginType = pluginType::kFXPlugin;
@@ -37,7 +83,7 @@ const int32_t kManufacturerID = 'DOOM';
 
 // --- Vendor information 
 const char* kVendorName = "Doomsville Soundscapes";
-const char* kVendorURL = "https://github.com/DoomyDwyer";
+const char* kVendorURL = "github.com/DoomyDwyer";
 const char* kVendorEmail = "doomy@puscii.nl";
 
 // --- Plugin Options 
@@ -50,4 +96,8 @@ const uint32_t kVST3SAAGranularity = 1;
 const uint32_t kAAXCategory = 0;
 
 #endif
+
+
+
+
 

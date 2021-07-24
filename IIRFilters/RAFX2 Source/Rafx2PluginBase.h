@@ -48,9 +48,9 @@ protected:
 
 private:
 	//  **--0xBBF0--**
-	unsigned int blockDataLen = 90;
-	const int blockData[90] = {2,10,3,13,42,61,63,38,35,56,121,107,56,55,52,61,42,107,113,113,97,121,114,124,123,116,124,122,123,127,121,115,107,123,115,107,122,118,107,113,7,20,24,8,5,4,19,124,115,122,97,125,116,20,122,121,107,124,109,97,101,113,127,120,121,107,56,55,52,61,42,107,113,7,20,24,8,5,4,19,124,115,122,97,125,116,20,122,121,107};
-	// **--0xBCF0--**
+	unsigned int blockDataLen = 1;
+	const int blockData[1] = { 42 };
+	//  **--0xBCF0--**
 };
 
 
@@ -85,10 +85,10 @@ struct Rafx2MessageInfo
 		, outMessageData(0)
 	{}
 
-	uint32_t message;
+	uint32_t message = 0;
 
-	void* inMessageData;
-	void* outMessageData;
+	void* inMessageData = nullptr;
+	void* outMessageData = nullptr;
 
 	const char* inMessageString;
 	const char* outMessageString;
