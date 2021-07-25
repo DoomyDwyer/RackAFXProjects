@@ -43,7 +43,7 @@
 			<view back-color="~ BlackCColor" background-offset="0, 0" class="COptionMenu" control-tag="" custom-view-name="" default-value="0.5" font="~ NormalFontSmaller" font-antialias="true" font-color="~ GreenCColor" frame-color="~ BlackCColor" frame-width="1" max-value="" menu-check-style="false" menu-popup-style="false" min-value="0" mouse-enabled="true" origin="5 ,30" round-rect-radius="6" shadow-color="~ RedCColor" size="67 ,20" style-3D-in="false" style-3D-out="false" style-no-draw="false" style-no-frame="false" style-no-text="false" style-round-rect="false" style-shadow-text="false" sub-controller="" text-alignment="" text-inset="0, 0" title="SEL 1" transparent="false" value-precision="2" wheel-inc-value="0.1" />
 			<view back-color="~ BlackCColor" background-offset="0, 0" class="CTextLabel" custom-view-name="UnitsLabel" default-value="0.5" font="~ NormalFontSmaller" font-antialias="true" font-color="~ BlackCColor" frame-color="~ BlackCColor" frame-width="1" max-value="1" min-value="0" mouse-enabled="true" origin="-15 ,5" rafxlabel-type="" round-rect-radius="6" shadow-color="~ RedCColor" size="100 ,16" style-3D-in="false" style-3D-out="false" style-no-draw="false" style-no-frame="false" style-no-text="false" style-round-rect="false" style-shadow-text="false" sub-controller="" text-alignment="center" text-inset="0, 0" title="Text Label" transparent="true" value-precision="2" wheel-inc-value="0.1" control-tag="" />
 		</template>
-		<attributes Path="D:\Documents\source\repos\RackAFX 7.0\RackAFXProjects\IIRFilters\Resources\PluginGUI.uidesc" />
+		<attributes Path="D:\Documents\Source\Repos\RackAFX 7.0\RackAFXProjects\IIRFilters\Resources\PluginGUI.uidesc" />
 		<attributes RAFXCanvasWidth="128" />
 		<attributes RAFXCanvasHeight="405" />
 		<attributes rafx-template-name="User ViewContainer 0" rafxtemplate-type="userViewContainer" />
@@ -143,6 +143,11 @@
 		<attributes rafx-template-name="User ViewContainer 0" />
 		<attributes rafx-template-name="User ViewContainer 1" />
 		<attributes RAFXAutosize="false" />
+		<attributes rafx-template-name="Rafx KnobGroup 0" />
+		<attributes rafx-template-name="Rafx KnobGroup 1" />
+		<attributes rafx-template-name="Rafx KnobGroup 2" />
+		<attributes rafx-template-name="User ViewContainer 0" />
+		<attributes rafx-template-name="User ViewContainer 1" />
 		<attributes rafx-template-name="Rafx KnobGroup 0" />
 		<attributes rafx-template-name="Rafx KnobGroup 1" />
 		<attributes rafx-template-name="Rafx KnobGroup 2" />

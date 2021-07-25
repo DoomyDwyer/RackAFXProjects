@@ -70,8 +70,3 @@ const uint32_t kVST3SAAGranularity = 1;
 const uint32_t kAAXCategory = 0;
 
 #endif
-
-
-
-
-
