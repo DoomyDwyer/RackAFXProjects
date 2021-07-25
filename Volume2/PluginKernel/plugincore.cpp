@@ -626,4 +626,3 @@ const char* PluginCore::getAUCocoaViewFactoryName(){ return AU_COCOA_VIEWFACTORY
 pluginType PluginCore::getPluginType(){ return kPluginType; }
 const char* PluginCore::getVSTFUID(){ return kVSTFUID; }
 int32_t PluginCore::getFourCharCode(){ return kFourCharCode; }
-
