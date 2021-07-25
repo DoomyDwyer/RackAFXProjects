@@ -23,6 +23,29 @@ const char* kVST3BundleID = "doomsvillesoundscapes.vst3.Volume2.bundleID";
 const char* kPluginName = "Volume2";
 const char* kShortPluginName = "Volume2";
 const char* kAUBundleName = "Volume2";
+const char* kAAXBundleName = "Volume2";
+const char* kVSTBundleName = "Volume2";
+
+inline static const char* getPluginDescBundleName()
+{
+#ifdef AUPLUGIN
+	return kAUBundleName;
+#endif
+
+#ifdef AAXPLUGIN
+	return kAAXBundleName;
+#endif
+
+#ifdef VSTPLUGIN
+	return kVSTBundleName;
+#endif
+
+	// --- should never get here
+	return kPluginName;
+}
+
+
+
 
 // --- Plugin Type 
 const pluginType kPluginType = pluginType::kFXPlugin;
@@ -50,4 +73,5 @@ const uint32_t kVST3SAAGranularity = 1;
 const uint32_t kAAXCategory = 0;
 
 #endif
+
 

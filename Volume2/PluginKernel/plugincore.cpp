@@ -616,7 +616,7 @@ bool PluginCore::initPluginDescriptors()
 }
 
 // --- static functions required for VST3/AU only --------------------------------------------- //
-const char* PluginCore::getPluginBundleName() { return kAUBundleName; }
+const char* PluginCore::getPluginBundleName() { return getPluginDescBundleName(); }
 const char* PluginCore::getPluginName(){ return kPluginName; }
 const char* PluginCore::getShortPluginName(){ return kShortPluginName; }
 const char* PluginCore::getVendorName(){ return kVendorName; }
@@ -626,3 +626,4 @@ const char* PluginCore::getAUCocoaViewFactoryName(){ return AU_COCOA_VIEWFACTORY
 pluginType PluginCore::getPluginType(){ return kPluginType; }
 const char* PluginCore::getVSTFUID(){ return kVSTFUID; }
 int32_t PluginCore::getFourCharCode(){ return kFourCharCode; }
+

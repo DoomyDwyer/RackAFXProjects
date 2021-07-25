@@ -59,62 +59,6 @@ bool Rafx2Plugin::processRafx2Message(const Rafx2MessageInfo& messageInfo)
 	// --- decode message
 	switch (messageInfo.message)
 	{
-		// --- this can only come from RackAFX, so we need to handle that thunk issue
-		case PLUGINGUI_REGISTER_CUSTOMVIEW:
-		{
-			if (!messageInfo.inMessageData || !pluginCore) return false;
-			MessageInfo messageStuff;
-			messageStuff.message = PLUGINGUI_REGISTER_CUSTOMVIEW;
-			messageStuff.inMessageData = messageInfo.inMessageData;
-			messageStuff.inMessageString = messageInfo.inMessageString;
-			messageStuff.outMessageData = messageInfo.outMessageData;
-			pluginCore->processMessage(messageStuff);
-
-			break;
-		}
-		case PLUGINGUI_DIDOPEN:
-		{
-			if (!pluginCore) return false;
-			MessageInfo messageStuff;
-			messageStuff.message = PLUGINGUI_DIDOPEN;
-			pluginCore->processMessage(messageStuff);
-			break;
-		}
-
-		case PLUGINGUI_WILLCLOSE:
-		{
-			if (!pluginCore) return false;
-			MessageInfo messageStuff;
-			messageStuff.message = PLUGINGUI_WILLCLOSE;
-			pluginCore->processMessage(messageStuff);
-			break;
-		}
-
-		case PLUGINGUI_TIMERPING:
-		{
-			if (!pluginCore) return false;
-			MessageInfo messageStuff;
-			messageStuff.message = PLUGINGUI_TIMERPING;
-			pluginCore->processMessage(messageStuff);
-			break;
-		}
-
-		case PLUGINGUI_QUERY_HASUSERCUSTOM:
-		{
-			if (!pluginCore) return false;
-			if (messageInfo.inMessageString == "GUI_PANEL_WILL_CHANGE" == 0)
-			{
-				MessageInfo messageStuff;
-				messageStuff.message = PLUGINGUI_QUERY_HASUSERCUSTOM;
-				messageStuff.inMessageString.assign("GUI_PANEL_WILL_CHANGE");
-				pluginCore->processMessage(messageStuff);
-			}
-
-			return true; // handled
-		}
-
-		// --------------------------------------------------------------- //
-
 		// --- return descriptor
 		case PLUGIN_QUERY_DESCRIPTION:
 		{
@@ -218,7 +162,7 @@ bool Rafx2Plugin::processRafx2Message(const Rafx2MessageInfo& messageInfo)
 			pluginGUI = new VSTGUI::PluginGUI(_xmlFile);
 			if (!pluginGUI) return false;
 
-			bool opened = ((VSTGUI::PluginGUI*)pluginGUI)->open("Editor", guiInfo->window, PluginParameterPtr, VSTGUI::PlatformType::kHWND, guiPluginConnector, nullptr);
+			bool opened = ((VSTGUI::PluginGUI*)pluginGUI)->open("Editor", guiInfo->window, PluginParameterPtr, VSTGUI::kHWND, guiPluginConnector, nullptr);
 
 			// --- delete the PluginParameterPtr guts, and pointer too...
 			for (std::vector<PluginParameter*>::iterator it = PluginParameterPtr->begin(); it != PluginParameterPtr->end(); ++it)
@@ -272,7 +216,7 @@ bool Rafx2Plugin::processRafx2Message(const Rafx2MessageInfo& messageInfo)
 		{
 			if (!pluginCore) return false;
 			if (!pluginGUI) return false;
-
+			
 			GUIParameter* guiParam = (GUIParameter*)messageInfo.inMessageData;
 			if (guiParam)
 			{
@@ -292,7 +236,6 @@ bool Rafx2Plugin::processRafx2Message(const Rafx2MessageInfo& messageInfo)
 bool Rafx2Plugin::updatePluginParameter(uint32_t controlID, double actualValue)
 {
 	if (!pluginCore) return false;
-//	if (pluginGUI) return false;
 
 	ParameterUpdateInfo paramInfo;
 	paramInfo.bufferProcUpdate = true;
@@ -450,7 +393,7 @@ void Rafx2Plugin::setupTrackPad()
 	joystick_X_Control.joystickValue = 0.0;
 	joystick_X_Control.korgVectorJoystickOrientation = false;
 	joystick_X_Control.enableParamSmoothing = false;
-	joystick_X_Control.smoothingTimeInMs = 100.00;
+	joystick_X_Control.smoothingTimeInMs = 20.00;
 
 	joystick_Y_Control.trackpadIndex = -1;
 	joystick_Y_Control.midiControl = false;
@@ -460,7 +403,7 @@ void Rafx2Plugin::setupTrackPad()
 	joystick_Y_Control.joystickValue = 0.0;
 	joystick_Y_Control.korgVectorJoystickOrientation = false;
 	joystick_Y_Control.enableParamSmoothing = false;
-	joystick_Y_Control.smoothingTimeInMs = 100.00;
+	joystick_Y_Control.smoothingTimeInMs = 20.00;
 
 	// **--0x8F8F--**
 }

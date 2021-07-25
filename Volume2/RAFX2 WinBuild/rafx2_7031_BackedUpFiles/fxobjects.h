@@ -20,7 +20,6 @@
 #pragma once
 
 #include <memory>
-#include <algorithm>
 #include <math.h>
 #include "guiconstants.h"
 #include "filters.h"
@@ -333,7 +332,7 @@ inline double doWhiteNoise()
 	noise = (float)rand();
 
 	// normalize and make bipolar
-	noise = 2.f*(noise / 32767.f) - 1.f;
+	noise = 2.0*(noise / 32767.0) - 1.0;
 #else
 	// fNoise is 0 -> ARC4RANDOMMAX
 	noise = (float)arc4random();
@@ -647,11 +646,16 @@ inline bool getTransitionBandData(double testFreq, double bin1Freq, unsigned int
 	// --- for falling edge...
 	int nF1 = findEdgeTargetBin(targetF1, bin1Freq);
 	int nF2 = findEdgeTargetBin(targetF2, bin1Freq);
+	//int relaxBinsAbsDiff = nF2 - nF1;
 
-	nF1 = std::max(0, nF1);
-	nF2 = std::max(0, nF2);
+	nF1 = fmax(0, nF1);
+	nF2 = fmax(0, nF2);
+
+	//if (relaxBinsAbsDiff < 0 || nF1 == 0)
+	//	nF2 = nF1 + relaxBinsAbsDiff;
 
 	int relaxBins = nF2 - nF1;
+
 	if (relaxBins < 1)
 		return false;
 
@@ -686,7 +690,7 @@ inline bool calculateBrickwallMagArray(BrickwallMagData& magData)
 {
 	// --- calculate first half of array
 	double actualLength = magData.mirrorMag ? (double)magData.dftArrayLen : (double)magData.dftArrayLen * 2.0;
-	uint32_t dumpLength = magData.mirrorMag ? magData.dftArrayLen / 2 : magData.dftArrayLen;
+	int dumpLength = magData.mirrorMag ? magData.dftArrayLen / 2 : magData.dftArrayLen;
 
 	// --- first bin in Hz
 	double bin1 = magData.sampleRate / actualLength;
@@ -723,7 +727,7 @@ inline bool calculateBrickwallMagArray(BrickwallMagData& magData)
 		}
 	}
 
-	for (uint32_t i = 0; i < dumpLength; i++)
+	for (int i = 0; i < dumpLength; i++)
 	{
 		double eval_f = i*bin1;
 
@@ -857,7 +861,7 @@ inline bool calculateAnalogMagArray(AnalogMagData& magData)
 {
 	// --- calculate first half of array
 	double actualLength = magData.mirrorMag ? (double)magData.dftArrayLen : (double)magData.dftArrayLen * 2.0;
-	uint32_t dumpLength = magData.mirrorMag ? magData.dftArrayLen / 2 : magData.dftArrayLen;
+	int dumpLength = magData.mirrorMag ? magData.dftArrayLen / 2 : magData.dftArrayLen;
 
 	double bin1 = magData.sampleRate / actualLength;// (double)magData.dftArrayLen;
 	double zeta = 1.0 / (2.0*magData.Q);
@@ -866,7 +870,7 @@ inline bool calculateAnalogMagArray(AnalogMagData& magData)
 	// --- zero out array; if filter not supported, this will return a bank of 0's!
 	memset(&magData.magArray[0], 0, magData.dftArrayLen * sizeof(double));
 
-	for (uint32_t i = 0; i < dumpLength; i++)
+	for (int i = 0; i < dumpLength; i++)
 	{
 		double eval_w = 2.0*kPi*i*bin1;
 		double w_o = eval_w / w_c;
@@ -1080,9 +1084,9 @@ inline bool resample(double* input, double* output, uint32_t inLength, uint32_t 
 		{
 			// --- find interpolation location
 			double xInterp = i*inc;
-			uint32_t x1 = (uint32_t)xInterp; // floor?
+			int x1 = (int)xInterp; // floor?
 
-			if (xInterp > 1.0 && x1 < inLength - 2)
+			if (xInterp > 1 && x1 < inLength - 2)
 			{
 				x[0] = x1 - 1;
 				y[0] = input[(int)x[0]];
@@ -1103,7 +1107,7 @@ inline bool resample(double* input, double* output, uint32_t inLength, uint32_t 
 			}
 			else // --- linear for outer 2 end pts
 			{
-				uint32_t x2 = x1 + 1;
+				int x2 = x1 + 1;
 				if (x2 >= outLength)
 					x2 = x1;
 				double y1 = input[x1];
@@ -1119,11 +1123,11 @@ inline bool resample(double* input, double* output, uint32_t inLength, uint32_t 
 	else // must be linear
 	{
 		// --- LINEAR INTERP
-		for (uint32_t i = 1; i < outLength; i++)
+		for (unsigned int i = 1; i < outLength; i++)
 		{
 			double xInterp = i*inc;
-			uint32_t x1 = (uint32_t)xInterp; // floor?
-			uint32_t x2 = x1 + 1;
+			int x1 = (int)xInterp; // floor?
+			int x2 = x1 + 1;
 			if (x2 >= outLength)
 				x2 = x1;
 			double y1 = input[x1];
@@ -2786,7 +2790,7 @@ public:
 		if (outputChannels == 1)
 		{
 			// --- process left channel only
-			outputFrame[0] = (float)processAudioSample(inputFrame[0]);
+			outputFrame[0] = processAudioSample(inputFrame[0]);
 			return true;
 		}
 
@@ -2837,10 +2841,10 @@ public:
 		double outputR = dryMix*xnR + wetMix*ynR;
 
 		// --- set left channel
-		outputFrame[0] = (float)outputL;
+		outputFrame[0] = outputL;
 
 		// --- set right channel
-		outputFrame[1] = (float)outputR;
+		outputFrame[1] = outputR;
 
 		return true;
 	}
@@ -2993,7 +2997,7 @@ Control I/F:
 class LFO : public IAudioSignalGenerator
 {
 public:
-	LFO() {	srand((uint32_t)time(NULL)); }	/* C-TOR */
+	LFO() {	srand(time(NULL)); }	/* C-TOR */
 	virtual ~LFO() {}				/* D-TOR */
 
 	/** reset members to initialized state */
@@ -3351,7 +3355,7 @@ public:
 	*/
 	virtual double processAudioSample(double xn)
 	{
-		float input = (float)xn;
+		float input = xn;
 		float output = 0.0;
 		processAudioFrame(&input, &output, 1, 1);
 		return output;
@@ -3566,7 +3570,7 @@ public:
 		params.algorithm = filterAlgorithm::kAPF1; // can also use 2nd order
 		// params.Q = 0.001; use low Q if using 2nd order APFs
 
-		for (uint32_t i = 0; i < PHASER_STAGES; i++)
+		for (int i = 0; i < PHASER_STAGES; i++)
 		{
 			apf[i].setParameters(params);
 		}
@@ -3582,7 +3586,7 @@ public:
 		lfo.reset(_sampleRate);
 
 		// --- reset APFs
-		for (uint32_t i = 0; i < PHASER_STAGES; i++){
+		for (int i = 0; i < PHASER_STAGES; i++){
 			apf[i].reset(_sampleRate);
 		}
 
@@ -4777,7 +4781,7 @@ public:
 		preDelay.reset(_sampleRate);
 		preDelay.createDelayBuffer(_sampleRate, 100.0);
 
-		for (uint32_t i = 0; i < NUM_BRANCHES; i++)
+		for (int i = 0; i < NUM_BRANCHES; i++)
 		{
 			branchDelays[i].reset(_sampleRate);
 			branchDelays[i].createDelayBuffer(_sampleRate, 100.0);
@@ -4787,7 +4791,7 @@ public:
 
 			branchLPFs[i].reset(_sampleRate);
 		}
-		for (uint32_t i = 0; i < NUM_CHANNELS; i++)
+		for (int i = 0; i < NUM_CHANNELS; i++)
 		{
 			shelvingFilters[i].reset(_sampleRate);
 		}
@@ -4833,7 +4837,7 @@ public:
 
 		// --- input to first branch = preDalay + globFB
 		double input = preDelayOut + fb;
-		for (uint32_t i = 0; i < NUM_BRANCHES; i++)
+		for (int i = 0; i < NUM_BRANCHES; i++)
 		{
 			double apfOut = branchNestedAPFs[i].processAudioSample(input);
 			double lpfOut = branchLPFs[i].processAudioSample(apfOut);
@@ -4886,11 +4890,11 @@ public:
 		double wet = pow(10.0, parameters.wetLevel_dB / 20.0);
 
 		if (outputChannels == 1)
-			outputFrame[0] = (float)(dry*xnL + wet*(0.5*tankOutL + 0.5*tankOutR));
+			outputFrame[0] = dry*xnL + wet*(0.5*tankOutL + 0.5*tankOutR);
 		else
 		{
-			outputFrame[0] = (float)(dry*xnL + wet*tankOutL);
-			outputFrame[1] = (float)(dry*xnR + wet*tankOutR);
+			outputFrame[0] = dry*xnL + wet*tankOutL;
+			outputFrame[1] = dry*xnR + wet*tankOutR;
 		}
 
 		return true;
@@ -4923,7 +4927,7 @@ public:
 		SimpleLPFParameters  lpfParams = branchLPFs[0].getParameters();
 		lpfParams.g = params.lpf_g;
 
-		for (uint32_t i = 0; i < NUM_BRANCHES; i++)
+		for (int i = 0; i < NUM_BRANCHES; i++)
 		{
 			branchLPFs[i].setParameters(lpfParams);
 		}
@@ -4947,7 +4951,7 @@ public:
 		apfParams.lfoMaxModulation_mSec = 0.3;
 		apfParams.lfoDepth = 1.0;
 
-		for (uint32_t i = 0; i < NUM_BRANCHES; i++)
+		for (int i = 0; i < NUM_BRANCHES; i++)
 		{
 			// --- setup APFs
 			apfParams.outerAPFdelayTime_mSec = globalAPFMaxDelay*apfDelayWeight[m++];
@@ -5823,7 +5827,7 @@ public:
 		tubeParams.lsf_BoostCut_dB = -12.0;
 		tubeParams.waveshaper = distortionModel::kFuzzAsym;
 
-		for (uint32_t i = 0; i < NUM_TUBES; i++)
+		for (int i = 0; i < NUM_TUBES; i++)
 		{
 			triodes[i].reset(_sampleRate);
 			triodes[i].setParameters(tubeParams);
@@ -5868,7 +5872,7 @@ public:
 		tubeParams.saturation = parameters.saturation;
 		tubeParams.asymmetry = parameters.asymmetry;
 
-		for (uint32_t i = 0; i < NUM_TUBES; i++)
+		for (int i = 0; i < NUM_TUBES; i++)
 			triodes[i].setParameters(tubeParams);
 	}
 
@@ -8702,7 +8706,7 @@ inline std::unique_ptr<double[]> makeWindow(unsigned int windowLength, unsigned 
 	double overlap = hopSize > 0.0 ? 1.0 - (double)hopSize / (double)windowLength : 0.0;
 	gainCorrectionValue = 0.0;
 
-	for (uint32_t n = 0; n < windowLength; n++)
+	for (int n = 0; n < windowLength; n++)
 	{
 		if (window == windowType::kRectWindow)
 		{
@@ -9004,7 +9008,7 @@ public:
 		//     we never want to hold a pointer to a FFT output
 		//     for more than one local function's worth
 		//     could replace with memcpy( )
-		for (uint32_t i = 0; i < 2; i++)
+		for (int i = 0; i < 2; i++)
 		{
 			for (unsigned int j = 0; j < filterImpulseLength * 2; j++)
 			{
@@ -9204,7 +9208,7 @@ public:
 		if(outputBuff)
 			memset(outputBuff, 0, sizeof(double)*outputBufferLength);
 
-		for (uint32_t i = 0; i < PSM_FFT_LEN; i++)
+		for (int i = 0; i < PSM_FFT_LEN; i++)
 		{
 			binData[i].reset();
 			binDataPrevious[i].reset();
@@ -9262,7 +9266,7 @@ public:
 
 		int delta = -1;
 		int previousPeak = -1;
-		for (uint32_t i = 0; i < PSM_FFT_LEN; i++)
+		for (int i = 0; i < PSM_FFT_LEN; i++)
 		{
 			if (peakBinsPrevious[i] < 0)
 				break;
@@ -9294,7 +9298,7 @@ public:
 		// --- find local maxima in 4-sample window
 		double localWindow[4] = { 0.0, 0.0, 0.0, 0.0 };
 		int m = 0;
-		for (uint32_t i = 0; i < PSM_FFT_LEN; i++)
+		for (int i = 0; i < PSM_FFT_LEN; i++)
 		{
 			if (i == 0)
 			{
@@ -9360,7 +9364,7 @@ public:
 
 			if (nextPeak >= 0)
 			{
-				for (uint32_t i = 0; i < PSM_FFT_LEN; i++)
+				for (int i = 0; i < PSM_FFT_LEN; i++)
 				{
 					if (i <= bossPeakBin)
 					{
@@ -9408,7 +9412,7 @@ public:
 			if (parameters.enablePeakPhaseLocking)
 			{
 				// --- get the magnitudes for searching
-				for (uint32_t i = 0; i < PSM_FFT_LEN; i++)
+				for (int i = 0; i < PSM_FFT_LEN; i++)
 				{
 					binData[i].reset();
 					peakBins[i] = -1;
@@ -9425,7 +9429,7 @@ public:
 				// --- now propagate phases accordingly
 				//
 				//     FIRST: set PSI angles of bosses
-				for (uint32_t i = 0; i < PSM_FFT_LEN; i++)
+				for (int i = 0; i < PSM_FFT_LEN; i++)
 				{
 					double mag_k = binData[i].magnitude;
 					double phi_k = binData[i].phi;
@@ -9463,7 +9467,7 @@ public:
 				}
 
 				// --- now set non-peaks
-				for (uint32_t i = 0; i < PSM_FFT_LEN; i++)
+				for (int i = 0; i < PSM_FFT_LEN; i++)
 				{
 					if (!binData[i].isPeak)
 					{
@@ -9481,7 +9485,7 @@ public:
 					}
 				}
 
-				for (uint32_t i = 0; i < PSM_FFT_LEN; i++)
+				for (int i = 0; i < PSM_FFT_LEN; i++)
 				{
 					double mag_k = binData[i].magnitude;
 
@@ -9498,7 +9502,7 @@ public:
 
 			else // ---> old school
 			{
-				for (uint32_t i = 0; i < PSM_FFT_LEN; i++)
+				for (int i = 0; i < PSM_FFT_LEN; i++)
 				{
 					double mag_k = getMagnitude(fftData[i][0], fftData[i][1]);
 					double phi_k = getPhase(fftData[i][0], fftData[i][1]);
@@ -9536,7 +9540,7 @@ public:
 
 			// --- make copy (can speed this up)
 			double ifft[PSM_FFT_LEN] = { 0.0 };
-			for (uint32_t i = 0; i < PSM_FFT_LEN; i++)
+			for (int i = 0; i < PSM_FFT_LEN; i++)
 				ifft[i] = inv_fftData[i][0];
 
 			// --- resample the audio as if it were stretched
@@ -9731,7 +9735,7 @@ inline double** decomposeFilter(double* filterIR, unsigned int FIRLength, unsign
 	}
 
 	int m = 0;
-	for (uint32_t i = 0; i < subBandLength; i++)
+	for (int i = 0; i < subBandLength; i++)
 	{
 		for (int j = ratio - 1; j >= 0; j--)
 		{
