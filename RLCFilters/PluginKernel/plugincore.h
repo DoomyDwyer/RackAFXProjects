@@ -13,12 +13,20 @@
 #ifndef __pluginCore_h__
 #define __pluginCore_h__
 
+#include "fxobjects.h"
 #include "pluginbase.h"
 
 // **--0x7F1F--**
 
+// --- Plugin Variables controlID Enumeration 
 
-// **--0x0F1F--**
+enum controlID {
+	filterFc_Hz = 0,
+	filterQ = 1,
+	filterType = 2
+};
+
+	// **--0x0F1F--**
 
 /**
 \class PluginCore
@@ -118,9 +126,22 @@ public:
 	// --- END USER VARIABLES AND FUNCTIONS -------------------------------------- //
 
 protected:
+	WDFIdealRLCLPF rlcLPF[NUM_CHANNELS];
+	WDFIdealRLCHPF rlcHPF[NUM_CHANNELS];
+	WDFIdealRLCBPF rlcBPF[NUM_CHANNELS];
+	WDFIdealRLCBSF rlcBSF[NUM_CHANNELS];
+	void updateParameters();	
 
 private:
 	//  **--0x07FD--**
+
+	// --- Continuous Plugin Variables 
+	double filterFc_Hz = 0.0;
+	double filterQ = 0.0;
+
+	// --- Discrete Plugin Variables 
+	int filterType = 0;
+	enum class filterTypeEnum { RLC_LPF,RLC_HPF,RLC_BPF,RLC_BSF };	// to compare: if(compareEnumToInt(filterTypeEnum::RLC_LPF, filterType)) etc... 
 
 	// **--0x1A7F--**
     // --- end member variables
@@ -205,5 +226,3 @@ public:
 
 
 #endif /* defined(__pluginCore_h__) */
-
-

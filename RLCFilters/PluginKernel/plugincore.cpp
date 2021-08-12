@@ -53,6 +53,25 @@ PluginCore::PluginCore()
     initPluginPresets();
 }
 
+void PluginCore::updateParameters()
+{
+	// --- all objects share  same params, so get first
+	WDFParameters params = rlcLPF[0].getParameters();
+
+	// --- update with our GUI parameter variables
+	params.fc = filterFc_Hz;
+	params.Q = filterQ;
+
+	// --- apply to all filters
+	for (unsigned int i = 0; i < NUM_CHANNELS; i++)
+	{
+		rlcLPF[i].setParameters(params);
+		rlcHPF[i].setParameters(params);
+		rlcBPF[i].setParameters(params);
+		rlcBSF[i].setParameters(params);
+	}
+}
+
 /**
 \brief initialize object for a new run of audio; called just before audio streams
 
@@ -71,6 +90,14 @@ bool PluginCore::reset(ResetInfo& resetInfo)
     audioProcDescriptor.bitDepth = resetInfo.bitDepth;
 
     // --- other reset inits
+	for (unsigned int i = 0; i < NUM_CHANNELS; i++)
+	{
+		rlcLPF[i].reset(resetInfo.sampleRate);
+		rlcHPF[i].reset(resetInfo.sampleRate);
+		rlcBPF[i].reset(resetInfo.sampleRate);
+		rlcBSF[i].reset(resetInfo.sampleRate);
+	}
+	
     return PluginBase::reset(resetInfo);
 }
 
@@ -163,7 +190,7 @@ bool PluginCore::processAudioFrame(ProcessFrameInfo& processFrameInfo)
 	//     updateParameters is the name used in Will Pirkle's books for the GUI update function
 	//     you may name it what you like - this is where GUI control values are cooked
 	//     for the DSP algorithm at hand
-	// updateParameters();
+	updateParameters();
 
 
     // --- decode the channelIOConfiguration and process accordingly
@@ -181,38 +208,26 @@ bool PluginCore::processAudioFrame(ProcessFrameInfo& processFrameInfo)
 	}
 
     // --- FX Plugin:
-    if(processFrameInfo.channelIOConfig.inputChannelFormat == kCFMono &&
-       processFrameInfo.channelIOConfig.outputChannelFormat == kCFMono)
-    {
-		// --- pass through code: change this with your signal processing
-        processFrameInfo.audioOutputFrame[0] = processFrameInfo.audioInputFrame[0];
+	// --- in your processing object's audio processing function
+	double xnL = processFrameInfo.audioInputFrame[0];
 
-        return true; /// processed
-    }
+	// --- setup for left output
+	double ynL = 0.0;
 
-    // --- Mono-In/Stereo-Out
-    else if(processFrameInfo.channelIOConfig.inputChannelFormat == kCFMono &&
-       processFrameInfo.channelIOConfig.outputChannelFormat == kCFStereo)
-    {
-		// --- pass through code: change this with your signal processing
-        processFrameInfo.audioOutputFrame[0] = processFrameInfo.audioInputFrame[0];
-        processFrameInfo.audioOutputFrame[1] = processFrameInfo.audioInputFrame[0];
+	// --- choose filter to process
+	if (compareIntToEnum(filterType, filterTypeEnum::RLC_LPF))
+		ynL = rlcLPF[0].processAudioSample(xnL);
+	else if (compareIntToEnum(filterType, filterTypeEnum::RLC_HPF))
+		ynL = rlcHPF[0].processAudioSample(xnL);
+	else if (compareIntToEnum(filterType, filterTypeEnum::RLC_BPF))
+		ynL = rlcBPF[0].processAudioSample(xnL);
+	else if (compareIntToEnum(filterType, filterTypeEnum::RLC_BSF))
+		ynL = rlcBSF[0].processAudioSample(xnL);
 
-        return true; /// processed
-    }
-
-    // --- Stereo-In/Stereo-Out
-    else if(processFrameInfo.channelIOConfig.inputChannelFormat == kCFStereo &&
-       processFrameInfo.channelIOConfig.outputChannelFormat == kCFStereo)
-    {
-		// --- pass through code: change this with your signal processing
-        processFrameInfo.audioOutputFrame[0] = processFrameInfo.audioInputFrame[0];
-        processFrameInfo.audioOutputFrame[1] = processFrameInfo.audioInputFrame[1];
-
-        return true; /// processed
-    }
-
-    return false; /// NOT processed
+	// --- write output
+	processFrameInfo.audioOutputFrame[0] = ynL; //< output sample L
+	
+    return true; /// processed
 }
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -650,6 +665,48 @@ bool PluginCore::initPluginParameters()
 	// **--0xDEA7--**
 
 
+	// --- Declaration of Plugin Parameter Objects 
+	PluginParameter* piParam = nullptr;
+
+	// --- continuous control: fc
+	piParam = new PluginParameter(controlID::filterFc_Hz, "fc", "Hz", controlVariableType::kDouble, 20.000000, 20480.000000, 1000.000000, taper::kVoltOctaveTaper);
+	piParam->setParameterSmoothing(true);
+	piParam->setSmoothingTimeMsec(20.00);
+	piParam->setBoundVariable(&filterFc_Hz, boundVariableType::kDouble);
+	addPluginParameter(piParam);
+
+	// --- continuous control: Q
+	piParam = new PluginParameter(controlID::filterQ, "Q", "", controlVariableType::kDouble, 0.707000, 20.000000, 0.707000, taper::kLinearTaper);
+	piParam->setParameterSmoothing(true);
+	piParam->setSmoothingTimeMsec(20.00);
+	piParam->setBoundVariable(&filterQ, boundVariableType::kDouble);
+	addPluginParameter(piParam);
+
+	// --- discrete control: Filter Type
+	piParam = new PluginParameter(controlID::filterType, "Filter Type", "RLC LPF,RLC HPF,RLC BPF,RLC BSF", "RLC LPF");
+	piParam->setBoundVariable(&filterType, boundVariableType::kInt);
+	piParam->setIsDiscreteSwitch(true);
+	addPluginParameter(piParam);
+
+	// --- Aux Attributes
+	AuxParameterAttribute auxAttribute;
+
+	// --- RAFX GUI attributes
+	// --- controlID::filterFc_Hz
+	auxAttribute.reset(auxGUIIdentifier::guiControlData);
+	auxAttribute.setUintAttribute(2147483648);
+	setParamAuxAttribute(controlID::filterFc_Hz, auxAttribute);
+
+	// --- controlID::filterQ
+	auxAttribute.reset(auxGUIIdentifier::guiControlData);
+	auxAttribute.setUintAttribute(2147483648);
+	setParamAuxAttribute(controlID::filterQ, auxAttribute);
+
+	// --- controlID::filterType
+	auxAttribute.reset(auxGUIIdentifier::guiControlData);
+	auxAttribute.setUintAttribute(268435456);
+	setParamAuxAttribute(controlID::filterType, auxAttribute);
+
 
 	// **--0xEDA5--**
 
@@ -677,6 +734,19 @@ NOTES:
 bool PluginCore::initPluginPresets()
 {
 	// **--0xFF7A--**
+
+	// --- Plugin Presets 
+	int index = 0;
+	PresetInfo* preset = nullptr;
+
+	// --- Preset: Factory Preset
+	preset = new PresetInfo(index++, "Factory Preset");
+	initPresetParameters(preset->presetParameters);
+	setPresetParameter(preset->presetParameters, controlID::filterFc_Hz, 1000.000000);
+	setPresetParameter(preset->presetParameters, controlID::filterQ, 0.707000);
+	setPresetParameter(preset->presetParameters, controlID::filterType, -0.000000);
+	addPreset(preset);
+
 
 	// **--0xA7FF--**
 
@@ -748,6 +818,3 @@ const char* PluginCore::getAUCocoaViewFactoryName(){ return AU_COCOA_VIEWFACTORY
 pluginType PluginCore::getPluginType(){ return kPluginType; }
 const char* PluginCore::getVSTFUID(){ return kVSTFUID; }
 int32_t PluginCore::getFourCharCode(){ return kFourCharCode; }
-
-
-
