@@ -13,12 +13,26 @@
 #ifndef __pluginCore_h__
 #define __pluginCore_h__
 
+#include "fxobjects.h"
 #include "pluginbase.h"
 
 // **--0x7F1F--**
 
+// --- Plugin Variables controlID Enumeration 
 
-// **--0x0F1F--**
+enum controlID {
+	filterFc_Hz = 0,
+	filterQ = 1,
+	filterOutputGain_dB = 2,
+	filterType = 3,
+	enableGainComp = 4,
+	matchAnalogNyquistLPF = 5,
+	selfOscillate = 6,
+	enableNLP = 7,
+	vuMeter = 8
+};
+
+	// **--0x0F1F--**
 
 /**
 \class PluginCore
@@ -114,13 +128,38 @@ public:
 	//	   Add your variables and methods here
 
 
-
 	// --- END USER VARIABLES AND FUNCTIONS -------------------------------------- //
 
 protected:
+	ZVAFilter zvaFilter[NUM_CHANNELS];
+	void updateParameters();	
 
 private:
 	//  **--0x07FD--**
+
+	// --- Continuous Plugin Variables 
+	double filterFc_Hz = 0.0;
+	double filterQ = 0.0;
+	double filterOutputGain_dB = 0.0;
+
+	// --- Discrete Plugin Variables 
+	int filterType = 0;
+	enum class filterTypeEnum { kLPF1,kHPF1,kAPF1,kSVF_LP,kSVF_HP,kSVF_BP,kSVF_BS };	// to compare: if(compareEnumToInt(filterTypeEnum::kLPF1, filterType)) etc... 
+
+	int enableGainComp = 0;
+	enum class enableGainCompEnum { SWITCH_OFF,SWITCH_ON };	// to compare: if(compareEnumToInt(enableGainCompEnum::SWITCH_OFF, enableGainComp)) etc... 
+
+	int matchAnalogNyquistLPF = 0;
+	enum class matchAnalogNyquistLPFEnum { SWITCH_OFF,SWITCH_ON };	// to compare: if(compareEnumToInt(matchAnalogNyquistLPFEnum::SWITCH_OFF, matchAnalogNyquistLPF)) etc... 
+
+	int selfOscillate = 0;
+	enum class selfOscillateEnum { SWITCH_OFF,SWITCH_ON };	// to compare: if(compareEnumToInt(selfOscillateEnum::SWITCH_OFF, selfOscillate)) etc... 
+
+	int enableNLP = 0;
+	enum class enableNLPEnum { SWITCH_OFF,SWITCH_ON };	// to compare: if(compareEnumToInt(enableNLPEnum::SWITCH_OFF, enableNLP)) etc... 
+
+	// --- Meter Plugin Variables
+	float vuMeter = 0.f;
 
 	// **--0x1A7F--**
     // --- end member variables
@@ -205,5 +244,3 @@ public:
 
 
 #endif /* defined(__pluginCore_h__) */
-
-

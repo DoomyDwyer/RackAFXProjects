@@ -53,6 +53,29 @@ PluginCore::PluginCore()
     initPluginPresets();
 }
 
+void PluginCore::updateParameters()
+{
+	// --- all objects share  same params, so get first
+	ZVAFilterParameters params = zvaFilter[0].getParameters();
+
+	// --- update with our GUI parameter variables
+	params.fc = filterFc_Hz;
+	params.Q = filterQ;
+	params.filterOutputGain_dB = filterOutputGain_dB;
+
+	// --- Discrete Plugin Variables 
+	params.filterAlgorithm = convertIntToEnum(filterType, vaFilterAlgorithm);
+	params.enableGainComp = enableGainComp;
+	params.matchAnalogNyquistLPF = matchAnalogNyquistLPF;
+	params.selfOscillate = selfOscillate;
+	params.enableNLP = enableNLP;
+
+	// --- apply to all filters
+	for (unsigned int i = 0; i < NUM_CHANNELS; i++)
+	{
+		zvaFilter[i].setParameters(params);
+	}
+}
 /**
 \brief initialize object for a new run of audio; called just before audio streams
 
@@ -71,6 +94,10 @@ bool PluginCore::reset(ResetInfo& resetInfo)
     audioProcDescriptor.bitDepth = resetInfo.bitDepth;
 
     // --- other reset inits
+    for (unsigned int i = 0; i < NUM_CHANNELS; i++)
+    {
+	    zvaFilter[i].reset(resetInfo.sampleRate);
+    }
     return PluginBase::reset(resetInfo);
 }
 
@@ -163,7 +190,7 @@ bool PluginCore::processAudioFrame(ProcessFrameInfo& processFrameInfo)
 	//     updateParameters is the name used in Will Pirkle's books for the GUI update function
 	//     you may name it what you like - this is where GUI control values are cooked
 	//     for the DSP algorithm at hand
-	// updateParameters();
+	updateParameters();
 
 
     // --- decode the channelIOConfiguration and process accordingly
@@ -181,38 +208,23 @@ bool PluginCore::processAudioFrame(ProcessFrameInfo& processFrameInfo)
 	}
 
     // --- FX Plugin:
-    if(processFrameInfo.channelIOConfig.inputChannelFormat == kCFMono &&
-       processFrameInfo.channelIOConfig.outputChannelFormat == kCFMono)
-    {
-		// --- pass through code: change this with your signal processing
-        processFrameInfo.audioOutputFrame[0] = processFrameInfo.audioInputFrame[0];
+	vuMeter = 0.f;
 
-        return true; /// processed
-    }
+	for (unsigned int i = 0; i < NUM_CHANNELS; i++)
+	{
+		double xn = processFrameInfo.audioInputFrame[i];
 
-    // --- Mono-In/Stereo-Out
-    else if(processFrameInfo.channelIOConfig.inputChannelFormat == kCFMono &&
-       processFrameInfo.channelIOConfig.outputChannelFormat == kCFStereo)
-    {
-		// --- pass through code: change this with your signal processing
-        processFrameInfo.audioOutputFrame[0] = processFrameInfo.audioInputFrame[0];
-        processFrameInfo.audioOutputFrame[1] = processFrameInfo.audioInputFrame[0];
+		// --- choose filter to process
+		double yn = zvaFilter[i].processAudioSample(xn);
 
-        return true; /// processed
-    }
+		// --- write output
+		processFrameInfo.audioOutputFrame[i] = yn;
 
-    // --- Stereo-In/Stereo-Out
-    else if(processFrameInfo.channelIOConfig.inputChannelFormat == kCFStereo &&
-       processFrameInfo.channelIOConfig.outputChannelFormat == kCFStereo)
-    {
-		// --- pass through code: change this with your signal processing
-        processFrameInfo.audioOutputFrame[0] = processFrameInfo.audioInputFrame[0];
-        processFrameInfo.audioOutputFrame[1] = processFrameInfo.audioInputFrame[1];
+		// — sum all channels into 1 single value for Vu Meter
+	    vuMeter += yn/NUM_CHANNELS;
+	}
 
-        return true; /// processed
-    }
-
-    return false; /// NOT processed
+    return true; /// processed
 }
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -650,6 +662,114 @@ bool PluginCore::initPluginParameters()
 	// **--0xDEA7--**
 
 
+	// --- Declaration of Plugin Parameter Objects 
+	PluginParameter* piParam = nullptr;
+
+	// --- continuous control: Cutoff
+	piParam = new PluginParameter(controlID::filterFc_Hz, "Cutoff", "Hz", controlVariableType::kDouble, 20.000000, 20480.000000, 1000.000000, taper::kVoltOctaveTaper);
+	piParam->setParameterSmoothing(true);
+	piParam->setSmoothingTimeMsec(20.00);
+	piParam->setBoundVariable(&filterFc_Hz, boundVariableType::kDouble);
+	addPluginParameter(piParam);
+
+	// --- continuous control: Resonance
+	piParam = new PluginParameter(controlID::filterQ, "Resonance", "", controlVariableType::kDouble, 0.707000, 20.000000, 0.707000, taper::kLinearTaper);
+	piParam->setParameterSmoothing(true);
+	piParam->setSmoothingTimeMsec(20.00);
+	piParam->setBoundVariable(&filterQ, boundVariableType::kDouble);
+	addPluginParameter(piParam);
+
+	// --- continuous control: Gain
+	piParam = new PluginParameter(controlID::filterOutputGain_dB, "Gain", "dB", controlVariableType::kDouble, -20.000000, 20.000000, 0.000000, taper::kLinearTaper);
+	piParam->setParameterSmoothing(true);
+	piParam->setSmoothingTimeMsec(20.00);
+	piParam->setBoundVariable(&filterOutputGain_dB, boundVariableType::kDouble);
+	addPluginParameter(piParam);
+
+	// --- discrete control: Filter Type
+	piParam = new PluginParameter(controlID::filterType, "Filter Type", "kLPF1,kHPF1,kAPF1,kSVF LP,kSVF HP,kSVF BP,kSVF BS", "kLPF1");
+	piParam->setBoundVariable(&filterType, boundVariableType::kInt);
+	piParam->setIsDiscreteSwitch(true);
+	addPluginParameter(piParam);
+
+	// --- discrete control: Gain Comp
+	piParam = new PluginParameter(controlID::enableGainComp, "Gain Comp", "SWITCH OFF,SWITCH ON", "SWITCH OFF");
+	piParam->setBoundVariable(&enableGainComp, boundVariableType::kInt);
+	piParam->setIsDiscreteSwitch(true);
+	addPluginParameter(piParam);
+
+	// --- discrete control: Analog Nyquist
+	piParam = new PluginParameter(controlID::matchAnalogNyquistLPF, "Analog Nyquist", "SWITCH OFF,SWITCH ON", "SWITCH OFF");
+	piParam->setBoundVariable(&matchAnalogNyquistLPF, boundVariableType::kInt);
+	piParam->setIsDiscreteSwitch(true);
+	addPluginParameter(piParam);
+
+	// --- discrete control: Self-oscillate
+	piParam = new PluginParameter(controlID::selfOscillate, "Self-oscillate", "SWITCH OFF,SWITCH ON", "SWITCH OFF");
+	piParam->setBoundVariable(&selfOscillate, boundVariableType::kInt);
+	piParam->setIsDiscreteSwitch(true);
+	addPluginParameter(piParam);
+
+	// --- discrete control: Non-linear proc
+	piParam = new PluginParameter(controlID::enableNLP, "Non-linear proc", "SWITCH OFF,SWITCH ON", "SWITCH OFF");
+	piParam->setBoundVariable(&enableNLP, boundVariableType::kInt);
+	piParam->setIsDiscreteSwitch(true);
+	addPluginParameter(piParam);
+
+	// --- meter control: Volume
+	piParam = new PluginParameter(controlID::vuMeter, "Volume", 10.00, 500.00, ENVELOPE_DETECT_MODE_RMS, meterCal::kLogMeter);
+	piParam->setBoundVariable(&vuMeter, boundVariableType::kFloat);
+	addPluginParameter(piParam);
+
+	// --- Aux Attributes
+	AuxParameterAttribute auxAttribute;
+
+	// --- RAFX GUI attributes
+	// --- controlID::filterFc_Hz
+	auxAttribute.reset(auxGUIIdentifier::guiControlData);
+	auxAttribute.setUintAttribute(2147483648);
+	setParamAuxAttribute(controlID::filterFc_Hz, auxAttribute);
+
+	// --- controlID::filterQ
+	auxAttribute.reset(auxGUIIdentifier::guiControlData);
+	auxAttribute.setUintAttribute(2147483648);
+	setParamAuxAttribute(controlID::filterQ, auxAttribute);
+
+	// --- controlID::filterOutputGain_dB
+	auxAttribute.reset(auxGUIIdentifier::guiControlData);
+	auxAttribute.setUintAttribute(2147483648);
+	setParamAuxAttribute(controlID::filterOutputGain_dB, auxAttribute);
+
+	// --- controlID::filterType
+	auxAttribute.reset(auxGUIIdentifier::guiControlData);
+	auxAttribute.setUintAttribute(805306368);
+	setParamAuxAttribute(controlID::filterType, auxAttribute);
+
+	// --- controlID::enableGainComp
+	auxAttribute.reset(auxGUIIdentifier::guiControlData);
+	auxAttribute.setUintAttribute(1073741824);
+	setParamAuxAttribute(controlID::enableGainComp, auxAttribute);
+
+	// --- controlID::matchAnalogNyquistLPF
+	auxAttribute.reset(auxGUIIdentifier::guiControlData);
+	auxAttribute.setUintAttribute(1073741824);
+	setParamAuxAttribute(controlID::matchAnalogNyquistLPF, auxAttribute);
+
+	// --- controlID::selfOscillate
+	auxAttribute.reset(auxGUIIdentifier::guiControlData);
+	auxAttribute.setUintAttribute(1073741824);
+	setParamAuxAttribute(controlID::selfOscillate, auxAttribute);
+
+	// --- controlID::enableNLP
+	auxAttribute.reset(auxGUIIdentifier::guiControlData);
+	auxAttribute.setUintAttribute(1073741824);
+	setParamAuxAttribute(controlID::enableNLP, auxAttribute);
+
+	// --- controlID::vuMeter
+	auxAttribute.reset(auxGUIIdentifier::guiControlData);
+	auxAttribute.setUintAttribute(134217728);
+	setParamAuxAttribute(controlID::vuMeter, auxAttribute);
+
 
 	// **--0xEDA5--**
 
@@ -677,6 +797,24 @@ NOTES:
 bool PluginCore::initPluginPresets()
 {
 	// **--0xFF7A--**
+
+	// --- Plugin Presets 
+	int index = 0;
+	PresetInfo* preset = nullptr;
+
+	// --- Preset: Factory Preset
+	preset = new PresetInfo(index++, "Factory Preset");
+	initPresetParameters(preset->presetParameters);
+	setPresetParameter(preset->presetParameters, controlID::filterFc_Hz, 1000.000000);
+	setPresetParameter(preset->presetParameters, controlID::filterQ, 0.707000);
+	setPresetParameter(preset->presetParameters, controlID::filterOutputGain_dB, 0.000000);
+	setPresetParameter(preset->presetParameters, controlID::filterType, -0.000000);
+	setPresetParameter(preset->presetParameters, controlID::enableGainComp, -0.000000);
+	setPresetParameter(preset->presetParameters, controlID::matchAnalogNyquistLPF, -0.000000);
+	setPresetParameter(preset->presetParameters, controlID::selfOscillate, -0.000000);
+	setPresetParameter(preset->presetParameters, controlID::enableNLP, -0.000000);
+	addPreset(preset);
+
 
 	// **--0xA7FF--**
 
@@ -748,6 +886,3 @@ const char* PluginCore::getAUCocoaViewFactoryName(){ return AU_COCOA_VIEWFACTORY
 pluginType PluginCore::getPluginType(){ return kPluginType; }
 const char* PluginCore::getVSTFUID(){ return kVSTFUID; }
 int32_t PluginCore::getFourCharCode(){ return kFourCharCode; }
-
-
-
