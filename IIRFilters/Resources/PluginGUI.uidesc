@@ -291,6 +291,12 @@
 		<attributes rafx-template-name="User ViewContainer 0" />
 		<attributes rafx-template-name="User ViewContainer 1" />
 		<attributes rafx-template-name="User ViewContainer 2" rafxtemplate-type="userViewContainer" />
+		<attributes rafx-template-name="Rafx KnobGroup 0" />
+		<attributes rafx-template-name="Rafx KnobGroup 1" />
+		<attributes rafx-template-name="Rafx KnobGroup 2" />
+		<attributes rafx-template-name="User ViewContainer 0" />
+		<attributes rafx-template-name="User ViewContainer 1" />
+		<attributes rafx-template-name="User ViewContainer 2" />
 	</custom>
 	<bitmaps>
 		<bitmap name="IIRFilters_VCVRack_panel" path="D:\Pictures\Doomsville\IIRFilters_VCVRack_panel.png">
