@@ -129,7 +129,7 @@ public:
 	// --- END USER VARIABLES AND FUNCTIONS -------------------------------------- //
 
 protected:
-	EnvelopeFollower envFollower[NUM_CHANNELS];
+	EnvelopeFollower envFollowers[NUM_CHANNELS];
 	void updateParameters();
 
 private:

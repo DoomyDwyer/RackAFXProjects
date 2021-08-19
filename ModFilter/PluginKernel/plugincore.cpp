@@ -55,7 +55,7 @@ PluginCore::PluginCore()
 
 void PluginCore::updateParameters()
 {
-	EnvelopeFollowerParameters params = envFollower[0].getParameters();
+	EnvelopeFollowerParameters params = envFollowers[0].getParameters();
 	params.fc = filterFc_Hz;
 	params.Q = filterQ;
 	params.attackTime_mSec = attackTime_mSec;
@@ -63,9 +63,9 @@ void PluginCore::updateParameters()
 	params.threshold_dB = threshold_dB;
 	params.sensitivity = sensitivity;
 
-    for (auto& envelopeFollower : envFollower)
+    for (auto& envFollower : envFollowers)
     {
-	    envelopeFollower.setParameters(params);
+	    envFollower.setParameters(params);
     }
 }
 
@@ -88,9 +88,9 @@ bool PluginCore::reset(ResetInfo& resetInfo)
     audioProcDescriptor.bitDepth = resetInfo.bitDepth;
 
 	// --- Reset the filters
-    for (auto& envelopeFollower : envFollower)
+    for (auto& envFollower : envFollowers)
     {
-	    envelopeFollower.reset(resetInfo.sampleRate);
+	    envFollower.reset(resetInfo.sampleRate);
     }
     // --- other reset inits
     return PluginBase::reset(resetInfo);
@@ -208,7 +208,7 @@ bool PluginCore::processAudioFrame(ProcessFrameInfo& processFrameInfo)
 		double xn = processFrameInfo.audioInputFrame[i];
 
 		// --- Process the audio to produce output
-		double yn = envFollower->processAudioSample(xn);
+		double yn = envFollowers[i].processAudioSample(xn);
 
 		// --- Write output
 		processFrameInfo.audioOutputFrame[i] = yn;
@@ -763,6 +763,17 @@ bool PluginCore::initPluginPresets()
 	// --- Plugin Presets 
 	int index = 0;
 	PresetInfo* preset = nullptr;
+
+	// --- Preset: Factory Preset
+	preset = new PresetInfo(index++, "Factory Preset");
+	initPresetParameters(preset->presetParameters);
+	setPresetParameter(preset->presetParameters, controlID::filterFc_Hz, 1000.000000);
+	setPresetParameter(preset->presetParameters, controlID::filterQ, 0.707000);
+	setPresetParameter(preset->presetParameters, controlID::attackTime_mSec, 20.000000);
+	setPresetParameter(preset->presetParameters, controlID::releaseTime_mSec, 500.000000);
+	setPresetParameter(preset->presetParameters, controlID::threshold_dB, -6.000000);
+	setPresetParameter(preset->presetParameters, controlID::sensitivity, 1.000000);
+	addPreset(preset);
 
 
 	// **--0xA7FF--**
