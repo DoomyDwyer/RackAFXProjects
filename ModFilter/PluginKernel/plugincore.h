@@ -13,12 +13,23 @@
 #ifndef __pluginCore_h__
 #define __pluginCore_h__
 
+#include "fxobjects.h"
 #include "pluginbase.h"
 
 // **--0x7F1F--**
 
+// --- Plugin Variables controlID Enumeration 
 
-// **--0x0F1F--**
+enum controlID {
+	filterFc_Hz = 0,
+	filterQ = 1,
+	attackTime_mSec = 2,
+	releaseTime_mSec = 3,
+	threshold_dB = 4,
+	sensitivity = 5
+};
+
+	// **--0x0F1F--**
 
 /**
 \class PluginCore
@@ -118,9 +129,20 @@ public:
 	// --- END USER VARIABLES AND FUNCTIONS -------------------------------------- //
 
 protected:
+	EnvelopeFollower envFollower[NUM_CHANNELS];
+	void updateParameters();
 
 private:
 	//  **--0x07FD--**
+
+	// --- Continuous Plugin Variables 
+	double filterFc_Hz = 0.0;
+	double filterQ = 0.0;
+	double attackTime_mSec = 0.0;
+	double releaseTime_mSec = 0.0;
+	double threshold_dB = 0.0;
+	double sensitivity = 0.0;
+
 
 	// **--0x1A7F--**
     // --- end member variables
@@ -205,5 +227,3 @@ public:
 
 
 #endif /* defined(__pluginCore_h__) */
-
-
