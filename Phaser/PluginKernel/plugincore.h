@@ -13,12 +13,20 @@
 #ifndef __pluginCore_h__
 #define __pluginCore_h__
 
+#include "fxobjects.h"
 #include "pluginbase.h"
 
 // **--0x7F1F--**
 
+// --- Plugin Variables controlID Enumeration 
 
-// **--0x0F1F--**
+enum controlID {
+	lfoRate_Hz = 0,
+	lfoDepth_Pct = 1,
+	intensity_Pct = 2
+};
+
+	// **--0x0F1F--**
 
 /**
 \class PluginCore
@@ -118,9 +126,17 @@ public:
 	// --- END USER VARIABLES AND FUNCTIONS -------------------------------------- //
 
 protected:
+	PhaseShifter phaseShifter[NUM_CHANNELS];
+	void updateParameters();
 
 private:
 	//  **--0x07FD--**
+
+	// --- Continuous Plugin Variables 
+	double lfoRate_Hz = 0.0;
+	double lfoDepth_Pct = 0.0;
+	double intensity_Pct = 0.0;
+
 
 	// **--0x1A7F--**
     // --- end member variables
@@ -205,5 +221,3 @@ public:
 
 
 #endif /* defined(__pluginCore_h__) */
-
-

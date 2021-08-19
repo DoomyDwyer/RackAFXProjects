@@ -53,6 +53,22 @@ PluginCore::PluginCore()
     initPluginPresets();
 }
 
+void PluginCore::updateParameters()
+{
+	// --- Update with GUI parameters
+	PhaseShifterParameters params = phaseShifter[0].getParameters();
+	params.lfoRate_Hz = lfoRate_Hz;
+	params.lfoDepth_Pct = lfoDepth_Pct;
+	params.intensity_Pct = intensity_Pct;
+
+	// --- Update
+	for (int i = 0; i < NUM_CHANNELS; i++)
+	{
+		params.quadPhaseLFO = i % 2 != 0; // Set quadrature phase on right channel (all odd channels, actually)
+		phaseShifter[i].setParameters(params);
+	}
+}
+
 /**
 \brief initialize object for a new run of audio; called just before audio streams
 
@@ -70,6 +86,12 @@ bool PluginCore::reset(ResetInfo& resetInfo)
     audioProcDescriptor.sampleRate = resetInfo.sampleRate;
     audioProcDescriptor.bitDepth = resetInfo.bitDepth;
 
+	// --- Reset the filters
+	for (auto& shifter : phaseShifter)
+	{
+		shifter.reset(resetInfo.sampleRate);
+	}
+	
     // --- other reset inits
     return PluginBase::reset(resetInfo);
 }
@@ -163,7 +185,7 @@ bool PluginCore::processAudioFrame(ProcessFrameInfo& processFrameInfo)
 	//     updateParameters is the name used in Will Pirkle's books for the GUI update function
 	//     you may name it what you like - this is where GUI control values are cooked
 	//     for the DSP algorithm at hand
-	// updateParameters();
+	updateParameters();
 
 
     // --- decode the channelIOConfiguration and process accordingly
@@ -181,38 +203,20 @@ bool PluginCore::processAudioFrame(ProcessFrameInfo& processFrameInfo)
 	}
 
     // --- FX Plugin:
-    if(processFrameInfo.channelIOConfig.inputChannelFormat == kCFMono &&
-       processFrameInfo.channelIOConfig.outputChannelFormat == kCFMono)
+	for (unsigned int i = 0; i < NUM_CHANNELS; i++)
     {
-		// --- pass through code: change this with your signal processing
-        processFrameInfo.audioOutputFrame[0] = processFrameInfo.audioInputFrame[0];
+	    // --- Read input
+		double xn = processFrameInfo.audioInputFrame[i];
 
-        return true; /// processed
+		// --- Process the audio to produce output
+		double yn = phaseShifter[i].processAudioSample(xn);
+
+		// --- Write output
+		processFrameInfo.audioOutputFrame[i] = yn;
     }
 
-    // --- Mono-In/Stereo-Out
-    else if(processFrameInfo.channelIOConfig.inputChannelFormat == kCFMono &&
-       processFrameInfo.channelIOConfig.outputChannelFormat == kCFStereo)
-    {
-		// --- pass through code: change this with your signal processing
-        processFrameInfo.audioOutputFrame[0] = processFrameInfo.audioInputFrame[0];
-        processFrameInfo.audioOutputFrame[1] = processFrameInfo.audioInputFrame[0];
 
-        return true; /// processed
-    }
-
-    // --- Stereo-In/Stereo-Out
-    else if(processFrameInfo.channelIOConfig.inputChannelFormat == kCFStereo &&
-       processFrameInfo.channelIOConfig.outputChannelFormat == kCFStereo)
-    {
-		// --- pass through code: change this with your signal processing
-        processFrameInfo.audioOutputFrame[0] = processFrameInfo.audioInputFrame[0];
-        processFrameInfo.audioOutputFrame[1] = processFrameInfo.audioInputFrame[1];
-
-        return true; /// processed
-    }
-
-    return false; /// NOT processed
+    return true; /// processed
 }
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -650,6 +654,49 @@ bool PluginCore::initPluginParameters()
 	// **--0xDEA7--**
 
 
+	// --- Declaration of Plugin Parameter Objects 
+	PluginParameter* piParam = nullptr;
+
+	// --- continuous control: Rate
+	piParam = new PluginParameter(controlID::lfoRate_Hz, "Rate", "Hz", controlVariableType::kDouble, 0.020000, 20.000000, 0.200000, taper::kVoltOctaveTaper);
+	piParam->setParameterSmoothing(true);
+	piParam->setSmoothingTimeMsec(20.00);
+	piParam->setBoundVariable(&lfoRate_Hz, boundVariableType::kDouble);
+	addPluginParameter(piParam);
+
+	// --- continuous control: Depth
+	piParam = new PluginParameter(controlID::lfoDepth_Pct, "Depth", "%", controlVariableType::kDouble, 0.000000, 100.000000, 50.000000, taper::kLinearTaper);
+	piParam->setParameterSmoothing(true);
+	piParam->setSmoothingTimeMsec(20.00);
+	piParam->setBoundVariable(&lfoDepth_Pct, boundVariableType::kDouble);
+	addPluginParameter(piParam);
+
+	// --- continuous control: Intensity
+	piParam = new PluginParameter(controlID::intensity_Pct, "Intensity", "%", controlVariableType::kDouble, 0.000000, 100.000000, 75.000000, taper::kLinearTaper);
+	piParam->setParameterSmoothing(true);
+	piParam->setSmoothingTimeMsec(20.00);
+	piParam->setBoundVariable(&intensity_Pct, boundVariableType::kDouble);
+	addPluginParameter(piParam);
+
+	// --- Aux Attributes
+	AuxParameterAttribute auxAttribute;
+
+	// --- RAFX GUI attributes
+	// --- controlID::lfoRate_Hz
+	auxAttribute.reset(auxGUIIdentifier::guiControlData);
+	auxAttribute.setUintAttribute(2147483648);
+	setParamAuxAttribute(controlID::lfoRate_Hz, auxAttribute);
+
+	// --- controlID::lfoDepth_Pct
+	auxAttribute.reset(auxGUIIdentifier::guiControlData);
+	auxAttribute.setUintAttribute(2147483648);
+	setParamAuxAttribute(controlID::lfoDepth_Pct, auxAttribute);
+
+	// --- controlID::intensity_Pct
+	auxAttribute.reset(auxGUIIdentifier::guiControlData);
+	auxAttribute.setUintAttribute(2147483648);
+	setParamAuxAttribute(controlID::intensity_Pct, auxAttribute);
+
 
 	// **--0xEDA5--**
 
@@ -677,6 +724,19 @@ NOTES:
 bool PluginCore::initPluginPresets()
 {
 	// **--0xFF7A--**
+
+	// --- Plugin Presets 
+	int index = 0;
+	PresetInfo* preset = nullptr;
+
+	// --- Preset: Factory Preset
+	preset = new PresetInfo(index++, "Factory Preset");
+	initPresetParameters(preset->presetParameters);
+	setPresetParameter(preset->presetParameters, controlID::lfoRate_Hz, 0.200000);
+	setPresetParameter(preset->presetParameters, controlID::lfoDepth_Pct, 50.000000);
+	setPresetParameter(preset->presetParameters, controlID::intensity_Pct, 75.000000);
+	addPreset(preset);
+
 
 	// **--0xA7FF--**
 
@@ -748,6 +808,3 @@ const char* PluginCore::getAUCocoaViewFactoryName(){ return AU_COCOA_VIEWFACTORY
 pluginType PluginCore::getPluginType(){ return kPluginType; }
 const char* PluginCore::getVSTFUID(){ return kVSTFUID; }
 int32_t PluginCore::getFourCharCode(){ return kFourCharCode; }
-
-
-
