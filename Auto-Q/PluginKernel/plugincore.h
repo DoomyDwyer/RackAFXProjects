@@ -13,12 +13,32 @@
 #ifndef __pluginCore_h__
 #define __pluginCore_h__
 
+#include "customfxobjects.h"
+#include "fxobjects.h"
 #include "pluginbase.h"
 
 // **--0x7F1F--**
 
+// --- Plugin Variables controlID Enumeration 
 
-// **--0x0F1F--**
+enum controlID {
+	fx_On = 0,
+	filterFc_Hz = 1,
+	filterQ = 2,
+	attackTime_mSec = 3,
+	releaseTime_mSec = 4,
+	threshold_dB = 5,
+	sensitivity = 6,
+	filterOutputGain_dB = 10,
+	enableGainComp = 11,
+	matchAnalogNyquistLPF = 12,
+	selfOscillate = 13,
+	enableNLP = 14,
+	filterType = 15,
+	vuMeter = 16
+};
+
+	// **--0x0F1F--**
 
 /**
 \class PluginCore
@@ -118,9 +138,43 @@ public:
 	// --- END USER VARIABLES AND FUNCTIONS -------------------------------------- //
 
 protected:
+	AutoQEnvelopeFollower envFollowers[NUM_CHANNELS];
+    int const FILTER_ENUM_OFFSET = 3;
+    void updateParameters();
 
 private:
 	//  **--0x07FD--**
+
+	// --- Continuous Plugin Variables 
+	double filterFc_Hz = 0.0;
+	double filterQ = 0.0;
+	double attackTime_mSec = 0.0;
+	double releaseTime_mSec = 0.0;
+	double threshold_dB = 0.0;
+	double sensitivity = 0.0;
+	double filterOutputGain_dB = 0.0;
+
+	// --- Discrete Plugin Variables 
+	int fx_On = 0;
+	enum class fx_OnEnum { SWITCH_OFF,SWITCH_ON };	// to compare: if(compareEnumToInt(fx_OnEnum::SWITCH_OFF, fx_On)) etc... 
+
+	int enableGainComp = 0;
+	enum class enableGainCompEnum { SWITCH_OFF,SWITCH_ON };	// to compare: if(compareEnumToInt(enableGainCompEnum::SWITCH_OFF, enableGainComp)) etc... 
+
+	int matchAnalogNyquistLPF = 0;
+	enum class matchAnalogNyquistLPFEnum { SWITCH_OFF,SWITCH_ON };	// to compare: if(compareEnumToInt(matchAnalogNyquistLPFEnum::SWITCH_OFF, matchAnalogNyquistLPF)) etc... 
+
+	int selfOscillate = 0;
+	enum class selfOscillateEnum { SWITCH_OFF,SWITCH_ON };	// to compare: if(compareEnumToInt(selfOscillateEnum::SWITCH_OFF, selfOscillate)) etc... 
+
+	int enableNLP = 0;
+	enum class enableNLPEnum { SWITCH_OFF,SWITCH_ON };	// to compare: if(compareEnumToInt(enableNLPEnum::SWITCH_OFF, enableNLP)) etc... 
+
+	int filterType = 0;
+	enum class filterTypeEnum { kSVF_LP,kSVF_HP,kSVF_BP };	// to compare: if(compareEnumToInt(filterTypeEnum::kSVF_LP, filterType)) etc... 
+
+	// --- Meter Plugin Variables
+	float vuMeter = 0.f;
 
 	// **--0x1A7F--**
     // --- end member variables
@@ -205,5 +259,3 @@ public:
 
 
 #endif /* defined(__pluginCore_h__) */
-
-
