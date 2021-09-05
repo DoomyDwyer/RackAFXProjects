@@ -30,12 +30,12 @@ enum controlID {
 	threshold_dB = 5,
 	sensitivity = 6,
 	filterOutputGain_dB = 10,
-	enableGainComp = 11,
 	matchAnalogNyquistLPF = 12,
 	selfOscillate = 13,
 	enableNLP = 14,
 	filterType = 15,
-	vuMeter = 16
+	vuMeter = 16,
+	enableGainComp = 11
 };
 
 	// **--0x0F1F--**
@@ -158,9 +158,6 @@ private:
 	int fx_On = 0;
 	enum class fx_OnEnum { SWITCH_OFF,SWITCH_ON };	// to compare: if(compareEnumToInt(fx_OnEnum::SWITCH_OFF, fx_On)) etc... 
 
-	int enableGainComp = 0;
-	enum class enableGainCompEnum { SWITCH_OFF,SWITCH_ON };	// to compare: if(compareEnumToInt(enableGainCompEnum::SWITCH_OFF, enableGainComp)) etc... 
-
 	int matchAnalogNyquistLPF = 0;
 	enum class matchAnalogNyquistLPFEnum { SWITCH_OFF,SWITCH_ON };	// to compare: if(compareEnumToInt(matchAnalogNyquistLPFEnum::SWITCH_OFF, matchAnalogNyquistLPF)) etc... 
 
@@ -172,6 +169,9 @@ private:
 
 	int filterType = 0;
 	enum class filterTypeEnum { kSVF_LP,kSVF_HP,kSVF_BP };	// to compare: if(compareEnumToInt(filterTypeEnum::kSVF_LP, filterType)) etc... 
+
+	int enableGainComp = 0;
+	enum class enableGainCompEnum { BOOST_Q_OFF,BOOST_Q_ON };	// to compare: if(compareEnumToInt(enableGainCompEnum::BOOST_Q_OFF, enableGainComp)) etc... 
 
 	// --- Meter Plugin Variables
 	float vuMeter = 0.f;

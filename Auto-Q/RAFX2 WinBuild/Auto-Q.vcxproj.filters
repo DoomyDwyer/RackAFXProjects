@@ -122,6 +122,12 @@
     <ClInclude Include="..\PluginObjects\customfxobjects.h">
       <Filter>PluginObjects</Filter>
     </ClInclude>
+    <ClInclude Include="..\PluginObjects\utilities.h">
+      <Filter>PluginObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\PluginObjects\debug.h">
+      <Filter>PluginObjects</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Resources\PluginGUI.uidesc">

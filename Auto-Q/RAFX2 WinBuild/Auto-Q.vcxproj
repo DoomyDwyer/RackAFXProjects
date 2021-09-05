@@ -267,8 +267,10 @@
     <ClInclude Include="..\PluginKernel\pluginparameter.h" />
     <ClInclude Include="..\PluginKernel\pluginstructures.h" />
     <ClInclude Include="..\PluginObjects\customfxobjects.h" />
+    <ClInclude Include="..\PluginObjects\debug.h" />
     <ClInclude Include="..\PluginObjects\fxobjects.h" />
     <ClInclude Include="..\PluginObjects\filters.h" />
+    <ClInclude Include="..\PluginObjects\utilities.h" />
     <ClInclude Include="..\RAFX2 Source\RackAFXDLL.h" />
     <ClInclude Include="..\RAFX2 Source\Rafx2Plugin.h" />
     <ClInclude Include="..\RAFX2 Source\Rafx2PluginBase.h" />

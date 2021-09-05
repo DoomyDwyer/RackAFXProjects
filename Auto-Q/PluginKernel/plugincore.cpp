@@ -12,6 +12,7 @@
 // -----------------------------------------------------------------------------
 #include "plugincore.h"
 #include "plugindescription.h"
+#include "utilities.h"
 #pragma warning (disable : 4244)
 
 /**
@@ -237,7 +238,7 @@ bool PluginCore::processAudioFrame(ProcessFrameInfo& processFrameInfo)
 	    }
     }
 
-    return true; /// processed
+	return true; /// processed
 }
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -733,12 +734,6 @@ bool PluginCore::initPluginParameters()
 	piParam->setBoundVariable(&filterOutputGain_dB, boundVariableType::kDouble);
 	addPluginParameter(piParam);
 
-	// --- discrete control: Boost Q
-	piParam = new PluginParameter(controlID::enableGainComp, "Boost Q", "SWITCH OFF,SWITCH ON", "SWITCH OFF");
-	piParam->setBoundVariable(&enableGainComp, boundVariableType::kInt);
-	piParam->setIsDiscreteSwitch(true);
-	addPluginParameter(piParam);
-
 	// --- discrete control: Analog Nyquist
 	piParam = new PluginParameter(controlID::matchAnalogNyquistLPF, "Analog Nyquist", "SWITCH OFF,SWITCH ON", "SWITCH ON");
 	piParam->setBoundVariable(&matchAnalogNyquistLPF, boundVariableType::kInt);
@@ -764,8 +759,14 @@ bool PluginCore::initPluginParameters()
 	addPluginParameter(piParam);
 
 	// --- meter control: Meter
-	piParam = new PluginParameter(controlID::vuMeter, "Meter", 10.00, 500.00, ENVELOPE_DETECT_MODE_RMS, meterCal::kLogMeter);
+	piParam = new PluginParameter(controlID::vuMeter, "Meter", 10.00, 10.00, ENVELOPE_DETECT_MODE_RMS, meterCal::kLinearMeter);
 	piParam->setBoundVariable(&vuMeter, boundVariableType::kFloat);
+	addPluginParameter(piParam);
+
+	// --- discrete control: Boost Q
+	piParam = new PluginParameter(controlID::enableGainComp, "Boost Q", "BOOST Q OFF,BOOST Q ON", "BOOST Q OFF");
+	piParam->setBoundVariable(&enableGainComp, boundVariableType::kInt);
+	piParam->setIsDiscreteSwitch(true);
 	addPluginParameter(piParam);
 
 	// --- Aux Attributes
@@ -812,11 +813,6 @@ bool PluginCore::initPluginParameters()
 	auxAttribute.setUintAttribute(2147483648);
 	setParamAuxAttribute(controlID::filterOutputGain_dB, auxAttribute);
 
-	// --- controlID::enableGainComp
-	auxAttribute.reset(auxGUIIdentifier::guiControlData);
-	auxAttribute.setUintAttribute(1073741824);
-	setParamAuxAttribute(controlID::enableGainComp, auxAttribute);
-
 	// --- controlID::matchAnalogNyquistLPF
 	auxAttribute.reset(auxGUIIdentifier::guiControlData);
 	auxAttribute.setUintAttribute(1073741824);
@@ -841,6 +837,11 @@ bool PluginCore::initPluginParameters()
 	auxAttribute.reset(auxGUIIdentifier::guiControlData);
 	auxAttribute.setUintAttribute(134217728);
 	setParamAuxAttribute(controlID::vuMeter, auxAttribute);
+
+	// --- controlID::enableGainComp
+	auxAttribute.reset(auxGUIIdentifier::guiControlData);
+	auxAttribute.setUintAttribute(805306368);
+	setParamAuxAttribute(controlID::enableGainComp, auxAttribute);
 
 
 	// **--0xEDA5--**
@@ -885,29 +886,29 @@ bool PluginCore::initPluginPresets()
 	setPresetParameter(preset->presetParameters, controlID::threshold_dB, -6.000000);
 	setPresetParameter(preset->presetParameters, controlID::sensitivity, 1.000000);
 	setPresetParameter(preset->presetParameters, controlID::filterOutputGain_dB, 0.000000);
-	setPresetParameter(preset->presetParameters, controlID::enableGainComp, -0.000000);
 	setPresetParameter(preset->presetParameters, controlID::matchAnalogNyquistLPF, 1.000000);
 	setPresetParameter(preset->presetParameters, controlID::selfOscillate, -0.000000);
 	setPresetParameter(preset->presetParameters, controlID::enableNLP, 1.000000);
 	setPresetParameter(preset->presetParameters, controlID::filterType, -0.000000);
+	setPresetParameter(preset->presetParameters, controlID::enableGainComp, -0.000000);
 	addPreset(preset);
 
-	// --- Preset: Default FC Wah
-	preset = new PresetInfo(index++, "Default FC Wah");
+	// --- Preset: Auto-Wah
+	preset = new PresetInfo(index++, "Auto-Wah");
 	initPresetParameters(preset->presetParameters);
 	setPresetParameter(preset->presetParameters, controlID::fx_On, 1.000000);
-	setPresetParameter(preset->presetParameters, controlID::filterFc_Hz, 537.158997);
-	setPresetParameter(preset->presetParameters, controlID::filterQ, 12.186334);
-	setPresetParameter(preset->presetParameters, controlID::attackTime_mSec, 12.529999);
-	setPresetParameter(preset->presetParameters, controlID::releaseTime_mSec, 320.089996);
-	setPresetParameter(preset->presetParameters, controlID::threshold_dB, -6.900001);
-	setPresetParameter(preset->presetParameters, controlID::sensitivity, 0.940160);
-	setPresetParameter(preset->presetParameters, controlID::filterOutputGain_dB, 5.440001);
-	setPresetParameter(preset->presetParameters, controlID::enableGainComp, 1.000000);
+	setPresetParameter(preset->presetParameters, controlID::filterFc_Hz, 554.112549);
+	setPresetParameter(preset->presetParameters, controlID::filterQ, 11.800473);
+	setPresetParameter(preset->presetParameters, controlID::attackTime_mSec, 29.959999);
+	setPresetParameter(preset->presetParameters, controlID::releaseTime_mSec, 310.095032);
+	setPresetParameter(preset->presetParameters, controlID::threshold_dB, -7.000000);
+	setPresetParameter(preset->presetParameters, controlID::sensitivity, 0.849574);
+	setPresetParameter(preset->presetParameters, controlID::filterOutputGain_dB, 9.280001);
 	setPresetParameter(preset->presetParameters, controlID::matchAnalogNyquistLPF, 1.000000);
 	setPresetParameter(preset->presetParameters, controlID::selfOscillate, -0.000000);
 	setPresetParameter(preset->presetParameters, controlID::enableNLP, 1.000000);
 	setPresetParameter(preset->presetParameters, controlID::filterType, -0.000000);
+	setPresetParameter(preset->presetParameters, controlID::enableGainComp, 1.000000);
 	addPreset(preset);
 
 
