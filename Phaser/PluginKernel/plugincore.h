@@ -13,6 +13,7 @@
 #ifndef __pluginCore_h__
 #define __pluginCore_h__
 
+#include "customfxobjects.h"
 #include "fxobjects.h"
 #include "pluginbase.h"
 
@@ -126,7 +127,7 @@ public:
 	// --- END USER VARIABLES AND FUNCTIONS -------------------------------------- //
 
 protected:
-	PhaseShifter phaseShifter[NUM_CHANNELS];
+	Phaser phasers[NUM_CHANNELS];
 	void updateParameters();
 
 private:

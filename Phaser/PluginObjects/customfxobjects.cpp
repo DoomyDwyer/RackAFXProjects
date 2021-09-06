@@ -24,6 +24,9 @@ AutoQEnvelopeFollower::AutoQEnvelopeFollower()
 	detector.setParameters(adParams);
 } /* C-TOR */
 
+AutoQEnvelopeFollower::~AutoQEnvelopeFollower()
+= default; /* D-TOR */
+
 bool AutoQEnvelopeFollower::reset(double _sampleRate)
 {
 	filter.reset(_sampleRate);
@@ -88,7 +91,6 @@ bool AutoQEnvelopeFollower::filterParametersUpdated(const ZVAFilterParameters fi
 		filterParams.selfOscillate != params.selfOscillate;
 }
 
-
 void AutoQEnvelopeFollower::updateFilterParameters(const AutoQEnvelopeFollowerParameters& params)
 {
 	ZVAFilterParameters filterParams = filter.getParameters();
@@ -121,4 +123,119 @@ void AutoQEnvelopeFollower::updateDetectorParameters(const AutoQEnvelopeFollower
 		adParams.releaseTime_mSec = params.releaseTime_mSec;
 		detector.setParameters(adParams);
 	}
+}
+
+filterAlgorithm Phaser::getFilterAlgorithm()
+{
+	return filterAlgorithm::kAPF1; //kAPF1;  // can also use 2nd order
+}
+
+double Phaser::getFilterQ()
+{
+	return 0.707; //0.001;  // use low Q if using 2nd order APFs
+}
+
+Phaser::Phaser()
+{
+	OscillatorParameters lfoparams = lfo.getParameters();
+	lfoparams.waveform = generatorWaveform::kTriangle; // kTriangle LFO for phaser
+	lfo.setParameters(lfoparams);
+
+	AudioFilterParameters params = apfs[0].getParameters();
+	params.algorithm = getFilterAlgorithm();
+	params.Q = getFilterQ();
+
+	for (auto& apf : apfs)
+	{
+		apf.setParameters(params);
+	}
+}
+
+Phaser::~Phaser()
+= default;
+
+bool Phaser::reset(double _sampleRate)
+{
+	// --- reset LFO
+	lfo.reset(_sampleRate);
+
+	// --- reset APFs
+	for (auto& apf : apfs)
+	{
+		apf.reset(_sampleRate);
+	}
+
+	return true;
+}
+
+double Phaser::processAudioSample(double xn)
+{
+	const SignalGenData lfoData = lfo.renderAudioOutput();
+
+	// --- create the bipolar modulator value
+	double lfoValue = lfoData.normalOutput;
+	if (parameters.quadPhaseLFO)
+		lfoValue = lfoData.quadPhaseOutput_pos;
+
+	const double depth = parameters.lfoDepth_Pct / 100.0;
+	const double modulatorValue = lfoValue * depth;
+
+	const PhaserAPFParameters* apfParams = getPhaserAPFParameters();
+	double gammas[PHASER_STAGES];
+	double gamma = 1;
+	for (uint32_t i = 0; i < PHASER_STAGES; i++)
+	{
+		// --- calculate modulated values for each APF; note they have different ranges
+		AudioFilterParameters params = apfs[i].getParameters();
+		params.fc = doBipolarModulation(modulatorValue, apfParams[i].minF, apfParams[i].maxF);
+		apfs[i].setParameters(params);
+
+		// --- calculate gamma values
+		gamma = apfs[PHASER_STAGES - (i + 1)].getG_value() * gamma;
+		gammas[i] = gamma;
+	}
+
+	// --- create combined feedback
+	double Sn = 0;
+	for (uint32_t i = 0; i < PHASER_STAGES; i++)
+	{
+		Sn += i < PHASER_STAGES - 1 ? gammas[PHASER_STAGES - (i+2)] * apfs[i].getS_value() : apfs[i].getS_value();
+	}
+	
+	// --- set the alpha0 value
+	const double K = parameters.intensity_Pct / 100.0;
+	const double alpha0 = 1.0 / (1.0 + K * gamma);
+
+	// --- form input to first APF
+	double apfsOutput = alpha0 * (xn + K * Sn);
+
+	// --- cascade of APFs
+	for (auto& apf : apfs)
+	{
+		apfsOutput = apf.processAudioSample(apfsOutput);
+	}
+
+	// Mix dry & wet signal, based on chosen coefficients
+	const PhaserMixCoeffs mixCoeefs = getPhaserMixCoeffs();
+	const double output = mixCoeefs.dry * xn + mixCoeefs.wet * apfsOutput;
+
+	return output;
+}
+
+bool Phaser::canProcessAudioFrame() { return false; }
+
+PhaserParameters Phaser::getParameters() { return parameters; }
+
+void Phaser::setParameters(const PhaserParameters& params)
+{
+	// --- update LFO rate
+	if (!isFloatEqual(params.lfoRate_Hz, parameters.lfoRate_Hz))
+	{
+		OscillatorParameters lfoparams = lfo.getParameters();
+		lfoparams.frequency_Hz = params.lfoRate_Hz;
+		lfo.setParameters(lfoparams);
+	}
+
+	// --- save new
+	parameters = params;
 }

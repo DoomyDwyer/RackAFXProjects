@@ -10,7 +10,7 @@ Custom parameter structure for the AutoQEnvelopeFollower object.
 \author Steve Dwyer - Adapted from Will Pirkle http://www.willpirkle.com
 \remark This object is based on the EnvelopeFollowerParameters class included in Designing Audio Effects Plugins in C++ 2nd Ed. by Will Pirkle
 \version Revision : 1.0
-\date Date : 2018 / 09 / 7
+\date Date : 2021/ 09 / 06
 */
 struct AutoQEnvelopeFollowerParameters
 {
@@ -61,10 +61,10 @@ struct AutoQEnvelopeFollowerParameters
 };
 
 /**
-\class EnvelopeFollower
+\class AutoQEnvelopeFollower
 \ingroup FX-Objects
 \brief
-The EnvelopeFollower object implements a traditional envelope follower effect modulating a LPR fc value
+The AutoQEnvelopeFollower object implements a traditional envelope follower effect modulating a LPR fc value
 using the strength of the detected input.
 
 Audio I/O:
@@ -73,18 +73,17 @@ Audio I/O:
 Control I/F:
 - Use EnvelopeFollowerParameters structure to get/set object params.
 
-\author Will Pirkle http://www.willpirkle.com
-\remark This object is included in Designing Audio Effects Plugins in C++ 2nd Ed. by Will Pirkle
+\author Steve Dwyer - Adapted from Will Pirkle http://www.willpirkle.com
+\remark This object is based on the EnvelopeFollower class included in Designing Audio Effects Plugins in C++ 2nd Ed. by Will Pirkle
 \version Revision : 1.0
-\date Date : 2018 / 09 / 7
+\date Date : 2021/ 09 / 06
 */
 class AutoQEnvelopeFollower : public IAudioSignalProcessor
 {
 public:
-	AutoQEnvelopeFollower();
+	AutoQEnvelopeFollower(); /* C-TOR */
 
-	virtual ~AutoQEnvelopeFollower()
-	= default; /* D-TOR */
+	virtual ~AutoQEnvelopeFollower(); /* D-TOR */
 
 	/** reset members to initialized state */
 	bool reset(double _sampleRate) override;
@@ -126,4 +125,135 @@ private:
 	virtual bool detectorParametersUpdated(AudioDetectorParameters adParams, const AutoQEnvelopeFollowerParameters& params);
 
 	virtual void updateDetectorParameters(const AutoQEnvelopeFollowerParameters& params);
+};
+
+/**
+\struct PhaserParameters
+\ingroup FX-Objects
+\brief
+Custom parameter structure for the PhaserParameters object.
+
+\author Steve Dwyer - Adapted from Will Pirkle http://www.willpirkle.com
+\remark This object is based on the PhaseShifterParameters class included in Designing Audio Effects Plugins in C++ 2nd Ed. by Will Pirkle
+\version Revision : 1.0
+\date Date : 2021 / 09 / 06
+*/
+struct PhaserParameters
+{
+	PhaserParameters() = default;
+
+	/** all FXObjects parameter objects require overloaded= operator so remember to add new entries if you add new variables. */
+	PhaserParameters& operator=(const PhaserParameters& params)
+	{
+		if (this == &params)
+			return *this;
+
+		lfoRate_Hz = params.lfoRate_Hz;
+		lfoDepth_Pct = params.lfoDepth_Pct;
+		intensity_Pct = params.intensity_Pct;
+		quadPhaseLFO = params.quadPhaseLFO;
+		return *this;
+	}
+
+	// --- individual parameters
+	double lfoRate_Hz = 0.0;	///< phaser LFO rate in Hz
+	double lfoDepth_Pct = 0.0;	///< phaser LFO depth in %
+	double intensity_Pct = 0.0;	///< phaser feedback in %
+	bool quadPhaseLFO = false;	///< quad phase LFO flag
+};
+
+struct PhaserAPFParameters {
+	const double minF;
+	const double maxF;
+};
+
+// --- these are the ideal band definitions
+const PhaserAPFParameters idealPhaserParams[PHASER_STAGES] = {{16.0, 1600.0}, {33.0, 3300.0}, {48.0, 4800.0}, {98.0, 9800.0}, {160.0, 16000.0}, {260.0, 20480.0}};
+
+// --- these are the exact values from the National Semiconductor Phaser design
+const PhaserAPFParameters nsPhaserParams[PHASER_STAGES] = {{32.0, 1500.0}, {68.0, 3400.0}, {96.0, 4800.0}, {212.0, 10000.0}, {320.0, 16000.0}, {636.0, 20480.0}};
+
+inline const PhaserAPFParameters* getPhaserAPFParameters()
+{
+	return nsPhaserParams;
+}
+
+struct PhaserMixCoeffs
+{
+	const double dry;
+	const double wet;
+};
+
+// -3dB coefficients
+const PhaserMixCoeffs min3dBPhaserMixCoeffs = {0.707, 0.707};
+// National Semiconductor design ratio
+const PhaserMixCoeffs nsPhaserMixCoeffs = {0.5, 5.0};
+// Other dry/wet mix coefficients
+const PhaserMixCoeffs idealPhaserMixCoeffs = {0.125, 1.25};
+const PhaserMixCoeffs otherPhaserMixCoeffs = {0.25, 2.5};
+
+inline PhaserMixCoeffs getPhaserMixCoeffs()
+{
+	return idealPhaserMixCoeffs;
+}
+
+/**
+\class Phaser
+\ingroup FX-Objects
+\brief
+The Phaser object implements a six-stage phaser.
+
+Audio I/O:
+- Processes mono input to mono output.
+
+Control I/F:
+- Use BiquadParameters structure to get/set object params.
+Custom parameter structure for the PhaserParameters object.
+
+\author Steve Dwyer - Adapted from Will Pirkle http://www.willpirkle.com
+\remark This object is based on the PhaseShifter class included in Designing Audio Effects Plugins in C++ 2nd Ed. by Will Pirkle
+\version Revision : 1.0
+\date Date : 2021 / 09 / 06
+*/
+class Phaser : public IAudioSignalProcessor
+{
+public:
+	Phaser();	/* C-TOR */
+
+	virtual ~Phaser(); /* D-TOR */
+
+public:
+	/** reset members to initialized state */
+	bool reset(double _sampleRate) override;
+
+	/** get parameters: note use of custom structure for passing param data */
+	/**
+	\return PhaserParameters custom data structure
+	*/
+	virtual PhaserParameters getParameters();
+
+	/** set parameters: note use of custom structure for passing param data */
+	/**
+	\param params custom data structure
+	*/
+	virtual void setParameters(const PhaserParameters& params);
+
+	/** return false: this object only processes samples */
+	bool canProcessAudioFrame() override;
+
+	/** process audio through phaser */
+	/**
+	\param xn input
+	\return the processed sample
+	*/
+	double processAudioSample(double xn) override;
+
+protected:
+	PhaserParameters parameters;  ///< the object parameters
+	AudioFilter apfs[PHASER_STAGES];		///< six APF objects
+	LFO lfo;							///< the one and only LFO
+
+private:
+	static filterAlgorithm getFilterAlgorithm();
+	static double getFilterQ();
 };

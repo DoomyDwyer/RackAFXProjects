@@ -11,6 +11,8 @@
 */
 // -----------------------------------------------------------------------------
 #include "plugincore.h"
+
+#include "customfxobjects.h"
 #include "plugindescription.h"
 #pragma warning (disable : 4244)
 
@@ -56,7 +58,7 @@ PluginCore::PluginCore()
 void PluginCore::updateParameters()
 {
 	// --- Update with GUI parameters
-	PhaseShifterParameters params = phaseShifter[0].getParameters();
+	PhaserParameters params = phasers[0].getParameters();
 	params.lfoRate_Hz = lfoRate_Hz;
 	params.lfoDepth_Pct = lfoDepth_Pct;
 	params.intensity_Pct = intensity_Pct;
@@ -65,7 +67,7 @@ void PluginCore::updateParameters()
 	for (int i = 0; i < NUM_CHANNELS; i++)
 	{
 		params.quadPhaseLFO = i % 2 != 0; // Set quadrature phase on right channel (all odd channels, actually)
-		phaseShifter[i].setParameters(params);
+		phasers[i].setParameters(params);
 	}
 }
 
@@ -87,7 +89,7 @@ bool PluginCore::reset(ResetInfo& resetInfo)
     audioProcDescriptor.bitDepth = resetInfo.bitDepth;
 
 	// --- Reset the filters
-	for (auto& shifter : phaseShifter)
+	for (auto& shifter : phasers)
 	{
 		shifter.reset(resetInfo.sampleRate);
 	}
@@ -209,12 +211,11 @@ bool PluginCore::processAudioFrame(ProcessFrameInfo& processFrameInfo)
 		double xn = processFrameInfo.audioInputFrame[i];
 
 		// --- Process the audio to produce output
-		double yn = phaseShifter[i].processAudioSample(xn);
+		double yn = phasers[i].processAudioSample(xn);
 
 		// --- Write output
 		processFrameInfo.audioOutputFrame[i] = yn;
     }
-
 
     return true; /// processed
 }
