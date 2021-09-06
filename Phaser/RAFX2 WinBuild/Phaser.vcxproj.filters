@@ -63,6 +63,9 @@
     <ClCompile Include="..\PluginObjects\fxobjects.cpp">
       <Filter>PluginObjects</Filter>
     </ClCompile>
+    <ClCompile Include="..\PluginObjects\customfxobjects.cpp">
+      <Filter>PluginObjects</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\RAFX2 Source\RackAFXDLL.h">
@@ -116,8 +119,17 @@
     <ClInclude Include="..\CustomControls\readerwriterqueue.h">
       <Filter>CustomControls</Filter>
     </ClInclude>
+    <ClInclude Include="..\PluginObjects\customfxobjects.h">
+      <Filter>PluginObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\PluginObjects\debug.h">
+      <Filter>PluginObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\PluginObjects\utilities.h">
+      <Filter>PluginObjects</Filter>
+    </ClInclude>
   </ItemGroup>
-  <ItemGroup> 
+  <ItemGroup>
     <None Include="..\Resources\PluginGUI.uidesc">
       <Filter>Resources</Filter>
     </None>
@@ -128,4 +140,3 @@
     </ResourceCompile>
   </ItemGroup>
 </Project>
-
