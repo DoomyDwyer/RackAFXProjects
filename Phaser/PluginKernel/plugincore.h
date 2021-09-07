@@ -24,7 +24,9 @@
 enum controlID {
 	lfoRate_Hz = 0,
 	lfoDepth_Pct = 1,
-	intensity_Pct = 2
+	intensity_Pct = 2,
+	lfoWaveform = 3,
+	quadPhaseLFO = 4
 };
 
 	// **--0x0F1F--**
@@ -138,6 +140,12 @@ private:
 	double lfoDepth_Pct = 0.0;
 	double intensity_Pct = 0.0;
 
+	// --- Discrete Plugin Variables 
+	int lfoWaveform = 0;
+	enum class lfoWaveformEnum { kTriangle,kSin,kSaw };	// to compare: if(compareEnumToInt(lfoWaveformEnum::kTriangle, lfoWaveform)) etc... 
+
+	int quadPhaseLFO = 0;
+	enum class quadPhaseLFOEnum { SWITCH_OFF,SWITCH_ON };	// to compare: if(compareEnumToInt(quadPhaseLFOEnum::SWITCH_OFF, quadPhaseLFO)) etc... 
 
 	// **--0x1A7F--**
     // --- end member variables

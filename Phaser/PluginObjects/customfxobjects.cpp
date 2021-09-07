@@ -124,6 +124,15 @@ void AutoQEnvelopeFollower::updateDetectorParameters(const AutoQEnvelopeFollower
 		detector.setParameters(adParams);
 	}
 }
+const PhaserAPFParameters* Phaser::getPhaserApfParameters()
+{
+	return nsPhaserParams;
+}
+
+PhaserMixCoeffs Phaser::getPhaserMixCoeffs()
+{
+	return idealPhaserMixCoeffs;
+}
 
 filterAlgorithm Phaser::getFilterAlgorithm()
 {
@@ -180,7 +189,7 @@ double Phaser::processAudioSample(double xn)
 	const double depth = parameters.lfoDepth_Pct / 100.0;
 	const double modulatorValue = lfoValue * depth;
 
-	const PhaserAPFParameters* apfParams = getPhaserAPFParameters();
+	const PhaserAPFParameters* apfParams = getPhaserApfParameters();
 	double gammas[PHASER_STAGES];
 	double gamma = 1;
 	for (uint32_t i = 0; i < PHASER_STAGES; i++)
@@ -226,16 +235,29 @@ bool Phaser::canProcessAudioFrame() { return false; }
 
 PhaserParameters Phaser::getParameters() { return parameters; }
 
-void Phaser::setParameters(const PhaserParameters& params)
+
+bool Phaser::parametersUpdated(const OscillatorParameters lfoparams, const PhaserParameters& params)
 {
-	// --- update LFO rate
-	if (!isFloatEqual(params.lfoRate_Hz, parameters.lfoRate_Hz))
+	return !isFloatEqual(lfoparams.frequency_Hz, params.lfoRate_Hz) ||
+		lfoparams.waveform != params.lfoWaveform;
+}
+
+void Phaser::updateParameters(const PhaserParameters& params)
+{
+	OscillatorParameters lfoparams = lfo.getParameters();
+
+	if (parametersUpdated(lfoparams, params))
 	{
-		OscillatorParameters lfoparams = lfo.getParameters();
+		lfoparams.waveform = params.lfoWaveform;
 		lfoparams.frequency_Hz = params.lfoRate_Hz;
 		lfo.setParameters(lfoparams);
 	}
+}
 
-	// --- save new
+void Phaser::setParameters(const PhaserParameters& params)
+{
+	// --- update LFO waveform & rate
+	updateParameters(params);
+	// --- save
 	parameters = params;
 }

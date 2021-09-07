@@ -148,6 +148,7 @@ struct PhaserParameters
 		if (this == &params)
 			return *this;
 
+		lfoWaveform = params.lfoWaveform;
 		lfoRate_Hz = params.lfoRate_Hz;
 		lfoDepth_Pct = params.lfoDepth_Pct;
 		intensity_Pct = params.intensity_Pct;
@@ -156,6 +157,7 @@ struct PhaserParameters
 	}
 
 	// --- individual parameters
+	generatorWaveform lfoWaveform = generatorWaveform::kTriangle;
 	double lfoRate_Hz = 0.0;	///< phaser LFO rate in Hz
 	double lfoDepth_Pct = 0.0;	///< phaser LFO depth in %
 	double intensity_Pct = 0.0;	///< phaser feedback in %
@@ -167,35 +169,11 @@ struct PhaserAPFParameters {
 	const double maxF;
 };
 
-// --- these are the ideal band definitions
-const PhaserAPFParameters idealPhaserParams[PHASER_STAGES] = {{16.0, 1600.0}, {33.0, 3300.0}, {48.0, 4800.0}, {98.0, 9800.0}, {160.0, 16000.0}, {260.0, 20480.0}};
-
-// --- these are the exact values from the National Semiconductor Phaser design
-const PhaserAPFParameters nsPhaserParams[PHASER_STAGES] = {{32.0, 1500.0}, {68.0, 3400.0}, {96.0, 4800.0}, {212.0, 10000.0}, {320.0, 16000.0}, {636.0, 20480.0}};
-
-inline const PhaserAPFParameters* getPhaserAPFParameters()
-{
-	return nsPhaserParams;
-}
-
 struct PhaserMixCoeffs
 {
 	const double dry;
 	const double wet;
 };
-
-// -3dB coefficients
-const PhaserMixCoeffs min3dBPhaserMixCoeffs = {0.707, 0.707};
-// National Semiconductor design ratio
-const PhaserMixCoeffs nsPhaserMixCoeffs = {0.5, 5.0};
-// Other dry/wet mix coefficients
-const PhaserMixCoeffs idealPhaserMixCoeffs = {0.125, 1.25};
-const PhaserMixCoeffs otherPhaserMixCoeffs = {0.25, 2.5};
-
-inline PhaserMixCoeffs getPhaserMixCoeffs()
-{
-	return idealPhaserMixCoeffs;
-}
 
 /**
 \class Phaser
@@ -254,6 +232,29 @@ protected:
 	LFO lfo;							///< the one and only LFO
 
 private:
+	// --- these are the ideal band definitions
+	const PhaserAPFParameters idealPhaserParams[PHASER_STAGES] = {{16.0, 1600.0}, {33.0, 3300.0}, {48.0, 4800.0}, {98.0, 9800.0}, {160.0, 16000.0}, {260.0, 20480.0}};
+
+	// --- these are the exact values from the National Semiconductor Phaser design
+	const PhaserAPFParameters nsPhaserParams[PHASER_STAGES] = {{32.0, 1500.0}, {68.0, 3400.0}, {96.0, 4800.0}, {212.0, 10000.0}, {320.0, 16000.0}, {636.0, 20480.0}};
+
+	// -3dB coefficients
+	const PhaserMixCoeffs min3dBPhaserMixCoeffs = {0.707, 0.707};
+	// National Semiconductor design ratio
+	const PhaserMixCoeffs nsPhaserMixCoeffs = {0.5, 5.0};
+	// Other dry/wet mix coefficients
+	const PhaserMixCoeffs idealPhaserMixCoeffs = {0.125, 1.25};
+	const PhaserMixCoeffs otherPhaserMixCoeffs = {0.25, 2.5};
+
 	static filterAlgorithm getFilterAlgorithm();
+
 	static double getFilterQ();
+
+	virtual bool parametersUpdated(OscillatorParameters lfoparams, const PhaserParameters& params);
+
+	virtual void updateParameters(const PhaserParameters& params);
+
+	virtual const PhaserAPFParameters* getPhaserApfParameters();
+
+	virtual PhaserMixCoeffs getPhaserMixCoeffs();
 };

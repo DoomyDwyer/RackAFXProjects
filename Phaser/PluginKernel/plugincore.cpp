@@ -59,14 +59,16 @@ void PluginCore::updateParameters()
 {
 	// --- Update with GUI parameters
 	PhaserParameters params = phasers[0].getParameters();
+	params.lfoWaveform = convertIntToEnum(lfoWaveform, generatorWaveform);
 	params.lfoRate_Hz = lfoRate_Hz;
 	params.lfoDepth_Pct = lfoDepth_Pct;
 	params.intensity_Pct = intensity_Pct;
 
 	// --- Update
-	for (int i = 0; i < NUM_CHANNELS; i++)
+	for (unsigned int i = 0; i < NUM_CHANNELS; i++)
 	{
-		params.quadPhaseLFO = i % 2 != 0; // Set quadrature phase on right channel (all odd channels, actually)
+		// Set quadrature phase on right channel (all odd channels, actually) when switch is on
+		params.quadPhaseLFO = quadPhaseLFO && i % 2 != 0;
 		phasers[i].setParameters(params);
 	}
 }
@@ -89,9 +91,9 @@ bool PluginCore::reset(ResetInfo& resetInfo)
     audioProcDescriptor.bitDepth = resetInfo.bitDepth;
 
 	// --- Reset the filters
-	for (auto& shifter : phasers)
+	for (auto& phaser : phasers)
 	{
-		shifter.reset(resetInfo.sampleRate);
+		phaser.reset(resetInfo.sampleRate);
 	}
 	
     // --- other reset inits
@@ -679,6 +681,18 @@ bool PluginCore::initPluginParameters()
 	piParam->setBoundVariable(&intensity_Pct, boundVariableType::kDouble);
 	addPluginParameter(piParam);
 
+	// --- discrete control: LFO
+	piParam = new PluginParameter(controlID::lfoWaveform, "LFO", "kTriangle,kSin,kSaw", "kTriangle");
+	piParam->setBoundVariable(&lfoWaveform, boundVariableType::kInt);
+	piParam->setIsDiscreteSwitch(true);
+	addPluginParameter(piParam);
+
+	// --- discrete control: Stereo
+	piParam = new PluginParameter(controlID::quadPhaseLFO, "Stereo", "SWITCH OFF,SWITCH ON", "SWITCH OFF");
+	piParam->setBoundVariable(&quadPhaseLFO, boundVariableType::kInt);
+	piParam->setIsDiscreteSwitch(true);
+	addPluginParameter(piParam);
+
 	// --- Aux Attributes
 	AuxParameterAttribute auxAttribute;
 
@@ -697,6 +711,16 @@ bool PluginCore::initPluginParameters()
 	auxAttribute.reset(auxGUIIdentifier::guiControlData);
 	auxAttribute.setUintAttribute(2147483648);
 	setParamAuxAttribute(controlID::intensity_Pct, auxAttribute);
+
+	// --- controlID::lfoWaveform
+	auxAttribute.reset(auxGUIIdentifier::guiControlData);
+	auxAttribute.setUintAttribute(805306368);
+	setParamAuxAttribute(controlID::lfoWaveform, auxAttribute);
+
+	// --- controlID::quadPhaseLFO
+	auxAttribute.reset(auxGUIIdentifier::guiControlData);
+	auxAttribute.setUintAttribute(1073741824);
+	setParamAuxAttribute(controlID::quadPhaseLFO, auxAttribute);
 
 
 	// **--0xEDA5--**
@@ -736,6 +760,8 @@ bool PluginCore::initPluginPresets()
 	setPresetParameter(preset->presetParameters, controlID::lfoRate_Hz, 0.200000);
 	setPresetParameter(preset->presetParameters, controlID::lfoDepth_Pct, 50.000000);
 	setPresetParameter(preset->presetParameters, controlID::intensity_Pct, 75.000000);
+	setPresetParameter(preset->presetParameters, controlID::lfoWaveform, -0.000000);
+	setPresetParameter(preset->presetParameters, controlID::quadPhaseLFO, -0.000000);
 	addPreset(preset);
 
 
