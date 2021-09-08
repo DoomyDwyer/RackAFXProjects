@@ -26,7 +26,8 @@ enum controlID {
 	lfoDepth_Pct = 1,
 	intensity_Pct = 2,
 	lfoWaveform = 3,
-	quadPhaseLFO = 4
+	quadPhaseLFO = 4,
+	fx_On = 5
 };
 
 	// **--0x0F1F--**
@@ -146,6 +147,9 @@ private:
 
 	int quadPhaseLFO = 0;
 	enum class quadPhaseLFOEnum { SWITCH_OFF,SWITCH_ON };	// to compare: if(compareEnumToInt(quadPhaseLFOEnum::SWITCH_OFF, quadPhaseLFO)) etc... 
+
+	int fx_On = 0;
+	enum class fx_OnEnum { SWITCH_OFF,SWITCH_ON };	// to compare: if(compareEnumToInt(fx_OnEnum::SWITCH_OFF, fx_On)) etc... 
 
 	// **--0x1A7F--**
     // --- end member variables

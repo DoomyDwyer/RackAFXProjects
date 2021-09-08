@@ -209,14 +209,22 @@ bool PluginCore::processAudioFrame(ProcessFrameInfo& processFrameInfo)
     // --- FX Plugin:
 	for (unsigned int i = 0; i < NUM_CHANNELS; i++)
     {
-	    // --- Read input
-		double xn = processFrameInfo.audioInputFrame[i];
+	    if (fx_On)
+	    {
+		    // --- Read input
+			double xn = processFrameInfo.audioInputFrame[i];
 
-		// --- Process the audio to produce output
-		double yn = phasers[i].processAudioSample(xn);
+			// --- Process the audio to produce output
+			double yn = phasers[i].processAudioSample(xn);
 
-		// --- Write output
-		processFrameInfo.audioOutputFrame[i] = yn;
+			// --- Write output
+			processFrameInfo.audioOutputFrame[i] = yn;
+	    }
+	    else
+	    {
+		    // Bypass
+		    processFrameInfo.audioOutputFrame[i] = processFrameInfo.audioInputFrame[i];
+	    }
     }
 
     return true; /// processed
@@ -693,6 +701,12 @@ bool PluginCore::initPluginParameters()
 	piParam->setIsDiscreteSwitch(true);
 	addPluginParameter(piParam);
 
+	// --- discrete control: On
+	piParam = new PluginParameter(controlID::fx_On, "On", "SWITCH OFF,SWITCH ON", "SWITCH OFF");
+	piParam->setBoundVariable(&fx_On, boundVariableType::kInt);
+	piParam->setIsDiscreteSwitch(true);
+	addPluginParameter(piParam);
+
 	// --- Aux Attributes
 	AuxParameterAttribute auxAttribute;
 
@@ -721,6 +735,11 @@ bool PluginCore::initPluginParameters()
 	auxAttribute.reset(auxGUIIdentifier::guiControlData);
 	auxAttribute.setUintAttribute(1073741824);
 	setParamAuxAttribute(controlID::quadPhaseLFO, auxAttribute);
+
+	// --- controlID::fx_On
+	auxAttribute.reset(auxGUIIdentifier::guiControlData);
+	auxAttribute.setUintAttribute(1073741824);
+	setParamAuxAttribute(controlID::fx_On, auxAttribute);
 
 
 	// **--0xEDA5--**
@@ -762,6 +781,7 @@ bool PluginCore::initPluginPresets()
 	setPresetParameter(preset->presetParameters, controlID::intensity_Pct, 75.000000);
 	setPresetParameter(preset->presetParameters, controlID::lfoWaveform, -0.000000);
 	setPresetParameter(preset->presetParameters, controlID::quadPhaseLFO, -0.000000);
+	setPresetParameter(preset->presetParameters, controlID::fx_On, -0.000000);
 	addPreset(preset);
 
 
