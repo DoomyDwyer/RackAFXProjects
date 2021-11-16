@@ -14,58 +14,58 @@ Custom parameter structure for the AutoQEnvelopeFollower object.
 */
 struct AutoQEnvelopeFollowerParameters
 {
-	AutoQEnvelopeFollowerParameters() = default;
-	~AutoQEnvelopeFollowerParameters() = default;
-	
-	// Explicitly use default copy constructor
-	AutoQEnvelopeFollowerParameters(const AutoQEnvelopeFollowerParameters&) = default;
+    AutoQEnvelopeFollowerParameters() = default;
+    ~AutoQEnvelopeFollowerParameters() = default;
 
-	// Copy assignment operator
-	/** all FXObjects parameter objects require overloaded= operator so remember to add new entries if you add new variables. */
-	AutoQEnvelopeFollowerParameters& operator=(const AutoQEnvelopeFollowerParameters& params)
-	// need this override for collections to work
-	{
-		if (this == &params)
-			return *this;
+    // Explicitly use default copy constructor
+    AutoQEnvelopeFollowerParameters(const AutoQEnvelopeFollowerParameters&) = default;
 
-		// Filter parameters
-		filterAlgorithm = params.filterAlgorithm;
-		fc = params.fc;
-		Q = params.Q;
-		filterOutputGain_dB = params.filterOutputGain_dB;
-		enableGainComp = params.enableGainComp;
-		matchAnalogNyquistLPF = params.matchAnalogNyquistLPF;
-		selfOscillate = params.selfOscillate;
-		enableNLP = params.enableNLP;
+    // Copy assignment operator
+    /** all FXObjects parameter objects require overloaded= operator so remember to add new entries if you add new variables. */
+    AutoQEnvelopeFollowerParameters& operator=(const AutoQEnvelopeFollowerParameters& params)
+    // need this override for collections to work
+    {
+        if (this == &params)
+            return *this;
 
-		// Detector parameters
-		attackTime_mSec = params.attackTime_mSec;
-		releaseTime_mSec = params.releaseTime_mSec;
-		threshold_dB = params.threshold_dB;
-		sensitivity = params.sensitivity;
+        // Filter parameters
+        filterAlgorithm = params.filterAlgorithm;
+        fc = params.fc;
+        Q = params.Q;
+        filterOutputGain_dB = params.filterOutputGain_dB;
+        enableGainComp = params.enableGainComp;
+        matchAnalogNyquistLPF = params.matchAnalogNyquistLPF;
+        selfOscillate = params.selfOscillate;
+        enableNLP = params.enableNLP;
 
-		return *this;
-	}
+        // Detector parameters
+        attackTime_mSec = params.attackTime_mSec;
+        releaseTime_mSec = params.releaseTime_mSec;
+        threshold_dB = params.threshold_dB;
+        sensitivity = params.sensitivity;
 
-	// Suppress generation of move constructor and move assignment operator
-	AutoQEnvelopeFollowerParameters(const AutoQEnvelopeFollowerParameters&&) = delete;
-	AutoQEnvelopeFollowerParameters& operator=(const AutoQEnvelopeFollowerParameters&&) = delete;
+        return *this;
+    }
 
-	// Filter parameters
-	vaFilterAlgorithm filterAlgorithm = vaFilterAlgorithm::kSVF_LP; ///< va filter algorithm
-	double fc = 1000.0; ///< va filter fc
-	double Q = 0.707; ///< va filter Q
-	double filterOutputGain_dB = 0.0; ///< va filter gain (normally unused)
-	bool enableGainComp = false; ///< enable gain compensation (see book)
-	bool matchAnalogNyquistLPF = true; ///< match analog gain at Nyquist
-	bool selfOscillate = false; ///< enable selfOscillation
-	bool enableNLP = true; ///< enable non linear processing (use oversampling for best results)
+    // Suppress generation of move constructor and move assignment operator
+    AutoQEnvelopeFollowerParameters(const AutoQEnvelopeFollowerParameters&&) = delete;
+    AutoQEnvelopeFollowerParameters& operator=(const AutoQEnvelopeFollowerParameters&&) = delete;
 
-	// Detector parameters
-	double attackTime_mSec = 20.0; ///< detector attack time
-	double releaseTime_mSec = 500.0; ///< detector release time
-	double threshold_dB = -6.0; ///< detector threshold in dB
-	double sensitivity = 1.0; ///< detector sensitivity
+    // Filter parameters
+    vaFilterAlgorithm filterAlgorithm = vaFilterAlgorithm::kSVF_LP; ///< va filter algorithm
+    double fc = 1000.0; ///< va filter fc
+    double Q = 0.707; ///< va filter Q
+    double filterOutputGain_dB = 0.0; ///< va filter gain (normally unused)
+    bool enableGainComp = false; ///< enable gain compensation (see book)
+    bool matchAnalogNyquistLPF = true; ///< match analog gain at Nyquist
+    bool selfOscillate = false; ///< enable selfOscillation
+    bool enableNLP = true; ///< enable non linear processing (use oversampling for best results)
+
+    // Detector parameters
+    double attackTime_mSec = 20.0; ///< detector attack time
+    double releaseTime_mSec = 500.0; ///< detector release time
+    double threshold_dB = -6.0; ///< detector threshold in dB
+    double sensitivity = 1.0; ///< detector sensitivity
 };
 
 /**
@@ -89,57 +89,59 @@ Control I/F:
 class AutoQEnvelopeFollower : public IAudioSignalProcessor
 {
 public:
-	AutoQEnvelopeFollower(); /* C-TOR */
-	virtual ~AutoQEnvelopeFollower(); /* D-TOR */
+    AutoQEnvelopeFollower(); /* C-TOR */
+    virtual ~AutoQEnvelopeFollower(); /* D-TOR */
 
-	// Suppress generation of copy constructor and copy assignment operator
-	AutoQEnvelopeFollower(const AutoQEnvelopeFollower&) = delete;
-	AutoQEnvelopeFollower& operator=(const AutoQEnvelopeFollower&) = delete;
+    // Suppress generation of copy constructor and copy assignment operator
+    AutoQEnvelopeFollower(const AutoQEnvelopeFollower&) = delete;
+    AutoQEnvelopeFollower& operator=(const AutoQEnvelopeFollower&) = delete;
 
-	// Suppress generation of move constructor and move assignment operator
-	AutoQEnvelopeFollower(const AutoQEnvelopeFollower&&) = delete;
-	AutoQEnvelopeFollower& operator=(const AutoQEnvelopeFollower&&) = delete;
+    // Suppress generation of move constructor and move assignment operator
+    AutoQEnvelopeFollower(const AutoQEnvelopeFollower&&) = delete;
+    AutoQEnvelopeFollower& operator=(const AutoQEnvelopeFollower&&) = delete;
 
-	/** reset members to initialized state */
-	bool reset(double _sampleRate) override;
+    /** reset members to initialized state */
+    bool reset(double _sampleRate) override;
 
-	/** get parameters: note use of custom structure for passing param data */
-	/**
-	\return EnvelopeFollowerParameters custom data structure
-	*/
-	virtual AutoQEnvelopeFollowerParameters getParameters();
+    /** get parameters: note use of custom structure for passing param data */
+    /**
+    \return EnvelopeFollowerParameters custom data structure
+    */
+    virtual AutoQEnvelopeFollowerParameters getParameters();
 
-	/** set parameters: note use of custom structure for passing param data */
-	/**
-	\param params custom data structure
-	*/
-	virtual void setParameters(const AutoQEnvelopeFollowerParameters& params);
+    /** set parameters: note use of custom structure for passing param data */
+    /**
+    \param params custom data structure
+    */
+    virtual void setParameters(const AutoQEnvelopeFollowerParameters& params);
 
-	/** return false: this object only processes samples */
-	bool canProcessAudioFrame() override;
+    /** return false: this object only processes samples */
+    bool canProcessAudioFrame() override;
 
-	/** process input x(n) through the envelope follower to produce return value y(n) */
-	/**
-	\param xn input
-	\return the processed sample
-	*/
-	double processAudioSample(double xn) override;
+    /** process input x(n) through the envelope follower to produce return value y(n) */
+    /**
+    \param xn input
+    \return the processed sample
+    */
+    double processAudioSample(double xn) override;
 
 protected:
-	AutoQEnvelopeFollowerParameters parameters; ///< object parameters
+    AutoQEnvelopeFollowerParameters parameters; ///< object parameters
 
-	// --- 1 filter and 1 detector
-	ZVAFilter filter; ///< filter to modulate
-	AudioDetector detector; ///< detector to track input signal
+    // --- 1 filter and 1 detector
+    ZVAFilter filter; ///< filter to modulate
+    AudioDetector detector; ///< detector to track input signal
 
 private:
-	virtual bool filterParametersUpdated(ZVAFilterParameters filterParams, const AutoQEnvelopeFollowerParameters& params);
+    virtual bool filterParametersUpdated(ZVAFilterParameters filterParams,
+                                         const AutoQEnvelopeFollowerParameters& params);
 
-	virtual void updateFilterParameters(const AutoQEnvelopeFollowerParameters& params);
+    virtual void updateFilterParameters(const AutoQEnvelopeFollowerParameters& params);
 
-	virtual bool detectorParametersUpdated(AudioDetectorParameters adParams, const AutoQEnvelopeFollowerParameters& params);
+    virtual bool detectorParametersUpdated(AudioDetectorParameters adParams,
+                                           const AutoQEnvelopeFollowerParameters& params);
 
-	virtual void updateDetectorParameters(const AutoQEnvelopeFollowerParameters& params);
+    virtual void updateDetectorParameters(const AutoQEnvelopeFollowerParameters& params);
 };
 
 /**
@@ -155,57 +157,57 @@ Custom parameter structure for the PhaserParameters object.
 */
 struct PhaserParameters
 {
-	PhaserParameters() = default;
-	~PhaserParameters() = default;
+    PhaserParameters() = default;
+    ~PhaserParameters() = default;
 
-	// Explicitly use default copy constructor
-	PhaserParameters(const PhaserParameters&) = default;
+    // Explicitly use default copy constructor
+    PhaserParameters(const PhaserParameters&) = default;
 
-	// Copy assignment operator
-	/** all FXObjects parameter objects require overloaded= operator so remember to add new entries if you add new variables. */
-	PhaserParameters& operator=(const PhaserParameters& params)
-	{
-		if (this == &params)
-			return *this;
+    // Copy assignment operator
+    /** all FXObjects parameter objects require overloaded= operator so remember to add new entries if you add new variables. */
+    PhaserParameters& operator=(const PhaserParameters& params)
+    {
+        if (this == &params)
+            return *this;
 
-		lfoWaveform = params.lfoWaveform;
-		lfoRate_Hz = params.lfoRate_Hz;
-		lfoDepth_Pct = params.lfoDepth_Pct;
-		intensity_Pct = params.intensity_Pct;
-		quadPhaseLFO = params.quadPhaseLFO;
-		return *this;
-	}
+        lfoWaveform = params.lfoWaveform;
+        lfoRate_Hz = params.lfoRate_Hz;
+        lfoDepth_Pct = params.lfoDepth_Pct;
+        intensity_Pct = params.intensity_Pct;
+        quadPhaseLFO = params.quadPhaseLFO;
+        return *this;
+    }
 
-	PhaserParameters(const PhaserParameters&& params) noexcept
-		: lfoWaveform{params.lfoWaveform},
-		  lfoRate_Hz{params.lfoRate_Hz},
-		  lfoDepth_Pct{params.lfoDepth_Pct},
-		  intensity_Pct{params.intensity_Pct},
-		  quadPhaseLFO{params.quadPhaseLFO}
-	{
-	}
+    PhaserParameters(const PhaserParameters&& params) noexcept
+        : lfoWaveform{params.lfoWaveform},
+          lfoRate_Hz{params.lfoRate_Hz},
+          lfoDepth_Pct{params.lfoDepth_Pct},
+          intensity_Pct{params.intensity_Pct},
+          quadPhaseLFO{params.quadPhaseLFO}
+    {
+    }
 
-	// Suppress generation of move assignment operator
-	PhaserParameters& operator=(const PhaserParameters&&) = delete;
+    // Suppress generation of move assignment operator
+    PhaserParameters& operator=(const PhaserParameters&&) = delete;
 
-	// --- individual parameters
-	generatorWaveform lfoWaveform = generatorWaveform::kTriangle;
-	double lfoRate_Hz = 0.0;	///< phaser LFO rate in Hz
-	double lfoDepth_Pct = 0.0;	///< phaser LFO depth in %
-	double intensity_Pct = 0.0;	///< phaser feedback in %
-	bool quadPhaseLFO = false;	///< quad phase LFO flag
+    // --- individual parameters
+    generatorWaveform lfoWaveform = generatorWaveform::kTriangle;
+    double lfoRate_Hz = 0.0; ///< phaser LFO rate in Hz
+    double lfoDepth_Pct = 0.0; ///< phaser LFO depth in %
+    double intensity_Pct = 0.0; ///< phaser feedback in %
+    bool quadPhaseLFO = false; ///< quad phase LFO flag
 };
 
 struct PhaserApfParameters
 {
-	const double minF;
-	const double maxF;
+    const double minF;
+    const double maxF;
 };
 
 struct PhaserMixCoeffs
 {
-	const double dry;
-	const double wet;
+    const double dry;
+    const double wet;
 };
 
 /**
@@ -229,73 +231,77 @@ Custom parameter structure for the PhaserParameters object.
 class Phaser : public IAudioSignalProcessor
 {
 public:
-	Phaser();	/* C-TOR */
-	virtual ~Phaser(); /* D-TOR */
+    Phaser(); /* C-TOR */
+    virtual ~Phaser(); /* D-TOR */
 
-	// Suppress generation of copy constructor and copy assignment operator
-	Phaser(const Phaser&) = delete;
-	Phaser& operator=(const Phaser&) = delete;
+    // Suppress generation of copy constructor and copy assignment operator
+    Phaser(const Phaser&) = delete;
+    Phaser& operator=(const Phaser&) = delete;
 
-	// Suppress generation of move constructor and move assignment operator
-	Phaser(const Phaser&&) = delete;
-	Phaser& operator=(const Phaser&&) = delete;
+    // Suppress generation of move constructor and move assignment operator
+    Phaser(const Phaser&&) = delete;
+    Phaser& operator=(const Phaser&&) = delete;
 
-	/** reset members to initialized state */
-	bool reset(double _sampleRate) override;
+    /** reset members to initialized state */
+    bool reset(double _sampleRate) override;
 
-	/** get parameters: note use of custom structure for passing param data */
-	/**
-	\return PhaserParameters custom data structure
-	*/
-	virtual PhaserParameters getParameters();
+    /** get parameters: note use of custom structure for passing param data */
+    /**
+    \return PhaserParameters custom data structure
+    */
+    virtual PhaserParameters getParameters();
 
-	/** set parameters: note use of custom structure for passing param data */
-	/**
-	\param params custom data structure
-	*/
-	virtual void setParameters(const PhaserParameters& params);
+    /** set parameters: note use of custom structure for passing param data */
+    /**
+    \param params custom data structure
+    */
+    virtual void setParameters(const PhaserParameters& params);
 
-	/** return false: this object only processes samples */
-	bool canProcessAudioFrame() override;
+    /** return false: this object only processes samples */
+    bool canProcessAudioFrame() override;
 
-	/** process audio through phaser */
-	/**
-	\param xn input
-	\return the processed sample
-	*/
-	double processAudioSample(double xn) override;
+    /** process audio through phaser */
+    /**
+    \param xn input
+    \return the processed sample
+    */
+    double processAudioSample(double xn) override;
 
 protected:
-	PhaserParameters parameters;  ///< the object parameters
-	AudioFilter apfs[PHASER_STAGES];		///< six APF objects
-	LFO lfo;							///< the one and only LFO
+    PhaserParameters parameters; ///< the object parameters
+    AudioFilter apfs[PHASER_STAGES]; ///< six APF objects
+    LFO lfo; ///< the one and only LFO
 
 private:
-	// --- these are the ideal band definitions
-	const PhaserApfParameters idealPhaserParams[PHASER_STAGES] = {{16.0, 1600.0}, {33.0, 3300.0}, {48.0, 4800.0}, {98.0, 9800.0}, {160.0, 16000.0}, {260.0, 20480.0}};
+    // --- these are the ideal band definitions
+    const PhaserApfParameters idealPhaserParams[PHASER_STAGES] = {
+        {16.0, 1600.0}, {33.0, 3300.0}, {48.0, 4800.0}, {98.0, 9800.0}, {160.0, 16000.0}, {260.0, 20480.0}
+    };
 
-	// --- these are the exact values from the National Semiconductor Phaser design
-	const PhaserApfParameters nsPhaserParams[PHASER_STAGES] = {{32.0, 1500.0}, {68.0, 3400.0}, {96.0, 4800.0}, {212.0, 10000.0}, {320.0, 16000.0}, {636.0, 20480.0}};
+    // --- these are the exact values from the National Semiconductor Phaser design
+    const PhaserApfParameters nsPhaserParams[PHASER_STAGES] = {
+        {32.0, 1500.0}, {68.0, 3400.0}, {96.0, 4800.0}, {212.0, 10000.0}, {320.0, 16000.0}, {636.0, 20480.0}
+    };
 
-	// -3dB coefficients
-	const PhaserMixCoeffs min3dBPhaserMixCoeffs = {0.707, 0.707};
-	// National Semiconductor design ratio
-	const PhaserMixCoeffs nsPhaserMixCoeffs = {0.5, 5.0};
-	// Other dry/wet mix coefficients
-	const PhaserMixCoeffs idealPhaserMixCoeffs = {0.125, 1.25};
-	const PhaserMixCoeffs otherPhaserMixCoeffs = {0.25, 2.5};
+    // -3dB coefficients
+    const PhaserMixCoeffs min3dBPhaserMixCoeffs = {0.707, 0.707};
+    // National Semiconductor design ratio
+    const PhaserMixCoeffs nsPhaserMixCoeffs = {0.5, 5.0};
+    // Other dry/wet mix coefficients
+    const PhaserMixCoeffs idealPhaserMixCoeffs = {0.125, 1.25};
+    const PhaserMixCoeffs otherPhaserMixCoeffs = {0.25, 2.5};
 
-	static filterAlgorithm getFilterAlgorithm();
+    static filterAlgorithm getFilterAlgorithm();
 
-	static double getFilterQ();
+    static double getFilterQ();
 
-	virtual bool parametersUpdated(OscillatorParameters lfoparams, const PhaserParameters& params);
+    virtual bool parametersUpdated(OscillatorParameters lfoparams, const PhaserParameters& params);
 
-	virtual void updateParameters(const PhaserParameters& params);
+    virtual void updateParameters(const PhaserParameters& params);
 
-	virtual const PhaserApfParameters* getPhaserApfParameters();
+    virtual const PhaserApfParameters* getPhaserApfParameters();
 
-	virtual PhaserMixCoeffs getPhaserMixCoeffs();
+    virtual PhaserMixCoeffs getPhaserMixCoeffs();
 };
 
 /**
@@ -311,62 +317,62 @@ Custom parameter structure for the DigitalDelay object.
 */
 struct DigitalDelayParameters
 {
-	DigitalDelayParameters() = default;
-	~DigitalDelayParameters() = default;
-	
-	// Explicitly use default copy constructor
-	DigitalDelayParameters(const DigitalDelayParameters&) = default;
+    DigitalDelayParameters() = default;
+    ~DigitalDelayParameters() = default;
 
-	// Copy assignment operator
-	/** all FXObjects parameter objects require overloaded= operator so remember to add new entries if you add new variables. */
-	DigitalDelayParameters& operator=(const DigitalDelayParameters& params)
-	// need this override for collections to work
-	{
-		if (this == &params)
-			return *this;
+    // Explicitly use default copy constructor
+    DigitalDelayParameters(const DigitalDelayParameters&) = default;
 
-		algorithm = params.algorithm;
-		mix = params.mix;
-		Level_dB = params.Level_dB;
-		feedback_Pct = params.feedback_Pct;
+    // Copy assignment operator
+    /** all FXObjects parameter objects require overloaded= operator so remember to add new entries if you add new variables. */
+    DigitalDelayParameters& operator=(const DigitalDelayParameters& params)
+    // need this override for collections to work
+    {
+        if (this == &params)
+            return *this;
 
-		updateType = params.updateType;
-		leftDelay_mSec = params.leftDelay_mSec;
-		rightDelay_mSec = params.rightDelay_mSec;
-		delayRatio_Pct = params.delayRatio_Pct;
-		emulateAnalog = params.emulateAnalog;
+        algorithm = params.algorithm;
+        mix = params.mix;
+        Level_dB = params.Level_dB;
+        feedback_Pct = params.feedback_Pct;
 
-		return *this;
-	}
+        updateType = params.updateType;
+        leftDelay_mSec = params.leftDelay_mSec;
+        rightDelay_mSec = params.rightDelay_mSec;
+        delayRatio_Pct = params.delayRatio_Pct;
+        emulateAnalog = params.emulateAnalog;
 
-	// Suppress generation of move constructor and move assignment operator
-	DigitalDelayParameters(const DigitalDelayParameters&& params) noexcept
-		: algorithm{params.algorithm},
-		  mix{params.mix},
-		  Level_dB{params.Level_dB},
-		  feedback_Pct{params.feedback_Pct},
-		  updateType{params.updateType},
-		  leftDelay_mSec{params.leftDelay_mSec},
-		  rightDelay_mSec{params.rightDelay_mSec},
-		  delayRatio_Pct{params.delayRatio_Pct},
-		  emulateAnalog{params.emulateAnalog}
-	{
-	}
+        return *this;
+    }
+
+    // Suppress generation of move constructor and move assignment operator
+    DigitalDelayParameters(const DigitalDelayParameters&& params) noexcept
+        : algorithm{params.algorithm},
+          mix{params.mix},
+          Level_dB{params.Level_dB},
+          feedback_Pct{params.feedback_Pct},
+          updateType{params.updateType},
+          leftDelay_mSec{params.leftDelay_mSec},
+          rightDelay_mSec{params.rightDelay_mSec},
+          delayRatio_Pct{params.delayRatio_Pct},
+          emulateAnalog{params.emulateAnalog}
+    {
+    }
 
 
-	DigitalDelayParameters& operator=(const DigitalDelayParameters&&) = delete;
+    DigitalDelayParameters& operator=(const DigitalDelayParameters&&) = delete;
 
-	// --- individual parameters
-	delayAlgorithm algorithm = delayAlgorithm::kNormal; ///< delay algorithm
-	double mix = 0.5;	///< wet / dry mix
-	double Level_dB = -3.0;	///< output level in dB
-	double feedback_Pct = 0.0;	///< feedback as a % value
+    // --- individual parameters
+    delayAlgorithm algorithm = delayAlgorithm::kNormal; ///< delay algorithm
+    double mix = 0.5; ///< wet / dry mix
+    double Level_dB = -3.0; ///< output level in dB
+    double feedback_Pct = 0.0; ///< feedback as a % value
 
-	delayUpdateType updateType = delayUpdateType::kLeftAndRight;///< update algorithm
-	double leftDelay_mSec = 0.0;	///< left delay time
-	double rightDelay_mSec = 0.0;	///< right delay time
-	double delayRatio_Pct = 0.0;	///< delay ratio: right length = (delayRatio)*(left length)
-	bool emulateAnalog = false;
+    delayUpdateType updateType = delayUpdateType::kLeftAndRight; ///< update algorithm
+    double leftDelay_mSec = 0.0; ///< left delay time
+    double rightDelay_mSec = 0.0; ///< right delay time
+    double delayRatio_Pct = 0.0; ///< delay ratio: right length = (delayRatio)*(left length)
+    bool emulateAnalog = false;
 };
 
 /**
@@ -389,71 +395,72 @@ Control I/F:
 class DigitalDelay : public IAudioSignalProcessor
 {
 public:
-	DigitalDelay(); /* C-TOR */
-	virtual ~DigitalDelay(); /* D-TOR */
+    DigitalDelay(); /* C-TOR */
+    virtual ~DigitalDelay(); /* D-TOR */
 
-	// Suppress generation of copy constructor and copy assignment operator
-	DigitalDelay(const DigitalDelay&) = delete;
-	DigitalDelay& operator=(const DigitalDelay&) = delete;
+    // Suppress generation of copy constructor and copy assignment operator
+    DigitalDelay(const DigitalDelay&) = delete;
+    DigitalDelay& operator=(const DigitalDelay&) = delete;
 
-	// Suppress generation of move constructor and move assignment operator
-	DigitalDelay(const DigitalDelay&&) = delete;
-	DigitalDelay& operator=(const DigitalDelay&&) = delete;
+    // Suppress generation of move constructor and move assignment operator
+    DigitalDelay(const DigitalDelay&&) = delete;
+    DigitalDelay& operator=(const DigitalDelay&&) = delete;
 
-	/** reset members to initialized state */
-	bool reset(double _sampleRate) override;
+    /** reset members to initialized state */
+    bool reset(double _sampleRate) override;
 
-	/** process audio through phaser */
-	/**
-	\param xn input
-	\return the processed sample
-	*/
-	double processAudioSample(double xn) override;
+    /** process audio through phaser */
+    /**
+    \param xn input
+    \return the processed sample
+    */
+    double processAudioSample(double xn) override;
 
-	/** return true: this object can also process frames */
-	bool canProcessAudioFrame() override;
+    /** return true: this object can also process frames */
+    bool canProcessAudioFrame() override;
 
-	/** process STEREO audio delay in frames */
-	bool processAudioFrame(const float* inputFrame,		/* ptr to one frame of data: pInputFrame[0] = left, pInputFrame[1] = right, etc...*/
-		float* outputFrame,
-		uint32_t inputChannels,
-		uint32_t outputChannels) override;
+    /** process STEREO audio delay in frames */
+    bool processAudioFrame(const float* inputFrame,
+                           /* ptr to one frame of data: pInputFrame[0] = left, pInputFrame[1] = right, etc...*/
+                           float* outputFrame,
+                           uint32_t inputChannels,
+                           uint32_t outputChannels) override;
 
-	/** get parameters: note use of custom structure for passing param data */
-	/**
-	\return DigitalDelayParameters custom data structure
-	*/
-	DigitalDelayParameters getParameters() const;
+    /** get parameters: note use of custom structure for passing param data */
+    /**
+    \return DigitalDelayParameters custom data structure
+    */
+    DigitalDelayParameters getParameters() const;
 
-	/** set parameters: note use of custom structure for passing param data */
-	/**
-	\param _parameters custom data structure
-	*/
-	void setParameters(DigitalDelayParameters _parameters);
+    /** set parameters: note use of custom structure for passing param data */
+    /**
+    \param _parameters custom data structure
+    */
+    void setParameters(DigitalDelayParameters _parameters);
 
-	/** creation function */
-	void createDelayBuffers(double _sampleRate, double _bufferLength_mSec);
+    /** creation function */
+    void createDelayBuffers(double _sampleRate, double _bufferLength_mSec);
 
 private:
-	double getOutput(double xn, double yn) const;
-	double filter(double yn);
-	double getDn(double xn, double yn);
-	void updateParameters(DigitalDelayParameters _parameters);
-	void resetLpf(double _sampleRate);
+    double getOutput(double xn, double yn) const;
+    double filter(double yn);
+    double getDn(double xn, double yn);
+    void updateParameters(DigitalDelayParameters _parameters);
+    void resetLpf(double _sampleRate);
 
-	DigitalDelayParameters parameters; ///< object parameters
-	ZVAFilter zvaFilter;
+    DigitalDelayParameters parameters; ///< object parameters
+    ZVAFilter zvaFilter;
 
-	double sampleRate = 0.0;		///< current sample rate
-	double samplesPerMSec = 0.0;	///< samples per millisecond, for easy access calculation
-	double delayInSamples_L = 0.0;	///< double includes fractional part
-	double delayInSamples_R = 0.0;	///< double includes fractional part
-	double bufferLength_mSec = 0.0;	///< buffer length in mSec
-	unsigned int bufferLength = 0;	///< buffer length in samples
-	double mix = 0.5; ///< wet / dry mix
-	double level_dB = 0.707; ///< output level default = -3dB
+    double sampleRate = 0.0; ///< current sample rate
+    double samplesPerMSec = 0.0; ///< samples per millisecond, for easy access calculation
+    double delayInSamples_L = 0.0; ///< double includes fractional part
+    double delayInSamples_R = 0.0; ///< double includes fractional part
+    double bufferLength_mSec = 0.0; ///< buffer length in mSec
+    unsigned int bufferLength = 0; ///< buffer length in samples
+    double mix = 0.5; ///< wet / dry mix
+    double level_dB = 0.707; ///< output level default = -3dB
 
-	// --- delay buffer of doubles
-	CircularBuffer<double> delayBuffer_L;	///< LEFT delay buffer of doubles
-	CircularBuffer<double> delayBuffer_R;	///< RIGHT delay buffer of doubles
+    // --- delay buffer of doubles
+    CircularBuffer<double> delayBuffer_L; ///< LEFT delay buffer of doubles
+    CircularBuffer<double> delayBuffer_R; ///< RIGHT delay buffer of doubles
 };
