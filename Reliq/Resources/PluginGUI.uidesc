@@ -23,11 +23,11 @@
 	<control-tags>
 		<control-tag name="controlID::delayTime_mSec" tag="0" />
 		<control-tag name="controlID::delayFeedback_Pct" tag="1" />
-		<control-tag name="controlID::delayRatio_Pct" tag="2" />
-		<control-tag name="controlID::wetLevel_dB" tag="3" />
-		<control-tag name="controlID::dryLevel_dB" tag="4" />
+		<control-tag name="controlID::mix" tag="3" />
+		<control-tag name="controlID::level_dB" tag="4" />
 		<control-tag name="controlID::delayType" tag="5" />
 		<control-tag name="controlID::fx_On" tag="6" />
+		<control-tag name="controlID::emulateAnalog" tag="7" />
 		<control-tag name="XY_TRACKPAD" tag="131073" />
 		<control-tag name="VECTOR_JOYSTICK" tag="131074" />
 		<control-tag name="PRESET_NAME" tag="131075" />

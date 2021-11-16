@@ -55,17 +55,26 @@ PluginCore::PluginCore()
 
 void PluginCore::updateParameters()
 {
-	AudioDelayParameters params = stereoDelay.getParameters();
+	DigitalDelayParameters params = stereoDelay.getParameters();
 	params.leftDelay_mSec = delayTime_mSec;
-	params.feedback_Pct = delayFeedback_Pct;
-	params.delayRatio_Pct = delayRatio_Pct;
-	params.updateType = delayUpdateType::kLeftPlusRatio;
 
-	params.dryLevel_dB = dryLevel_dB;
-	params.wetLevel_dB = wetLevel_dB;
+	params.Level_dB = level_dB;
+	params.mix = mix;
+	params.emulateAnalog = emulateAnalog;
+
+	params.feedback_Pct = delayFeedback_Pct;
+	params.delayRatio_Pct = delayGoldenRatio;
 
 	// --- use helper
 	params.algorithm = convertIntToEnum(delayType, delayAlgorithm);
+	if (params.algorithm == delayAlgorithm::kPingPong)
+	{
+		// Only use ratios with delayAlgorithm::kPingPong, otherwise default to normal Left & Right
+		params.updateType = delayUpdateType::kLeftPlusRatio;
+	} else
+	{
+		params.updateType = delayUpdateType::kLeftAndRight;
+	}
 
 	// ---set them
 	stereoDelay.setParameters(params);
@@ -161,6 +170,30 @@ bool PluginCore::preProcessAudioBuffers(ProcessBufferInfo& processInfo)
 */
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+void PluginCore::renderFXPassThrough(ProcessFrameInfo& processFrameInfo)
+{
+	if (processFrameInfo.channelIOConfig.inputChannelFormat == kCFMono &&
+		processFrameInfo.channelIOConfig.outputChannelFormat == kCFMono)
+	{
+		// --- Mono-In/Stereo-Out
+		processFrameInfo.audioOutputFrame[0] = processFrameInfo.audioInputFrame[0];
+	}
+	else if (processFrameInfo.channelIOConfig.inputChannelFormat == kCFMono &&
+		processFrameInfo.channelIOConfig.outputChannelFormat == kCFStereo)
+	{
+		// --- Mono-In/Stereo-Out
+		processFrameInfo.audioOutputFrame[0] = processFrameInfo.audioInputFrame[0];
+		processFrameInfo.audioOutputFrame[1] = processFrameInfo.audioInputFrame[0];
+	}
+	else if (processFrameInfo.channelIOConfig.inputChannelFormat == kCFStereo &&
+		processFrameInfo.channelIOConfig.outputChannelFormat == kCFStereo)
+	{
+		// --- Stereo-In/Stereo-Out
+		processFrameInfo.audioOutputFrame[0] = processFrameInfo.audioInputFrame[0];
+		processFrameInfo.audioOutputFrame[1] = processFrameInfo.audioInputFrame[1];
+	}
+}
+
 /**
 \brief frame-processing method
 
@@ -205,37 +238,21 @@ bool PluginCore::processAudioFrame(ProcessFrameInfo& processFrameInfo)
 	}
 
     // --- FX Plugin:
-    if (fx_On)
+    if (!fx_On)
     {
-    	// --- object does all the work on frames
-        return stereoDelay.processAudioFrame(processFrameInfo.audioInputFrame,
-                                      processFrameInfo.audioOutputFrame,
-                                      processFrameInfo.numAudioInChannels,
-                                      processFrameInfo.numAudioOutChannels);
+	    // --- Bypass, for when fx_On is false
+	    renderFXPassThrough(processFrameInfo);
+    }
+    else
+    {
+	    // --- object does all the work on frames
+	    return stereoDelay.processAudioFrame(processFrameInfo.audioInputFrame,
+	                                         processFrameInfo.audioOutputFrame,
+	                                         processFrameInfo.numAudioInChannels,
+	                                         processFrameInfo.numAudioOutChannels);
     }
 
-	// --- Bypass
-    if (processFrameInfo.channelIOConfig.inputChannelFormat == kCFMono &&
-	    processFrameInfo.channelIOConfig.outputChannelFormat == kCFMono)
-    {
-	    // --- Mono-In/Stereo-Out
-	    processFrameInfo.audioOutputFrame[0] = processFrameInfo.audioInputFrame[0];
-    }
-    else if (processFrameInfo.channelIOConfig.inputChannelFormat == kCFMono &&
-	    processFrameInfo.channelIOConfig.outputChannelFormat == kCFStereo)
-    {
-	    // --- Mono-In/Stereo-Out
-	    processFrameInfo.audioOutputFrame[0] = processFrameInfo.audioInputFrame[0];
-	    processFrameInfo.audioOutputFrame[1] = processFrameInfo.audioInputFrame[0];
-    }
-    else if (processFrameInfo.channelIOConfig.inputChannelFormat == kCFStereo &&
-	    processFrameInfo.channelIOConfig.outputChannelFormat == kCFStereo)
-    {
-	    // --- Stereo-In/Stereo-Out
-	    processFrameInfo.audioOutputFrame[0] = processFrameInfo.audioInputFrame[0];
-	    processFrameInfo.audioOutputFrame[1] = processFrameInfo.audioInputFrame[1];
-    }
-    return true; /// processed
+	return true; /// processed
 }
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -678,8 +695,8 @@ bool PluginCore::initPluginParameters()
 
 	// --- continuous control: Delay
 	piParam = new PluginParameter(controlID::delayTime_mSec, "Delay", "mSec", controlVariableType::kDouble, 0.000000, 2000.000000, 250.000000, taper::kLinearTaper);
-	piParam->setParameterSmoothing(true);
-	piParam->setSmoothingTimeMsec(200.00);
+	piParam->setParameterSmoothing(false);
+	piParam->setSmoothingTimeMsec(600.00);
 	piParam->setBoundVariable(&delayTime_mSec, boundVariableType::kDouble);
 	addPluginParameter(piParam);
 
@@ -690,25 +707,18 @@ bool PluginCore::initPluginParameters()
 	piParam->setBoundVariable(&delayFeedback_Pct, boundVariableType::kDouble);
 	addPluginParameter(piParam);
 
-	// --- continuous control: Ratio
-	piParam = new PluginParameter(controlID::delayRatio_Pct, "Ratio", "%", controlVariableType::kDouble, 1.000000, 100.000000, 50.000000, taper::kLinearTaper);
-	piParam->setParameterSmoothing(true);
-	piParam->setSmoothingTimeMsec(200.00);
-	piParam->setBoundVariable(&delayRatio_Pct, boundVariableType::kDouble);
-	addPluginParameter(piParam);
-
-	// --- continuous control: Wet Level
-	piParam = new PluginParameter(controlID::wetLevel_dB, "Wet Level", "dB", controlVariableType::kDouble, -60.000000, 12.000000, -3.000000, taper::kLinearTaper);
+	// --- continuous control: Blend
+	piParam = new PluginParameter(controlID::mix, "Blend", "", controlVariableType::kDouble, 0.000000, 1.000000, 0.500000, taper::kLinearTaper);
 	piParam->setParameterSmoothing(true);
 	piParam->setSmoothingTimeMsec(20.00);
-	piParam->setBoundVariable(&wetLevel_dB, boundVariableType::kDouble);
+	piParam->setBoundVariable(&mix, boundVariableType::kDouble);
 	addPluginParameter(piParam);
 
-	// --- continuous control: Dry Level
-	piParam = new PluginParameter(controlID::dryLevel_dB, "Dry Level", "dB", controlVariableType::kDouble, -60.000000, 12.000000, -3.000000, taper::kLinearTaper);
+	// --- continuous control: Level
+	piParam = new PluginParameter(controlID::level_dB, "Level", "dB", controlVariableType::kDouble, -60.000000, 12.000000, -3.000000, taper::kLinearTaper);
 	piParam->setParameterSmoothing(true);
 	piParam->setSmoothingTimeMsec(20.00);
-	piParam->setBoundVariable(&dryLevel_dB, boundVariableType::kDouble);
+	piParam->setBoundVariable(&level_dB, boundVariableType::kDouble);
 	addPluginParameter(piParam);
 
 	// --- discrete control: Delay Type
@@ -720,6 +730,12 @@ bool PluginCore::initPluginParameters()
 	// --- discrete control: On
 	piParam = new PluginParameter(controlID::fx_On, "On", "SWITCH OFF,SWITCH ON", "SWITCH OFF");
 	piParam->setBoundVariable(&fx_On, boundVariableType::kInt);
+	piParam->setIsDiscreteSwitch(true);
+	addPluginParameter(piParam);
+
+	// --- discrete control: Emulate Analog
+	piParam = new PluginParameter(controlID::emulateAnalog, "Emulate Analog", "SWITCH OFF,SWITCH ON", "SWITCH OFF");
+	piParam->setBoundVariable(&emulateAnalog, boundVariableType::kInt);
 	piParam->setIsDiscreteSwitch(true);
 	addPluginParameter(piParam);
 
@@ -737,20 +753,15 @@ bool PluginCore::initPluginParameters()
 	auxAttribute.setUintAttribute(2147483648);
 	setParamAuxAttribute(controlID::delayFeedback_Pct, auxAttribute);
 
-	// --- controlID::delayRatio_Pct
+	// --- controlID::mix
 	auxAttribute.reset(auxGUIIdentifier::guiControlData);
 	auxAttribute.setUintAttribute(2147483648);
-	setParamAuxAttribute(controlID::delayRatio_Pct, auxAttribute);
+	setParamAuxAttribute(controlID::mix, auxAttribute);
 
-	// --- controlID::wetLevel_dB
+	// --- controlID::level_dB
 	auxAttribute.reset(auxGUIIdentifier::guiControlData);
 	auxAttribute.setUintAttribute(2147483648);
-	setParamAuxAttribute(controlID::wetLevel_dB, auxAttribute);
-
-	// --- controlID::dryLevel_dB
-	auxAttribute.reset(auxGUIIdentifier::guiControlData);
-	auxAttribute.setUintAttribute(2147483648);
-	setParamAuxAttribute(controlID::dryLevel_dB, auxAttribute);
+	setParamAuxAttribute(controlID::level_dB, auxAttribute);
 
 	// --- controlID::delayType
 	auxAttribute.reset(auxGUIIdentifier::guiControlData);
@@ -761,6 +772,11 @@ bool PluginCore::initPluginParameters()
 	auxAttribute.reset(auxGUIIdentifier::guiControlData);
 	auxAttribute.setUintAttribute(1073741824);
 	setParamAuxAttribute(controlID::fx_On, auxAttribute);
+
+	// --- controlID::emulateAnalog
+	auxAttribute.reset(auxGUIIdentifier::guiControlData);
+	auxAttribute.setUintAttribute(1073741824);
+	setParamAuxAttribute(controlID::emulateAnalog, auxAttribute);
 
 
 	// **--0xEDA5--**
@@ -799,11 +815,11 @@ bool PluginCore::initPluginPresets()
 	initPresetParameters(preset->presetParameters);
 	setPresetParameter(preset->presetParameters, controlID::delayTime_mSec, 250.000000);
 	setPresetParameter(preset->presetParameters, controlID::delayFeedback_Pct, 50.000004);
-	setPresetParameter(preset->presetParameters, controlID::delayRatio_Pct, 50.000000);
-	setPresetParameter(preset->presetParameters, controlID::wetLevel_dB, -3.000000);
-	setPresetParameter(preset->presetParameters, controlID::dryLevel_dB, -3.000000);
+	setPresetParameter(preset->presetParameters, controlID::mix, 0.500000);
+	setPresetParameter(preset->presetParameters, controlID::level_dB, -3.000000);
 	setPresetParameter(preset->presetParameters, controlID::delayType, -0.000000);
 	setPresetParameter(preset->presetParameters, controlID::fx_On, -0.000000);
+	setPresetParameter(preset->presetParameters, controlID::emulateAnalog, -0.000000);
 	addPreset(preset);
 
 

@@ -13,8 +13,8 @@
 #ifndef __pluginCore_h__
 #define __pluginCore_h__
 
+#include "customfxobjects.h"
 #include "pluginbase.h"
-#include "fxobjects.h"
 
 // **--0x7F1F--**
 
@@ -23,11 +23,11 @@
 enum controlID {
 	delayTime_mSec = 0,
 	delayFeedback_Pct = 1,
-	delayRatio_Pct = 2,
-	wetLevel_dB = 3,
-	dryLevel_dB = 4,
+	mix = 3,
+	level_dB = 4,
 	delayType = 5,
-	fx_On = 6
+	fx_On = 6,
+	emulateAnalog = 7
 };
 
 	// **--0x0F1F--**
@@ -74,7 +74,16 @@ public:
 	/** preProcess: sync GUI parameters here; override if you don't want to use automatic variable-binding */
 	virtual bool preProcessAudioBuffers(ProcessBufferInfo& processInfo);
 
-	/** process frames of data (DEFAULT MODE) */
+	/**
+	 * \brief
+	 * Bypass - renders FX pass-through
+	 *
+	 \param processFrameInfo structure of information about *frame* processing
+
+	 */
+	virtual void renderFXPassThrough(ProcessFrameInfo& processFrameInfo);
+
+    /** process frames of data (DEFAULT MODE) */
 	virtual bool processAudioFrame(ProcessFrameInfo& processFrameInfo);
 
 	/** Pre-process the block with: MIDI events for the block and parametet smoothing */
@@ -130,7 +139,7 @@ public:
 	// --- END USER VARIABLES AND FUNCTIONS -------------------------------------- //
 
 protected:
-	AudioDelay stereoDelay;
+	DigitalDelay stereoDelay;
 	void updateParameters();
 
 private:
@@ -139,9 +148,8 @@ private:
 	// --- Continuous Plugin Variables 
 	double delayTime_mSec = 0.0;
 	double delayFeedback_Pct = 0.0;
-	double delayRatio_Pct = 0.0;
-	double wetLevel_dB = 0.0;
-	double dryLevel_dB = 0.0;
+	double mix = 0.0;
+	double level_dB = 0.0;
 
 	// --- Discrete Plugin Variables 
 	int delayType = 0;
@@ -150,8 +158,12 @@ private:
 	int fx_On = 0;
 	enum class fx_OnEnum { SWITCH_OFF,SWITCH_ON };	// to compare: if(compareEnumToInt(fx_OnEnum::SWITCH_OFF, fx_On)) etc... 
 
+	int emulateAnalog = 0;
+	enum class emulateAnalogEnum { SWITCH_OFF,SWITCH_ON };	// to compare: if(compareEnumToInt(emulateAnalogEnum::SWITCH_OFF, emulateAnalog)) etc... 
+
 	// **--0x1A7F--**
     // --- end member variables
+    const double delayGoldenRatio = 1 / 1.618 * 100;
 
 public:
     /** static description: bundle folder name
