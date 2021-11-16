@@ -690,100 +690,96 @@ bool PluginCore::initPluginParameters()
     // **--0xDEA7--**
 
 
-    // --- Declaration of Plugin Parameter Objects 
-    PluginParameter* piParam = nullptr;
+	// --- Declaration of Plugin Parameter Objects 
+	PluginParameter* piParam = nullptr;
 
-    // --- continuous control: Delay
-    piParam = new PluginParameter(controlID::delayTime_mSec, "Delay", "mSec", controlVariableType::kDouble, 0.000000,
-                                  2000.000000, 250.000000, taper::kLinearTaper);
-    piParam->setParameterSmoothing(true);
-    piParam->setSmoothingTimeMsec(1500.00);
-    piParam->setBoundVariable(&delayTime_mSec, boundVariableType::kDouble);
-    addPluginParameter(piParam);
+	// --- continuous control: Delay
+	piParam = new PluginParameter(controlID::delayTime_mSec, "Delay", "mSec", controlVariableType::kDouble, 0.000000, 2000.000000, 250.000000, taper::kLinearTaper);
+	piParam->setParameterSmoothing(true);
+	piParam->setSmoothingTimeMsec(1500.00);
+	piParam->setBoundVariable(&delayTime_mSec, boundVariableType::kDouble);
+	addPluginParameter(piParam);
 
-    // --- continuous control: Feedback
-    piParam = new PluginParameter(controlID::delayFeedback_Pct, "Feedback", "%", controlVariableType::kDouble, 0.000000,
-                                  90.000000, 50.000000, taper::kLinearTaper);
-    piParam->setParameterSmoothing(true);
-    piParam->setSmoothingTimeMsec(20.00);
-    piParam->setBoundVariable(&delayFeedback_Pct, boundVariableType::kDouble);
-    addPluginParameter(piParam);
+	// --- continuous control: Feedback
+	piParam = new PluginParameter(controlID::delayFeedback_Pct, "Feedback", "%", controlVariableType::kDouble, 0.000000, 90.000000, 50.000000, taper::kLinearTaper);
+	piParam->setParameterSmoothing(true);
+	piParam->setSmoothingTimeMsec(20.00);
+	piParam->setBoundVariable(&delayFeedback_Pct, boundVariableType::kDouble);
+	addPluginParameter(piParam);
 
-    // --- continuous control: Blend
-    piParam = new PluginParameter(controlID::mix, "Blend", "", controlVariableType::kDouble, 0.000000, 1.000000,
-                                  0.500000, taper::kLinearTaper);
-    piParam->setParameterSmoothing(true);
-    piParam->setSmoothingTimeMsec(20.00);
-    piParam->setBoundVariable(&mix, boundVariableType::kDouble);
-    addPluginParameter(piParam);
+	// --- continuous control: Blend
+	piParam = new PluginParameter(controlID::mix, "Blend", "", controlVariableType::kDouble, 0.000000, 1.000000, 0.500000, taper::kLinearTaper);
+	piParam->setParameterSmoothing(true);
+	piParam->setSmoothingTimeMsec(20.00);
+	piParam->setBoundVariable(&mix, boundVariableType::kDouble);
+	addPluginParameter(piParam);
 
-    // --- continuous control: Level
-    piParam = new PluginParameter(controlID::level_dB, "Level", "dB", controlVariableType::kDouble, -60.000000,
-                                  12.000000, -3.000000, taper::kLinearTaper);
-    piParam->setParameterSmoothing(true);
-    piParam->setSmoothingTimeMsec(20.00);
-    piParam->setBoundVariable(&level_dB, boundVariableType::kDouble);
-    addPluginParameter(piParam);
+	// --- continuous control: Level
+	piParam = new PluginParameter(controlID::level_dB, "Level", "dB", controlVariableType::kDouble, -60.000000, 12.000000, -3.000000, taper::kLinearTaper);
+	piParam->setParameterSmoothing(true);
+	piParam->setSmoothingTimeMsec(20.00);
+	piParam->setBoundVariable(&level_dB, boundVariableType::kDouble);
+	addPluginParameter(piParam);
 
-    // --- discrete control: Delay Type
-    piParam = new PluginParameter(controlID::delayType, "Delay Type", "NORMAL,PINGPONG", "NORMAL");
-    piParam->setBoundVariable(&delayType, boundVariableType::kInt);
-    piParam->setIsDiscreteSwitch(true);
-    addPluginParameter(piParam);
+	// --- discrete control: Delay Type
+	piParam = new PluginParameter(controlID::delayType, "Delay Type", "NORMAL,PINGPONG", "NORMAL");
+	piParam->setBoundVariable(&delayType, boundVariableType::kInt);
+	piParam->setIsDiscreteSwitch(true);
+	addPluginParameter(piParam);
 
-    // --- discrete control: On
-    piParam = new PluginParameter(controlID::fx_On, "On", "SWITCH OFF,SWITCH ON", "SWITCH OFF");
-    piParam->setBoundVariable(&fx_On, boundVariableType::kInt);
-    piParam->setIsDiscreteSwitch(true);
-    addPluginParameter(piParam);
+	// --- discrete control: On
+	piParam = new PluginParameter(controlID::fx_On, "On", "SWITCH OFF,SWITCH ON", "SWITCH OFF");
+	piParam->setBoundVariable(&fx_On, boundVariableType::kInt);
+	piParam->setIsDiscreteSwitch(true);
+	addPluginParameter(piParam);
 
-    // --- discrete control: Emulate Analog
-    piParam = new PluginParameter(controlID::emulateAnalog, "Emulate Analog", "SWITCH OFF,SWITCH ON", "SWITCH OFF");
-    piParam->setBoundVariable(&emulateAnalog, boundVariableType::kInt);
-    piParam->setIsDiscreteSwitch(true);
-    addPluginParameter(piParam);
+	// --- discrete control: Emulate Analog
+	piParam = new PluginParameter(controlID::emulateAnalog, "Emulate Analog", "SWITCH OFF,SWITCH ON", "SWITCH OFF");
+	piParam->setBoundVariable(&emulateAnalog, boundVariableType::kInt);
+	piParam->setIsDiscreteSwitch(true);
+	addPluginParameter(piParam);
 
-    // --- Aux Attributes
-    AuxParameterAttribute auxAttribute;
+	// --- Aux Attributes
+	AuxParameterAttribute auxAttribute;
 
-    // --- RAFX GUI attributes
-    // --- controlID::delayTime_mSec
-    auxAttribute.reset(auxGUIIdentifier::guiControlData);
-    auxAttribute.setUintAttribute(2147483648);
-    setParamAuxAttribute(controlID::delayTime_mSec, auxAttribute);
+	// --- RAFX GUI attributes
+	// --- controlID::delayTime_mSec
+	auxAttribute.reset(auxGUIIdentifier::guiControlData);
+	auxAttribute.setUintAttribute(2147483648);
+	setParamAuxAttribute(controlID::delayTime_mSec, auxAttribute);
 
-    // --- controlID::delayFeedback_Pct
-    auxAttribute.reset(auxGUIIdentifier::guiControlData);
-    auxAttribute.setUintAttribute(2147483648);
-    setParamAuxAttribute(controlID::delayFeedback_Pct, auxAttribute);
+	// --- controlID::delayFeedback_Pct
+	auxAttribute.reset(auxGUIIdentifier::guiControlData);
+	auxAttribute.setUintAttribute(2147483648);
+	setParamAuxAttribute(controlID::delayFeedback_Pct, auxAttribute);
 
-    // --- controlID::mix
-    auxAttribute.reset(auxGUIIdentifier::guiControlData);
-    auxAttribute.setUintAttribute(2147483648);
-    setParamAuxAttribute(controlID::mix, auxAttribute);
+	// --- controlID::mix
+	auxAttribute.reset(auxGUIIdentifier::guiControlData);
+	auxAttribute.setUintAttribute(2147483648);
+	setParamAuxAttribute(controlID::mix, auxAttribute);
 
-    // --- controlID::level_dB
-    auxAttribute.reset(auxGUIIdentifier::guiControlData);
-    auxAttribute.setUintAttribute(2147483648);
-    setParamAuxAttribute(controlID::level_dB, auxAttribute);
+	// --- controlID::level_dB
+	auxAttribute.reset(auxGUIIdentifier::guiControlData);
+	auxAttribute.setUintAttribute(2147483648);
+	setParamAuxAttribute(controlID::level_dB, auxAttribute);
 
-    // --- controlID::delayType
-    auxAttribute.reset(auxGUIIdentifier::guiControlData);
-    auxAttribute.setUintAttribute(805306368);
-    setParamAuxAttribute(controlID::delayType, auxAttribute);
+	// --- controlID::delayType
+	auxAttribute.reset(auxGUIIdentifier::guiControlData);
+	auxAttribute.setUintAttribute(805306368);
+	setParamAuxAttribute(controlID::delayType, auxAttribute);
 
-    // --- controlID::fx_On
-    auxAttribute.reset(auxGUIIdentifier::guiControlData);
-    auxAttribute.setUintAttribute(1073741824);
-    setParamAuxAttribute(controlID::fx_On, auxAttribute);
+	// --- controlID::fx_On
+	auxAttribute.reset(auxGUIIdentifier::guiControlData);
+	auxAttribute.setUintAttribute(1073741824);
+	setParamAuxAttribute(controlID::fx_On, auxAttribute);
 
-    // --- controlID::emulateAnalog
-    auxAttribute.reset(auxGUIIdentifier::guiControlData);
-    auxAttribute.setUintAttribute(1073741824);
-    setParamAuxAttribute(controlID::emulateAnalog, auxAttribute);
+	// --- controlID::emulateAnalog
+	auxAttribute.reset(auxGUIIdentifier::guiControlData);
+	auxAttribute.setUintAttribute(1073741824);
+	setParamAuxAttribute(controlID::emulateAnalog, auxAttribute);
 
 
-    // **--0xEDA5--**
+	// **--0xEDA5--**
 
     // --- BONUS Parameter
     // --- SCALE_GUI_SIZE
@@ -811,24 +807,24 @@ bool PluginCore::initPluginPresets()
 {
     // **--0xFF7A--**
 
-    // --- Plugin Presets 
-    int index = 0;
-    PresetInfo* preset = nullptr;
+	// --- Plugin Presets 
+	int index = 0;
+	PresetInfo* preset = nullptr;
 
-    // --- Preset: Factory Preset
-    preset = new PresetInfo(index++, "Factory Preset");
-    initPresetParameters(preset->presetParameters);
-    setPresetParameter(preset->presetParameters, controlID::delayTime_mSec, 250.000000);
-    setPresetParameter(preset->presetParameters, controlID::delayFeedback_Pct, 50.000004);
-    setPresetParameter(preset->presetParameters, controlID::mix, 0.500000);
-    setPresetParameter(preset->presetParameters, controlID::level_dB, -3.000000);
-    setPresetParameter(preset->presetParameters, controlID::delayType, -0.000000);
-    setPresetParameter(preset->presetParameters, controlID::fx_On, -0.000000);
-    setPresetParameter(preset->presetParameters, controlID::emulateAnalog, -0.000000);
-    addPreset(preset);
+	// --- Preset: Factory Preset
+	preset = new PresetInfo(index++, "Factory Preset");
+	initPresetParameters(preset->presetParameters);
+	setPresetParameter(preset->presetParameters, controlID::delayTime_mSec, 250.000000);
+	setPresetParameter(preset->presetParameters, controlID::delayFeedback_Pct, 50.000004);
+	setPresetParameter(preset->presetParameters, controlID::mix, 0.500000);
+	setPresetParameter(preset->presetParameters, controlID::level_dB, -3.000000);
+	setPresetParameter(preset->presetParameters, controlID::delayType, -0.000000);
+	setPresetParameter(preset->presetParameters, controlID::fx_On, -0.000000);
+	setPresetParameter(preset->presetParameters, controlID::emulateAnalog, -0.000000);
+	addPreset(preset);
 
 
-    // **--0xA7FF--**
+	// **--0xA7FF--**
 
     return true;
 }
