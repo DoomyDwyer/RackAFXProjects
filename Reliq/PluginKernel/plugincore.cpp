@@ -695,8 +695,8 @@ bool PluginCore::initPluginParameters()
 
 	// --- continuous control: Delay
 	piParam = new PluginParameter(controlID::delayTime_mSec, "Delay", "mSec", controlVariableType::kDouble, 0.000000, 2000.000000, 250.000000, taper::kLinearTaper);
-	piParam->setParameterSmoothing(false);
-	piParam->setSmoothingTimeMsec(600.00);
+	piParam->setParameterSmoothing(true);
+	piParam->setSmoothingTimeMsec(1500.00);
 	piParam->setBoundVariable(&delayTime_mSec, boundVariableType::kDouble);
 	addPluginParameter(piParam);
 
