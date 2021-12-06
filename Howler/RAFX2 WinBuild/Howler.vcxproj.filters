@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Resources">
+      <UniqueIdentifier>{486FB30E-4505-4B69-9EEE-51B78200FEE8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Plugin Kernel">
+      <UniqueIdentifier>{FCE30296-0DDC-4D06-995E-4AA21FD1A0C5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="vstgui4">
+      <UniqueIdentifier>{106BE205-50BA-4ED0-9016-825E23BDD8D1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="CustomControls">
+      <UniqueIdentifier>{7458F314-3529-46B8-8184-0EC8FD0845E8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="RAFX2 Source">
+      <UniqueIdentifier>{DFCA17A6-7F1A-4A9B-8230-4BBBDF981C03}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Plugin Kernel\Plugin GUI">
+      <UniqueIdentifier>{C0E795EB-02A2-4524-A7C1-83DDBAE81052}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Plugin Kernel\Plugin Core">
+      <UniqueIdentifier>{660CD461-0E53-4F39-A815-ADA9308E35DB}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="PluginObjects">
+      <UniqueIdentifier>{C84180EE-9F87-4CC0-A348-F553CDE13CF9}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\RAFX2 Source\RackAFXDLL.cpp">
+      <Filter>RAFX2 Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\RAFX2 Source\Rafx2Plugin.cpp">
+      <Filter>RAFX2 Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vstgui4\vstgui\vstgui_uidescription_win32.cpp">
+      <Filter>vstgui4</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vstgui4\vstgui\vstgui_win32.cpp">
+      <Filter>vstgui4</Filter>
+    </ClCompile>
+    <ClCompile Include="..\CustomControls\customviews.cpp">
+      <Filter>CustomControls</Filter>
+    </ClCompile>
+    <ClCompile Include="..\RAFX2 Source\Rafx2PluginBase.cpp">
+      <Filter>RAFX2 Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\CustomControls\customcontrols.cpp">
+      <Filter>CustomControls</Filter>
+    </ClCompile>
+    <ClCompile Include="..\PluginKernel\plugincore.cpp">
+      <Filter>Plugin Kernel\Plugin Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\PluginKernel\pluginbase.cpp">
+      <Filter>Plugin Kernel\Plugin Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\PluginKernel\plugingui.cpp">
+      <Filter>Plugin Kernel\Plugin GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\PluginKernel\pluginparameter.cpp">
+      <Filter>Plugin Kernel\Plugin Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\PluginObjects\fxobjects.cpp">
+      <Filter>PluginObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="..\PluginObjects\customfxobjects.cpp">
+      <Filter>PluginObjects</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\RAFX2 Source\RackAFXDLL.h">
+      <Filter>RAFX2 Source</Filter>
+    </ClInclude>
+    <ClInclude Include="..\RAFX2 Source\Rafx2Plugin.h">
+      <Filter>RAFX2 Source</Filter>
+    </ClInclude>
+    <ClInclude Include="..\CustomControls\customviews.h">
+      <Filter>CustomControls</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Resources\resource.h">
+      <Filter>Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="..\RAFX2 Source\Rafx2PluginBase.h">
+      <Filter>RAFX2 Source</Filter>
+    </ClInclude>
+    <ClInclude Include="..\CustomControls\customcontrols.h">
+      <Filter>CustomControls</Filter>
+    </ClInclude>
+    <ClInclude Include="..\PluginKernel\pluginbase.h">
+      <Filter>Plugin Kernel\Plugin Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\PluginKernel\plugincore.h">
+      <Filter>Plugin Kernel\Plugin Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\PluginKernel\guiconstants.h">
+      <Filter>Plugin Kernel\Plugin GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\PluginKernel\plugindescription.h">
+      <Filter>Plugin Kernel\Plugin Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\PluginKernel\plugingui.h">
+      <Filter>Plugin Kernel\Plugin GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\PluginKernel\pluginstructures.h">
+      <Filter>Plugin Kernel\Plugin Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\PluginKernel\pluginparameter.h">
+      <Filter>Plugin Kernel\Plugin Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\PluginObjects\fxobjects.h">
+      <Filter>PluginObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\PluginObjects\filters.h">
+      <Filter>PluginObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\CustomControls\atomicops.h">
+      <Filter>CustomControls</Filter>
+    </ClInclude>
+    <ClInclude Include="..\CustomControls\readerwriterqueue.h">
+      <Filter>CustomControls</Filter>
+    </ClInclude>
+    <ClInclude Include="..\PluginObjects\customfxobjects.h">
+      <Filter>PluginObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\PluginObjects\utilities.h">
+      <Filter>PluginObjects</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\Resources\PluginGUI.uidesc">
+      <Filter>Resources</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="PluginGUIMain.rc">
+      <Filter>Resources</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+</Project>
