@@ -52,8 +52,8 @@ const pluginType kPluginType = pluginType::kFXPlugin;
 const char* kVSTFUID = "{B645FD18-93FC-4C60-995A-8CF29FD9D925}";
 
 // --- 4-char codes
-const int32_t kFourCharCode = 'PHSR';
-const int32_t kAAXProductID = 'PHSR';
+const int32_t kFourCharCode = 'FAZE';
+const int32_t kAAXProductID = 'FAZE';
 const int32_t kManufacturerID = 'DOOM';
 
 // --- Vendor information
