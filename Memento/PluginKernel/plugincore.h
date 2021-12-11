@@ -145,7 +145,7 @@ public:
 	// --- END USER VARIABLES AND FUNCTIONS -------------------------------------- //
 
 protected:
-    DigitalDelay stereoDelay;
+    DigitalDelay stereoDelay{sideChainSignalProcessor};
     void updateParameters();
 
 private:
@@ -176,6 +176,7 @@ private:
 	// **--0x1A7F--**
     // --- end member variables
     const double delayGoldenRatio = 1 / 1.618 * 100;
+    DefaultSideChainSignalProcessor sideChainSignalProcessor;
 
 public:
     /** static description: bundle folder name
