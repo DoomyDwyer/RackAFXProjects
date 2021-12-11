@@ -286,7 +286,7 @@ SideChainSignalProcessorParameters DefaultSideChainSignalProcessor::getParameter
     return parameters;
 }
 
-void DefaultSideChainSignalProcessor::setParameters(const SideChainSignalProcessorParameters _parameters)
+void DefaultSideChainSignalProcessor::setParameters(const SideChainSignalProcessorParameters& _parameters)
 {
     parameters = _parameters;
 }
@@ -464,7 +464,7 @@ bool DigitalDelay::processAudioFrame(const float* inputFrame,
 
 DigitalDelayParameters DigitalDelay::getParameters() const { return parameters; }
 
-void DigitalDelay::updateParameters(const DigitalDelayParameters _parameters)
+void DigitalDelay::updateParameters(const DigitalDelayParameters& _parameters)
 {
     // --- check level in dB for calc
     if (!isFloatEqual(_parameters.Level_dB, parameters.Level_dB))
@@ -501,7 +501,7 @@ void DigitalDelay::updateParameters(const DigitalDelayParameters _parameters)
     sideChainSignalProcessor.setParameters(_parameters.sideChainSignalProcessorParameters);
 }
 
-void DigitalDelay::setParameters(const DigitalDelayParameters _parameters)
+void DigitalDelay::setParameters(const DigitalDelayParameters& _parameters)
 {
     updateParameters(_parameters);
 

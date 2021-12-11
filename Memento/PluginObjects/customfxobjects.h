@@ -317,15 +317,39 @@ Custom parameter structure for SideChainSignalProcessor object.
 struct SideChainSignalProcessorParameters
 {
     SideChainSignalProcessorParameters() = default;
-    ~SideChainSignalProcessorParameters() = default;
+    virtual ~SideChainSignalProcessorParameters() = default;
 
     // Explicitly use default Copy constructor & Copy assignment operator
     SideChainSignalProcessorParameters(const SideChainSignalProcessorParameters&) = default;
-    SideChainSignalProcessorParameters& operator=(const SideChainSignalProcessorParameters& params) = default;
+    SideChainSignalProcessorParameters& operator=(const SideChainSignalProcessorParameters&) = default;
 
     // Explicitly use default  Move constructor & Move assignment operator
     SideChainSignalProcessorParameters(SideChainSignalProcessorParameters&& params) = default;
-    SideChainSignalProcessorParameters& operator=(SideChainSignalProcessorParameters&&) = default;
+    SideChainSignalProcessorParameters& operator=(SideChainSignalProcessorParameters&&) = delete;
+};
+
+/**
+\struct DefaultSideChainSignalProcessorParameters
+\ingroup Custom-FX-Objects
+\brief
+Custom parameter structure for SideChainSignalProcessor object.
+
+\author Steve Dwyer
+\version Revision : 1.0
+\date Date : 2021 / 12 / 09
+*/
+struct DefaultSideChainSignalProcessorParameters : SideChainSignalProcessorParameters
+{
+    DefaultSideChainSignalProcessorParameters() = default;
+    ~DefaultSideChainSignalProcessorParameters() override = default;
+
+    // Explicitly use default Copy constructor & Copy assignment operator
+    DefaultSideChainSignalProcessorParameters(const DefaultSideChainSignalProcessorParameters&) = default;
+    DefaultSideChainSignalProcessorParameters& operator=(const DefaultSideChainSignalProcessorParameters&) = default;
+
+    // Explicitly use default Move constructor & Move assignment operator
+    DefaultSideChainSignalProcessorParameters(DefaultSideChainSignalProcessorParameters&& params) = default;
+    DefaultSideChainSignalProcessorParameters& operator=(DefaultSideChainSignalProcessorParameters&&) = delete;
 };
 
 /**
@@ -375,7 +399,7 @@ public:
     /**
     \param _parameters custom data structure
     */
-    virtual void setParameters(SideChainSignalProcessorParameters _parameters) = 0;
+    virtual void setParameters(const SideChainSignalProcessorParameters& _parameters) = 0;
 };
 
 /**
@@ -431,7 +455,7 @@ public:
     /**
     \param _parameters custom data structure
     */
-    void setParameters(SideChainSignalProcessorParameters _parameters) override;
+    void setParameters(const SideChainSignalProcessorParameters& _parameters) override;
 
 private:
     SideChainSignalProcessorParameters parameters;
@@ -481,7 +505,7 @@ struct DigitalDelayParameters
     }
 
     // Move constructor
-    DigitalDelayParameters(const DigitalDelayParameters&& params) noexcept
+    DigitalDelayParameters(DigitalDelayParameters&& params) noexcept
         : algorithm{params.algorithm},
           mix{params.mix},
           Level_dB{params.Level_dB},
@@ -491,12 +515,12 @@ struct DigitalDelayParameters
           rightDelay_mSec{params.rightDelay_mSec},
           delayRatio_Pct{params.delayRatio_Pct},
           emulateAnalog{params.emulateAnalog},
-          sideChainSignalProcessorParameters{params.sideChainSignalProcessorParameters}
+          sideChainSignalProcessorParameters{std::move(params.sideChainSignalProcessorParameters)}
     {
     }
 
     // Suppress generation of move assignment operator
-    DigitalDelayParameters& operator=(const DigitalDelayParameters&&) = delete;
+    DigitalDelayParameters& operator=(DigitalDelayParameters&&) = delete;
 
     // --- individual parameters
     delayAlgorithm algorithm = delayAlgorithm::kNormal; ///< delay algorithm
@@ -575,7 +599,7 @@ public:
     /**
     \param _parameters custom data structure
     */
-    void setParameters(DigitalDelayParameters _parameters);
+    void setParameters(const DigitalDelayParameters& _parameters);
 
     /** creation function */
     void createDelayBuffers(double _sampleRate, double _bufferLength_mSec);
@@ -584,7 +608,7 @@ private:
     double getOutputMix(double xn, double yn) const;
     double filter(double yn);
     double getDn(double xn, double yn);
-    void updateParameters(DigitalDelayParameters _parameters);
+    void updateParameters(const DigitalDelayParameters& _parameters);
     void resetLpf(double _sampleRate);
 
     DigitalDelayParameters parameters; ///< object parameters
