@@ -33,7 +33,8 @@ enum controlID {
 	threshold_dB = 9,
 	wetGainMin_dB = 10,
 	wetGainMax_dB = 11,
-	fx_On = 12
+	fx_On = 12,
+	sensitivity = 13
 };
 
 	// **--0x0F1F--**
@@ -162,6 +163,7 @@ private:
 	double threshold_dB = 0.0;
 	double wetGainMin_dB = 0.0;
 	double wetGainMax_dB = 0.0;
+	double sensitivity = 0.0;
 
 	// --- Discrete Plugin Variables 
 	int delayType = 0;
@@ -176,7 +178,7 @@ private:
 	// **--0x1A7F--**
     // --- end member variables
     const double delayGoldenRatio = 1 / 1.618 * 100;
-    DefaultSideChainSignalProcessor sideChainSignalProcessor;
+    EnvelopeDetectorSideChainSignalProcessor sideChainSignalProcessor;
 
 public:
     /** static description: bundle folder name

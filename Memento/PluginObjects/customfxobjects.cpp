@@ -263,6 +263,52 @@ void Phaser::setParameters(const PhaserParameters& params)
     parameters = params;
 }
 
+DelayGainCalculator::DelayGainCalculator() = default; /* C-TOR */
+DelayGainCalculator::~DelayGainCalculator() = default; /* D-TOR */
+
+bool DelayGainCalculator::reset(double _sampleRate)
+{
+	return true;
+};
+
+bool DelayGainCalculator::canProcessAudioFrame()
+{
+    return false;
+}
+
+double DelayGainCalculator::processAudioSample(double xn)
+{
+	// --- calc threshold
+	const double threshValue = pow(10.0, parameters.threshold_dB / 20.0);
+	const double deltaValue = xn - threshValue;
+
+	const double wetGainMin = pow(10.0, parameters.wetGainMin_dB / 20.0);
+	const double wetGainMax = pow(10.0, parameters.wetGainMax_dB / 20.0);
+
+    double yn = 1.0;
+    // --- if above the threshold, modulate the filter fc
+	if (deltaValue > 0.0) // || delta_dB > 0.0)
+	{
+		// --- best results are with linear values when detector is in dB mode
+		double modulatorValue = (deltaValue * parameters.sensitivity);
+        boundValue(modulatorValue, wetGainMin, wetGainMax);
+        yn = modulatorValue;
+	}
+
+    return yn;
+}
+
+DelayGainCalculatorParameters DelayGainCalculator::getParameters() const
+{
+    return parameters;
+}
+
+void DelayGainCalculator::setParameters(const DelayGainCalculatorParameters& _parameters)
+{
+        // --- save
+        parameters = _parameters;
+}
+
 DefaultSideChainSignalProcessor::DefaultSideChainSignalProcessor() = default; /* C-TOR */
 DefaultSideChainSignalProcessor::~DefaultSideChainSignalProcessor() = default; /* D-TOR */
 
@@ -289,6 +335,87 @@ SideChainSignalProcessorParameters DefaultSideChainSignalProcessor::getParameter
 void DefaultSideChainSignalProcessor::setParameters(const SideChainSignalProcessorParameters& _parameters)
 {
     parameters = _parameters;
+}
+
+EnvelopeDetectorSideChainSignalProcessor::EnvelopeDetectorSideChainSignalProcessor()
+{
+    // --- setup the detector
+    AudioDetectorParameters adParams;
+    adParams.attackTime_mSec = 20.0;
+    adParams.releaseTime_mSec = 500.0;
+    adParams.detectMode = TLD_AUDIO_DETECT_MODE_RMS;
+    adParams.detect_dB = true;
+    adParams.clampToUnityMax = false;
+    envDetector.setParameters(adParams);
+
+    // --- setup the DelayGainCalculator
+    DelayGainCalculatorParameters delayGainCalculatorParams;
+    delayGainCalculatorParams.sensitivity = 1.0;
+    delayGainCalculatorParams.threshold_dB = -6.0;
+    delayGainCalculatorParams.wetGainMin_dB = 0.0;
+    delayGainCalculatorParams.wetGainMax_dB = 0.0;
+    delayGainCalculator.setParameters(delayGainCalculatorParams);
+}/* C-TOR */
+EnvelopeDetectorSideChainSignalProcessor::~EnvelopeDetectorSideChainSignalProcessor() = default; /* D-TOR */
+
+bool EnvelopeDetectorSideChainSignalProcessor::reset(double _sampleRate)
+{
+	envDetector.reset(_sampleRate);
+	delayGainCalculator.reset(_sampleRate);
+	return true;
+};
+
+bool EnvelopeDetectorSideChainSignalProcessor::canProcessAudioFrame()
+{
+    return false;
+}
+
+double EnvelopeDetectorSideChainSignalProcessor::processAudioSample(double xn)
+{
+    // Amplify signal by sideChainGain
+    const double sideChainGain = pow(10.0, parameters.sideChainGain_dB / 20.0);
+    xn *= sideChainGain;
+
+    // --- detect the signal
+	const double detect_dB = envDetector.processAudioSample(xn);
+	const double detectValue = pow(10.0, detect_dB / 20.0);
+
+    // Pass it through Delay Gain Calculator
+    const double yn = delayGainCalculator.processAudioSample(detectValue);
+
+    return 1 - yn;
+}
+
+SideChainSignalProcessorParameters EnvelopeDetectorSideChainSignalProcessor::getParameters() const
+{
+	// --- Upcast & return - Is there a better way to achieve polymorphism?
+    return static_cast<SideChainSignalProcessorParameters>(parameters);
+}
+
+void EnvelopeDetectorSideChainSignalProcessor::setParameters(const SideChainSignalProcessorParameters& _parameters)
+{
+	// --- Downcast & save - Is there a better way to achieve polymorphism?
+	parameters = dynamic_cast<const EnvelopeDetectorSideChainSignalProcessorParameters&>(_parameters);
+
+    updateDetectorParameters(parameters);
+}
+
+bool EnvelopeDetectorSideChainSignalProcessor::detectorParametersUpdated(const AudioDetectorParameters adParams, const EnvelopeDetectorSideChainSignalProcessorParameters& params)
+{
+	return !isFloatEqual(adParams.attackTime_mSec, params.attackTime_mSec) ||
+		!isFloatEqual(adParams.releaseTime_mSec, params.releaseTime_mSec);
+}
+
+void EnvelopeDetectorSideChainSignalProcessor::updateDetectorParameters(const EnvelopeDetectorSideChainSignalProcessorParameters& params)
+{
+	AudioDetectorParameters adParams = envDetector.getParameters();
+
+	if (detectorParametersUpdated(adParams, params))
+	{
+		adParams.attackTime_mSec = params.attackTime_mSec;
+		adParams.releaseTime_mSec = params.releaseTime_mSec;
+		envDetector.setParameters(adParams);
+	}
 }
 
 DigitalDelay::DigitalDelay(SideChainSignalProcessor& _sideChainSignalProcessor) :  sideChainSignalProcessor{_sideChainSignalProcessor}

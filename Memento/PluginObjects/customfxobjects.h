@@ -305,6 +305,113 @@ private:
 };
 
 /**
+\struct DelayGainCalculatorParameters
+\ingroup Custom-FX-Objects
+\brief
+Custom parameter structure for DelayGainCalculator object.
+
+\author Steve Dwyer
+\version Revision : 1.0
+\date Date : 2021 / 12 / 11
+*/
+struct DelayGainCalculatorParameters
+{
+    DelayGainCalculatorParameters() = default;
+    ~DelayGainCalculatorParameters() = default;
+
+    // Explicitly use default Copy constructor & Copy assignment operator
+    DelayGainCalculatorParameters(const DelayGainCalculatorParameters&) = default;
+    DelayGainCalculatorParameters& operator=(const DelayGainCalculatorParameters& params)
+    {
+        if (this == &params) return *this;
+
+	    threshold_dB = params.threshold_dB;
+		sensitivity = params.sensitivity;
+	    wetGainMin_dB = params.wetGainMin_dB;
+	    wetGainMax_dB = params.wetGainMax_dB;
+        return *this;
+    }
+
+    // Explicitly use default  Move constructor & Move assignment operator
+    DelayGainCalculatorParameters(DelayGainCalculatorParameters&& params) = default;
+    DelayGainCalculatorParameters& operator=(DelayGainCalculatorParameters&& params) noexcept
+    {
+        if (this == &params) return *this;
+
+	    threshold_dB = params.threshold_dB;
+		sensitivity = params.sensitivity;
+	    wetGainMin_dB = params.wetGainMin_dB;
+	    wetGainMax_dB = params.wetGainMax_dB;
+        return *this;
+    }
+
+	double threshold_dB = 0.0;
+	double sensitivity = 0.0;
+	double wetGainMin_dB = 0.0;
+	double wetGainMax_dB = 0.0;
+};
+
+/**
+\class DelayGainCalculator
+\ingroup Custom-FX-Objects
+\brief
+The DelayGainCalculator calculates the gain to wet signal based on detected envelope.
+
+Audio I/O:
+- None.
+
+Control I/F:
+- Use DelayGainCalculatorParameters structure to get/set object params.
+
+\author Steve Dwyer
+\version Revision : 1.0
+\date Date : 2021 / 12 / 11
+*/
+
+class DelayGainCalculator : public IAudioSignalProcessor
+{
+public:
+    DelayGainCalculator(); /* C-TOR */
+    virtual ~DelayGainCalculator(); /* D-TOR */
+
+    // Suppress generation of copy constructor and copy assignment operator
+    DelayGainCalculator(const DelayGainCalculator&) = delete;
+    DelayGainCalculator& operator=(const DelayGainCalculator&) = delete;
+
+    // Suppress generation of move constructor and move assignment operator
+    DelayGainCalculator(const DelayGainCalculator&&) = delete;
+    DelayGainCalculator& operator=(const DelayGainCalculator&&) = delete;
+
+    /** reset members to initialized state */
+    bool reset(double _sampleRate) override;
+
+    /** process audio through Clipping Stage */
+    /**
+    \param xn input
+    \return the processed sample
+    */
+    double processAudioSample(double xn) override;
+
+    /** return true: this object can also process frames */
+    bool canProcessAudioFrame() override;
+
+    /** get parameters: note use of custom structure for passing param data */
+    /**
+    \return DelayGainCalculatorParameters custom data structure
+    */
+    DelayGainCalculatorParameters getParameters() const;
+
+    /** set parameters: note use of custom structure for passing param data */
+    /**
+    \param _parameters custom data structure
+    */
+    void setParameters(const DelayGainCalculatorParameters& _parameters);
+
+private:
+    DelayGainCalculatorParameters parameters;
+};
+
+/**
 \struct SideChainSignalProcessorParameters
 \ingroup Custom-FX-Objects
 \brief
@@ -325,7 +432,7 @@ struct SideChainSignalProcessorParameters
 
     // Explicitly use default  Move constructor & Move assignment operator
     SideChainSignalProcessorParameters(SideChainSignalProcessorParameters&& params) = default;
-    SideChainSignalProcessorParameters& operator=(SideChainSignalProcessorParameters&&) = delete;
+    SideChainSignalProcessorParameters& operator=(SideChainSignalProcessorParameters&&) = default;
 };
 
 /**
@@ -349,7 +456,63 @@ struct DefaultSideChainSignalProcessorParameters : SideChainSignalProcessorParam
 
     // Explicitly use default Move constructor & Move assignment operator
     DefaultSideChainSignalProcessorParameters(DefaultSideChainSignalProcessorParameters&& params) = default;
-    DefaultSideChainSignalProcessorParameters& operator=(DefaultSideChainSignalProcessorParameters&&) = delete;
+    DefaultSideChainSignalProcessorParameters& operator=(DefaultSideChainSignalProcessorParameters&&) = default;
+};
+
+/**
+\struct EnvelopeDetectorSideChainSignalProcessorParameters
+\ingroup Custom-FX-Objects
+\brief
+Custom parameter structure for EnvelopeDetectorSideChainSignalProcessor object.
+
+\author Steve Dwyer
+\version Revision : 1.0
+\date Date : 2021 / 12 / 11
+*/
+struct EnvelopeDetectorSideChainSignalProcessorParameters : SideChainSignalProcessorParameters
+{
+    EnvelopeDetectorSideChainSignalProcessorParameters() = default;
+    ~EnvelopeDetectorSideChainSignalProcessorParameters() override = default;
+
+    // Explicitly use default Copy constructor & Copy assignment operator
+    EnvelopeDetectorSideChainSignalProcessorParameters(const EnvelopeDetectorSideChainSignalProcessorParameters&) = default;
+    EnvelopeDetectorSideChainSignalProcessorParameters& operator=(const EnvelopeDetectorSideChainSignalProcessorParameters& params)
+    {
+        if (this == &params) return *this;
+
+	    sideChainGain_dB = params.sideChainGain_dB;
+	    attackTime_mSec = params.attackTime_mSec;
+	    releaseTime_mSec = params.releaseTime_mSec;
+	    threshold_dB = params.threshold_dB;
+		sensitivity = params.sensitivity;
+	    wetGainMin_dB = params.wetGainMin_dB;
+	    wetGainMax_dB = params.wetGainMax_dB;
+        return *this;
+    }
+
+    // Explicitly use default  Move constructor & Move assignment operator
+    EnvelopeDetectorSideChainSignalProcessorParameters(EnvelopeDetectorSideChainSignalProcessorParameters&& params) = default;
+    EnvelopeDetectorSideChainSignalProcessorParameters& operator=(EnvelopeDetectorSideChainSignalProcessorParameters&& params) noexcept
+    {
+        if (this == &params) return *this;
+
+	    sideChainGain_dB = params.sideChainGain_dB;
+	    attackTime_mSec = params.attackTime_mSec;
+	    releaseTime_mSec = params.releaseTime_mSec;
+	    threshold_dB = params.threshold_dB;
+		sensitivity = params.sensitivity;
+	    wetGainMin_dB = params.wetGainMin_dB;
+	    wetGainMax_dB = params.wetGainMax_dB;
+        return *this;
+    }
+
+	double sideChainGain_dB = 0.0;
+	double attackTime_mSec = 0.0;
+	double releaseTime_mSec = 0.0;
+	double threshold_dB = 0.0;
+	double sensitivity = 0.0;
+	double wetGainMin_dB = 0.0;
+	double wetGainMax_dB = 0.0;
 };
 
 /**
@@ -459,6 +622,71 @@ public:
 
 private:
     SideChainSignalProcessorParameters parameters;
+};
+
+/**
+\class EnvelopeDetectorSideChainSignalProcessor
+\ingroup Custom-FX-Objects
+\brief
+The EnvelopeDetectorSideChainSignalProcessor uses an Envelope Detector to attenuate a wet signal during high amplitude periods.
+
+Audio I/O:
+- None.
+
+Control I/F:
+- Use EnvelopeDetectorSideChainSignalProcessorParameters structure to get/set object params.
+
+\author Steve Dwyer
+\version Revision : 1.0
+\date Date : 2021 / 12 / 11
+*/
+class EnvelopeDetectorSideChainSignalProcessor : public SideChainSignalProcessor
+{
+public:
+    EnvelopeDetectorSideChainSignalProcessor(); /* C-TOR */
+    ~EnvelopeDetectorSideChainSignalProcessor() override; /* D-TOR */
+
+    // Suppress generation of copy constructor and copy assignment operator
+    EnvelopeDetectorSideChainSignalProcessor(const EnvelopeDetectorSideChainSignalProcessor&) = delete;
+    EnvelopeDetectorSideChainSignalProcessor& operator=(const EnvelopeDetectorSideChainSignalProcessor&) = delete;
+
+    // Suppress generation of move constructor and move assignment operator
+    EnvelopeDetectorSideChainSignalProcessor(const EnvelopeDetectorSideChainSignalProcessor&&) = delete;
+    EnvelopeDetectorSideChainSignalProcessor& operator=(const EnvelopeDetectorSideChainSignalProcessor&&) = delete;
+
+    /** reset members to initialized state */
+    bool reset(double _sampleRate) override;
+
+    /** process audio through Clipping Stage */
+    /**
+    \param xn input
+    \return the processed sample
+    */
+    double processAudioSample(double xn) override;
+
+    /** return true: this object can also process frames */
+    bool canProcessAudioFrame() override;
+
+    /** get parameters: note use of custom structure for passing param data */
+    /**
+    \return SideChainSignalProcessorParameters custom data structure
+    */
+    SideChainSignalProcessorParameters getParameters() const override;
+
+    /** set parameters: note use of custom structure for passing param data */
+    /**
+    \param _parameters custom data structure
+    */
+    void setParameters(const SideChainSignalProcessorParameters& _parameters) override;
+
+private:
+    EnvelopeDetectorSideChainSignalProcessorParameters parameters;
+
+	AudioDetector envDetector; ///< detector to track input signal
+	DelayGainCalculator delayGainCalculator; // Calculate gain to wet signal based on detected envelope
+
+    static bool detectorParametersUpdated(AudioDetectorParameters adParams, const EnvelopeDetectorSideChainSignalProcessorParameters& params);
+    void updateDetectorParameters(const EnvelopeDetectorSideChainSignalProcessorParameters& params);
 };
 
 /**

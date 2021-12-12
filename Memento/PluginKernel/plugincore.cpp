@@ -77,6 +77,16 @@ void PluginCore::updateParameters()
         params.updateType = delayUpdateType::kLeftAndRight;
     }
 
+    EnvelopeDetectorSideChainSignalProcessorParameters envelopeDetectorSideChainSignalProcessorParameters;
+    envelopeDetectorSideChainSignalProcessorParameters.sideChainGain_dB = sideChainGain_dB;
+    envelopeDetectorSideChainSignalProcessorParameters.attackTime_mSec = attackTime_mSec;
+    envelopeDetectorSideChainSignalProcessorParameters.releaseTime_mSec = releaseTime_mSec;
+    envelopeDetectorSideChainSignalProcessorParameters.threshold_dB = threshold_dB;
+    envelopeDetectorSideChainSignalProcessorParameters.sensitivity = sensitivity;
+    envelopeDetectorSideChainSignalProcessorParameters.wetGainMin_dB = wetGainMin_dB;
+    envelopeDetectorSideChainSignalProcessorParameters.wetGainMax_dB = wetGainMax_dB;
+    params.sideChainSignalProcessorParameters = envelopeDetectorSideChainSignalProcessorParameters;
+
     // ---set them
     stereoDelay.setParameters(params);
 }
@@ -782,6 +792,13 @@ bool PluginCore::initPluginParameters()
 	piParam->setIsDiscreteSwitch(true);
 	addPluginParameter(piParam);
 
+	// --- continuous control: Sensitivity
+	piParam = new PluginParameter(controlID::sensitivity, "Sensitivity", "", controlVariableType::kDouble, 0.250000, 5.000000, 1.000000, taper::kLinearTaper);
+	piParam->setParameterSmoothing(true);
+	piParam->setSmoothingTimeMsec(20.00);
+	piParam->setBoundVariable(&sensitivity, boundVariableType::kDouble);
+	addPluginParameter(piParam);
+
 	// --- Aux Attributes
 	AuxParameterAttribute auxAttribute;
 
@@ -851,6 +868,11 @@ bool PluginCore::initPluginParameters()
 	auxAttribute.setUintAttribute(1073741824);
 	setParamAuxAttribute(controlID::fx_On, auxAttribute);
 
+	// --- controlID::sensitivity
+	auxAttribute.reset(auxGUIIdentifier::guiControlData);
+	auxAttribute.setUintAttribute(2147483648);
+	setParamAuxAttribute(controlID::sensitivity, auxAttribute);
+
 
 	// **--0xEDA5--**
 
@@ -882,6 +904,25 @@ bool PluginCore::initPluginPresets()
 	// --- Plugin Presets 
 	int index = 0;
 	PresetInfo* preset = nullptr;
+
+	// --- Preset: Factory Preset
+	preset = new PresetInfo(index++, "Factory Preset");
+	initPresetParameters(preset->presetParameters);
+	setPresetParameter(preset->presetParameters, controlID::delayTime_mSec, 250.000000);
+	setPresetParameter(preset->presetParameters, controlID::delayFeedback_Pct, 50.000004);
+	setPresetParameter(preset->presetParameters, controlID::mix, 0.500000);
+	setPresetParameter(preset->presetParameters, controlID::level_dB, -3.000000);
+	setPresetParameter(preset->presetParameters, controlID::delayType, -0.000000);
+	setPresetParameter(preset->presetParameters, controlID::emulateAnalog, -0.000000);
+	setPresetParameter(preset->presetParameters, controlID::sideChainGain_dB, 0.000000);
+	setPresetParameter(preset->presetParameters, controlID::attackTime_mSec, 20.000000);
+	setPresetParameter(preset->presetParameters, controlID::releaseTime_mSec, 500.000000);
+	setPresetParameter(preset->presetParameters, controlID::threshold_dB, -6.000000);
+	setPresetParameter(preset->presetParameters, controlID::wetGainMin_dB, 0.000000);
+	setPresetParameter(preset->presetParameters, controlID::wetGainMax_dB, 0.000000);
+	setPresetParameter(preset->presetParameters, controlID::fx_On, -0.000000);
+	setPresetParameter(preset->presetParameters, controlID::sensitivity, 0.000000);
+	addPreset(preset);
 
 
 	// **--0xA7FF--**
