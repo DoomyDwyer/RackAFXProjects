@@ -37,6 +37,8 @@
 		<view back-color="~ BlackCColor" background-offset="0, 0" class="CTextLabel" custom-view-name="UnitsLabel" default-value="0.5" font="~ NormalFontVerySmall" font-antialias="true" font-color="~ BlackCColor" frame-color="~ BlackCColor" frame-width="1" max-value="1" min-value="0" mouse-enabled="true" origin="375 ,150" rafxlabel-type="" round-rect-radius="6" shadow-color="~ RedCColor" size="84 ,10" style-3D-in="false" style-3D-out="false" style-no-draw="false" style-no-frame="false" style-no-text="false" style-round-rect="false" style-shadow-text="false" sub-controller="" text-alignment="center" text-inset="0, 0" title="WET GAIN MAX" transparent="true" value-precision="2" wheel-inc-value="0.1" control-tag="" />
 		<view background-color="~ BlackCColor" background-color-draw-style="filled and stroked" bitmap="" class="CViewContainer" custom-view-name="" mouse-enabled="true" origin="95,75" rafxtemplate-type="userViewContainer" size="84 ,10" template="User ViewContainer 0" transparent="false" sub-controller="" />
 		<view background-color="~ BlackCColor" background-color-draw-style="filled and stroked" bitmap="" class="CViewContainer" custom-view-name="" mouse-enabled="true" origin="175 ,150" rafxtemplate-type="userViewContainer" size="64 ,10" template="User ViewContainer 1" transparent="false" sub-controller="" />
+		<view back-color="~ WhiteCColor" background-offset="0, 0" class="COptionMenu" control-tag="SCALE_GUI_SIZE" custom-view-name="" default-value="0.5" font="~ NormalFontVerySmall" font-antialias="true" font-color="~ BlackCColor" frame-color="~ MagentaCColor" frame-width="1" max-value="" menu-check-style="false" menu-popup-style="false" min-value="0" mouse-enabled="true" origin="393 ,350" round-rect-radius="6" shadow-color="~ RedCColor" size="60 ,10" style-3D-in="false" style-3D-out="false" style-no-draw="false" style-no-frame="false" style-no-text="false" style-round-rect="true" style-shadow-text="false" sub-controller="" text-alignment="" text-inset="0, 0" title="SEL 1" transparent="false" value-precision="2" wheel-inc-value="0.1" />
+		<view back-color="~ BlackCColor" background-offset="0, 0" class="CTextLabel" custom-view-name="UnitsLabel" default-value="0.5" font="~ NormalFontVerySmall" font-antialias="true" font-color="~ BlackCColor" frame-color="~ BlackCColor" frame-width="1" max-value="1" min-value="0" mouse-enabled="true" origin="393 ,338" rafxlabel-type="" round-rect-radius="6" shadow-color="~ RedCColor" size="60 ,10" style-3D-in="false" style-3D-out="false" style-no-draw="false" style-no-frame="false" style-no-text="false" style-round-rect="false" style-shadow-text="false" sub-controller="" text-alignment="center" text-inset="0, 0" title="SCALE GUI" transparent="true" value-precision="2" wheel-inc-value="0.1" control-tag="" />
 	</template>
 	<custom>
 		<attributes Path="" name="ASPiKEditor" />
@@ -59,6 +61,10 @@
 		<attributes RAFXCanvasHeight="378" />
 		<attributes rafx-template-name="User ViewContainer 0" rafxtemplate-type="userViewContainer" />
 		<attributes rafx-template-name="User ViewContainer 1" rafxtemplate-type="userViewContainer" />
+		<attributes rafx-template-name="User ViewContainer 0" />
+		<attributes rafx-template-name="User ViewContainer 1" />
+		<attributes rafx-template-name="User ViewContainer 0" />
+		<attributes rafx-template-name="User ViewContainer 1" />
 		<attributes rafx-template-name="User ViewContainer 0" />
 		<attributes rafx-template-name="User ViewContainer 1" />
 		<attributes rafx-template-name="User ViewContainer 0" />

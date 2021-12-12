@@ -55,7 +55,7 @@ PluginCore::PluginCore()
 
 void PluginCore::updateParameters()
 {
-    DigitalDelayParameters params = stereoDelay.getParameters();
+    DigitalDelayParameters<EnvelopeDetectorSideChainSignalProcessorParameters> params = stereoDelay.getParameters();
     params.leftDelay_mSec = delayTime_mSec;
 
     params.Level_dB = level_dB;
@@ -921,7 +921,7 @@ bool PluginCore::initPluginPresets()
 	setPresetParameter(preset->presetParameters, controlID::wetGainMin_dB, 0.000000);
 	setPresetParameter(preset->presetParameters, controlID::wetGainMax_dB, 0.000000);
 	setPresetParameter(preset->presetParameters, controlID::fx_On, -0.000000);
-	setPresetParameter(preset->presetParameters, controlID::sensitivity, 0.000000);
+	setPresetParameter(preset->presetParameters, controlID::sensitivity, 1.000000);
 	addPreset(preset);
 
 

@@ -1,5 +1,6 @@
 #pragma once
 #include "fxobjects.h"
+#include "utilities.h"
 
 /**
 \struct AutoQEnvelopeFollowerParameters
@@ -531,38 +532,39 @@ Control I/F:
 \version Revision : 1.0
 \date Date : 2021 / 12 / 10
 */
+template <class SideChainProcessorParams>
 class SideChainSignalProcessor : public IAudioSignalProcessor
 {
 public:
     /**
      * Virtual D-TOR for pure Pure-Virtual Interface Class
      */
-    SideChainSignalProcessor() = default;
+    SideChainSignalProcessor<SideChainProcessorParams>() = default;
 
     /**
      * Virtual D-TOR for pure Pure-Virtual Interface Class
      */
-    virtual ~SideChainSignalProcessor() = default;
+    virtual ~SideChainSignalProcessor<SideChainProcessorParams>() = default;
 
     // Suppress generation of copy constructor and copy assignment operator
-    SideChainSignalProcessor(const SideChainSignalProcessor&) = delete;
-    virtual SideChainSignalProcessor& operator=(const SideChainSignalProcessor&) = delete;
+    SideChainSignalProcessor<SideChainProcessorParams>(const SideChainSignalProcessor<SideChainProcessorParams>&) = default;
+    virtual SideChainSignalProcessor<SideChainProcessorParams>& operator=(const SideChainSignalProcessor<SideChainProcessorParams>&) = delete;
 
     // Suppress generation of move constructor and move assignment operator
-    SideChainSignalProcessor(const SideChainSignalProcessor&&) = delete;
-    virtual SideChainSignalProcessor& operator=(const SideChainSignalProcessor&&) = delete;
+    SideChainSignalProcessor<SideChainProcessorParams>(const SideChainSignalProcessor<SideChainProcessorParams>&&) = delete;
+    virtual SideChainSignalProcessor<SideChainProcessorParams>& operator=(const SideChainSignalProcessor<SideChainProcessorParams>&&) = delete;
 
     /** get parameters: note use of custom structure for passing param data */
     /**
     \return DigitalDelayParameters custom data structure
     */
-    virtual SideChainSignalProcessorParameters getParameters() const = 0;
+    virtual SideChainProcessorParams getParameters() const = 0;
 
     /** set parameters: note use of custom structure for passing param data */
     /**
     \param _parameters custom data structure
     */
-    virtual void setParameters(const SideChainSignalProcessorParameters& _parameters) = 0;
+    virtual void setParameters(const SideChainProcessorParams& _parameters) = 0;
 };
 
 /**
@@ -581,47 +583,63 @@ Control I/F:
 \version Revision : 1.0
 \date Date : 2021 / 12 / 09
 */
-class DefaultSideChainSignalProcessor : public SideChainSignalProcessor
+template <class SideChainProcessorParams>
+class DefaultSideChainSignalProcessor : public SideChainSignalProcessor<SideChainProcessorParams>
 {
 public:
-    DefaultSideChainSignalProcessor(); /* C-TOR */
-    ~DefaultSideChainSignalProcessor() override; /* D-TOR */
+    DefaultSideChainSignalProcessor<SideChainProcessorParams>() = default; /* C-TOR */
+    ~DefaultSideChainSignalProcessor<SideChainProcessorParams>() override = default; /* D-TOR */
 
     // Suppress generation of copy constructor and copy assignment operator
-    DefaultSideChainSignalProcessor(const DefaultSideChainSignalProcessor&) = delete;
-    DefaultSideChainSignalProcessor& operator=(const DefaultSideChainSignalProcessor&) = delete;
+    DefaultSideChainSignalProcessor<SideChainProcessorParams>(const DefaultSideChainSignalProcessor<SideChainProcessorParams>&) = default;
+    DefaultSideChainSignalProcessor<SideChainProcessorParams>& operator=(const DefaultSideChainSignalProcessor<SideChainProcessorParams>&) = delete;
 
     // Suppress generation of move constructor and move assignment operator
-    DefaultSideChainSignalProcessor(const DefaultSideChainSignalProcessor&&) = delete;
-    DefaultSideChainSignalProcessor& operator=(const DefaultSideChainSignalProcessor&&) = delete;
+    DefaultSideChainSignalProcessor<SideChainProcessorParams>(const DefaultSideChainSignalProcessor<SideChainProcessorParams>&&) = delete;
+    DefaultSideChainSignalProcessor<SideChainProcessorParams>& operator=(const DefaultSideChainSignalProcessor<SideChainProcessorParams>&&) = delete;
 
     /** reset members to initialized state */
-    bool reset(double _sampleRate) override;
+    bool reset(double _sampleRate) override
+    {
+        return true;
+    }
 
     /** process audio through Clipping Stage */
     /**
     \param xn input
     \return the processed sample
     */
-    double processAudioSample(double xn) override;
+    double processAudioSample(double xn) override
+    {
+        return 1.0;
+    }
 
     /** return true: this object can also process frames */
-    bool canProcessAudioFrame() override;
+    bool canProcessAudioFrame() override
+    {
+        return false;
+    }
 
     /** get parameters: note use of custom structure for passing param data */
     /**
     \return DigitalDelayParameters custom data structure
     */
-    SideChainSignalProcessorParameters getParameters() const override;
+    SideChainProcessorParams getParameters() const override
+    {
+        return parameters;
+    }
 
     /** set parameters: note use of custom structure for passing param data */
     /**
     \param _parameters custom data structure
     */
-    void setParameters(const SideChainSignalProcessorParameters& _parameters) override;
+    void setParameters(const SideChainProcessorParams& _parameters) override
+    {
+        parameters = _parameters;
+    }
 
 private:
-    SideChainSignalProcessorParameters parameters;
+    DefaultSideChainSignalProcessorParameters parameters;
 };
 
 /**
@@ -640,44 +658,95 @@ Control I/F:
 \version Revision : 1.0
 \date Date : 2021 / 12 / 11
 */
-class EnvelopeDetectorSideChainSignalProcessor : public SideChainSignalProcessor
+template <class SideChainProcessorParams>
+class EnvelopeDetectorSideChainSignalProcessor : public SideChainSignalProcessor<SideChainProcessorParams>
 {
 public:
-    EnvelopeDetectorSideChainSignalProcessor(); /* C-TOR */
-    ~EnvelopeDetectorSideChainSignalProcessor() override; /* D-TOR */
+    EnvelopeDetectorSideChainSignalProcessor<SideChainProcessorParams>()
+    {
+        // --- setup the detector
+        AudioDetectorParameters adParams;
+        adParams.attackTime_mSec = 20.0;
+        adParams.releaseTime_mSec = 500.0;
+        adParams.detectMode = TLD_AUDIO_DETECT_MODE_RMS;
+        adParams.detect_dB = true;
+        adParams.clampToUnityMax = false;
+        envDetector.setParameters(adParams);
+
+        // --- setup the DelayGainCalculator
+        DelayGainCalculatorParameters delayGainCalculatorParams;
+        delayGainCalculatorParams.sensitivity = 1.0;
+        delayGainCalculatorParams.threshold_dB = -6.0;
+        delayGainCalculatorParams.wetGainMin_dB = 0.0;
+        delayGainCalculatorParams.wetGainMax_dB = 0.0;
+        delayGainCalculator.setParameters(delayGainCalculatorParams);
+    }/* C-TOR */
+
+    ~EnvelopeDetectorSideChainSignalProcessor<SideChainProcessorParams>() override = default; /* D-TOR */
 
     // Suppress generation of copy constructor and copy assignment operator
-    EnvelopeDetectorSideChainSignalProcessor(const EnvelopeDetectorSideChainSignalProcessor&) = delete;
-    EnvelopeDetectorSideChainSignalProcessor& operator=(const EnvelopeDetectorSideChainSignalProcessor&) = delete;
+    EnvelopeDetectorSideChainSignalProcessor<SideChainProcessorParams>(const EnvelopeDetectorSideChainSignalProcessor<SideChainProcessorParams>&) = delete;
+    EnvelopeDetectorSideChainSignalProcessor<SideChainProcessorParams>& operator=(const EnvelopeDetectorSideChainSignalProcessor<SideChainProcessorParams>&) = delete;
 
     // Suppress generation of move constructor and move assignment operator
-    EnvelopeDetectorSideChainSignalProcessor(const EnvelopeDetectorSideChainSignalProcessor&&) = delete;
-    EnvelopeDetectorSideChainSignalProcessor& operator=(const EnvelopeDetectorSideChainSignalProcessor&&) = delete;
+    EnvelopeDetectorSideChainSignalProcessor<SideChainProcessorParams>(const EnvelopeDetectorSideChainSignalProcessor<SideChainProcessorParams>&&) = delete;
+    EnvelopeDetectorSideChainSignalProcessor<SideChainProcessorParams>& operator=(const EnvelopeDetectorSideChainSignalProcessor<SideChainProcessorParams>&&) = delete;
 
     /** reset members to initialized state */
-    bool reset(double _sampleRate) override;
+    bool reset(double _sampleRate) override
+    {
+	    envDetector.reset(_sampleRate);
+	    delayGainCalculator.reset(_sampleRate);
+	    return true;
+    }
 
     /** process audio through Clipping Stage */
     /**
     \param xn input
     \return the processed sample
     */
-    double processAudioSample(double xn) override;
+    double processAudioSample(double xn) override
+    {
+        // Amplify signal by sideChainGain
+        const double sideChainGain = pow(10.0, parameters.sideChainGain_dB / 20.0);
+        xn *= sideChainGain;
+
+        // --- detect the signal
+	    const double detect_dB = envDetector.processAudioSample(xn);
+	    const double detectValue = pow(10.0, detect_dB / 20.0);
+
+        // Pass it through Delay Gain Calculator
+        const double yn = delayGainCalculator.processAudioSample(detectValue);
+
+        return 1 - yn;
+    }
 
     /** return true: this object can also process frames */
-    bool canProcessAudioFrame() override;
+    bool canProcessAudioFrame() override
+    {
+        return false;
+    }
 
     /** get parameters: note use of custom structure for passing param data */
     /**
     \return SideChainSignalProcessorParameters custom data structure
     */
-    SideChainSignalProcessorParameters getParameters() const override;
+    SideChainProcessorParams getParameters() const override
+    {
+        return parameters;
+    }
 
     /** set parameters: note use of custom structure for passing param data */
     /**
     \param _parameters custom data structure
     */
-    void setParameters(const SideChainSignalProcessorParameters& _parameters) override;
+    void setParameters(const SideChainProcessorParams& _parameters) override
+    {
+	    parameters = _parameters;
+
+        updateDetectorParameters(parameters);
+        updateDelayGainCalculatorParameters(parameters);
+    }
 
 private:
     EnvelopeDetectorSideChainSignalProcessorParameters parameters;
@@ -685,12 +754,49 @@ private:
 	AudioDetector envDetector; ///< detector to track input signal
 	DelayGainCalculator delayGainCalculator; // Calculate gain to wet signal based on detected envelope
 
-    static bool detectorParametersUpdated(AudioDetectorParameters adParams, const EnvelopeDetectorSideChainSignalProcessorParameters& params);
-    void updateDetectorParameters(const EnvelopeDetectorSideChainSignalProcessorParameters& params);
+    static bool detectorParametersUpdated(AudioDetectorParameters adParams, const SideChainProcessorParams& params)
+    {
+	    return !isFloatEqual(adParams.attackTime_mSec, params.attackTime_mSec) ||
+		    !isFloatEqual(adParams.releaseTime_mSec, params.releaseTime_mSec);
+    }
+
+    void updateDetectorParameters(const SideChainProcessorParams& params)
+    {
+	    AudioDetectorParameters adParams = envDetector.getParameters();
+
+	    if (detectorParametersUpdated(adParams, params))
+	    {
+		    adParams.attackTime_mSec = params.attackTime_mSec;
+		    adParams.releaseTime_mSec = params.releaseTime_mSec;
+		    envDetector.setParameters(adParams);
+	    }
+    }
+
+    static bool delayGainCalculatorParametersUpdated(DelayGainCalculatorParameters dgcParams, const SideChainProcessorParams& params)
+    {
+	    return !isFloatEqual(dgcParams.threshold_dB, params.threshold_dB) ||
+            !isFloatEqual(dgcParams.sensitivity, params.sensitivity) ||
+            !isFloatEqual(dgcParams.wetGainMin_dB, params.wetGainMin_dB) ||
+		    !isFloatEqual(dgcParams.wetGainMax_dB, params.wetGainMax_dB);
+    }
+
+    void updateDelayGainCalculatorParameters(const SideChainProcessorParams& params)
+    {
+	    DelayGainCalculatorParameters dgcParams = delayGainCalculator.getParameters();
+
+	    if (delayGainCalculatorParametersUpdated(dgcParams, params))
+	    {
+		    dgcParams.threshold_dB = params.threshold_dB;
+		    dgcParams.sensitivity = params.sensitivity;
+		    dgcParams.wetGainMin_dB = params.wetGainMin_dB;
+		    dgcParams.wetGainMax_dB = params.wetGainMax_dB;
+		    delayGainCalculator.setParameters(dgcParams);
+	    }
+    }
 };
 
 /**
-\struct DigitalDelayParameters
+\class DigitalDelayParameters
 \ingroup Custom-FX-Objects
 \brief
 Custom parameter structure for the DigitalDelay object.
@@ -700,17 +806,19 @@ Custom parameter structure for the DigitalDelay object.
 \version Revision : 1.0
 \date Date : 2021 / 09 / 06
 */
-struct DigitalDelayParameters
+template <class SideChainProcessorParams>
+class DigitalDelayParameters
 {
-    DigitalDelayParameters() = default;
-    ~DigitalDelayParameters() = default;
+public:
+    DigitalDelayParameters<SideChainProcessorParams>() = default;
+    ~DigitalDelayParameters<SideChainProcessorParams>() = default;
 
     // Explicitly use default copy constructor
-    DigitalDelayParameters(const DigitalDelayParameters&) = default;
+    DigitalDelayParameters<SideChainProcessorParams>(const DigitalDelayParameters<SideChainProcessorParams>&) = default;
 
     // Copy assignment operator
     /** all FXObjects parameter objects require overloaded= operator so remember to add new entries if you add new variables. */
-    DigitalDelayParameters& operator=(const DigitalDelayParameters& params)
+    DigitalDelayParameters<SideChainProcessorParams>& operator=(const DigitalDelayParameters<SideChainProcessorParams>& params)
     // need this override for collections to work
     {
         if (this == &params)
@@ -733,7 +841,7 @@ struct DigitalDelayParameters
     }
 
     // Move constructor
-    DigitalDelayParameters(DigitalDelayParameters&& params) noexcept
+    DigitalDelayParameters<SideChainProcessorParams>(DigitalDelayParameters<SideChainProcessorParams>&& params) noexcept
         : algorithm{params.algorithm},
           mix{params.mix},
           Level_dB{params.Level_dB},
@@ -743,12 +851,12 @@ struct DigitalDelayParameters
           rightDelay_mSec{params.rightDelay_mSec},
           delayRatio_Pct{params.delayRatio_Pct},
           emulateAnalog{params.emulateAnalog},
-          sideChainSignalProcessorParameters{std::move(params.sideChainSignalProcessorParameters)}
+          sideChainSignalProcessorParameters{params.sideChainSignalProcessorParameters}
     {
     }
 
     // Suppress generation of move assignment operator
-    DigitalDelayParameters& operator=(DigitalDelayParameters&&) = delete;
+    DigitalDelayParameters<SideChainProcessorParams>& operator=(DigitalDelayParameters<SideChainProcessorParams>&&) = default;
 
     // --- individual parameters
     delayAlgorithm algorithm = delayAlgorithm::kNormal; ///< delay algorithm
@@ -763,7 +871,7 @@ struct DigitalDelayParameters
     bool emulateAnalog = false;
 
     // Any parameters required for the Side Chain Processor
-    SideChainSignalProcessorParameters sideChainSignalProcessorParameters;
+    SideChainProcessorParams sideChainSignalProcessorParameters;
 };
 
 /**
@@ -783,65 +891,278 @@ Control I/F:
 \version Revision : 1.0
 \date Date : 2021 / 09 / 06
 */
+template <class SideChainProcessor, class SideChainProcessorParams>
 class DigitalDelay : public IAudioSignalProcessor
 {
 public:
-    DigitalDelay(SideChainSignalProcessor& sideChainSignalProcessor);
-    virtual ~DigitalDelay(); /* D-TOR */
+    DigitalDelay<SideChainProcessor, SideChainProcessorParams>(SideChainProcessor& _sideChainSignalProcessor) :  sideChainSignalProcessor{_sideChainSignalProcessor}
+    {
+    } /* C-TOR */
+    virtual ~DigitalDelay<SideChainProcessor, SideChainProcessorParams>() = default; /* D-TOR */
 
     // Suppress generation of copy constructor and copy assignment operator
-    DigitalDelay(const DigitalDelay&) = delete;
-    DigitalDelay& operator=(const DigitalDelay&) = delete;
+    DigitalDelay<SideChainProcessor, SideChainProcessorParams>(const DigitalDelay<SideChainProcessor, SideChainProcessorParams>&) = delete;
+    DigitalDelay<SideChainProcessor, SideChainProcessorParams>& operator=(const DigitalDelay<SideChainProcessor, SideChainProcessorParams>&) = delete;
 
     // Suppress generation of move constructor and move assignment operator
-    DigitalDelay(const DigitalDelay&&) = delete;
-    DigitalDelay& operator=(const DigitalDelay&&) = delete;
+    DigitalDelay<SideChainProcessor, SideChainProcessorParams>(const DigitalDelay<SideChainProcessor, SideChainProcessorParams>&&) = delete;
+    DigitalDelay<SideChainProcessor, SideChainProcessorParams>& operator=(const DigitalDelay<SideChainProcessor, SideChainProcessorParams>&&) = delete;
 
     /** reset members to initialized state */
-    bool reset(double _sampleRate) override;
+    bool reset(double _sampleRate) override
+    {
+        // --- if sample rate did not change
+        if (isFloatEqual(sampleRate, _sampleRate))
+        {
+            // --- just flush buffer and return
+            delayBuffer_L.flushBuffer();
+            delayBuffer_R.flushBuffer();
+            return true;
+        }
+
+        // --- create new buffer, will store sample rate and length(mSec)
+        createDelayBuffers(_sampleRate, bufferLength_mSec);
+
+        // Reset the LPF each time and set params
+        resetLpf(_sampleRate);
+
+        // Reset the sideChainSignalProcessor
+        sideChainSignalProcessor.reset(_sampleRate);
+
+        return true;
+    }
 
     /** process audio through phaser */
     /**
     \param xn input
     \return the processed sample
     */
-    double processAudioSample(double xn) override;
+    double processAudioSample(double xn) override
+    {
+        // --- read delay
+        const double yn = delayBuffer_L.readBuffer(delayInSamples_L);
+
+        // --- create input for delay buffer
+        const double dn = getDn(xn, yn);
+
+        // --- write to delay buffer
+        delayBuffer_L.writeBuffer(dn);
+
+        // --- form mixture out
+        const double output = getOutputMix(xn, yn);
+
+        return output;
+    }
 
     /** return true: this object can also process frames */
-    bool canProcessAudioFrame() override;
+    bool canProcessAudioFrame() override
+    {
+        return true;
+    }
 
     /** process STEREO audio delay in frames */
     bool processAudioFrame(const float* inputFrame,
                            /* ptr to one frame of data: pInputFrame[0] = left, pInputFrame[1] = right, etc...*/
                            float* outputFrame,
                            uint32_t inputChannels,
-                           uint32_t outputChannels) override;
+                           uint32_t outputChannels) override
+    {
+        // --- make sure we have input and outputs
+        if (inputChannels == 0 || outputChannels == 0)
+            return false;
+
+        // --- make sure we support this delay algorithm
+        if (parameters.algorithm != delayAlgorithm::kNormal &&
+            parameters.algorithm != delayAlgorithm::kPingPong)
+            return false;
+
+        // --- if only one output channel, revert to mono operation
+        if (outputChannels == 1)
+        {
+            // --- process left channel only
+            outputFrame[0] = static_cast<float>(processAudioSample(inputFrame[0]));
+            return true;
+        }
+
+        // --- if we get here we know we have 2 output channels
+        //
+        // --- pick up inputs
+        //
+        // --- LEFT channel
+        const double xnL = inputFrame[0];
+
+        // --- RIGHT channel (duplicate left input if mono-in)
+        const double xnR = inputChannels > 1 ? inputFrame[1] : xnL;
+
+        // --- read delay LEFT
+        const double ynL = delayBuffer_L.readBuffer(delayInSamples_L);
+
+        // --- read delay RIGHT
+        const double ynR = delayBuffer_R.readBuffer(delayInSamples_R);
+
+        // --- create input for delay buffer with LEFT channel info
+        const double dnL = getDn(xnL, ynL);
+
+        // --- create input for delay buffer with RIGHT channel info
+        const double dnR = getDn(xnR, ynR);
+
+        // --- decode
+        if (parameters.algorithm == delayAlgorithm::kNormal)
+        {
+            // --- write to LEFT delay buffer with LEFT channel info
+            delayBuffer_L.writeBuffer(dnL);
+
+            // --- write to RIGHT delay buffer with RIGHT channel info
+            delayBuffer_R.writeBuffer(dnR);
+        }
+        else if (parameters.algorithm == delayAlgorithm::kPingPong)
+        {
+            // --- write to LEFT delay buffer with RIGHT channel info
+            delayBuffer_L.writeBuffer(dnR);
+
+            // --- write to RIGHT delay buffer with LEFT channel info
+            delayBuffer_R.writeBuffer(dnL);
+        }
+
+        // --- form Left mixture out
+        const double outputL = getOutputMix(xnL, ynL);
+
+        // --- form Right mixture out
+        const double outputR = getOutputMix(xnR, ynR);
+
+        // --- set left channel
+        outputFrame[0] = static_cast<float>(outputL);
+
+        // --- set right channel
+        outputFrame[1] = static_cast<float>(outputR);
+
+        return true;
+    }
 
     /** get parameters: note use of custom structure for passing param data */
     /**
     \return DigitalDelayParameters custom data structure
     */
-    DigitalDelayParameters getParameters() const;
+    DigitalDelayParameters<SideChainProcessorParams> getParameters() const
+    {
+        return parameters;
+    }
 
     /** set parameters: note use of custom structure for passing param data */
     /**
     \param _parameters custom data structure
     */
-    void setParameters(const DigitalDelayParameters& _parameters);
+    void setParameters(const DigitalDelayParameters<SideChainProcessorParams>& _parameters)
+    {
+        updateParameters(_parameters);
+
+        // --- save; rest of updates are cheap on CPU
+        parameters = _parameters;
+    }
 
     /** creation function */
-    void createDelayBuffers(double _sampleRate, double _bufferLength_mSec);
+    void createDelayBuffers(double _sampleRate, double _bufferLength_mSec)
+    {
+        // --- store for math
+        bufferLength_mSec = _bufferLength_mSec;
+        sampleRate = _sampleRate;
+        samplesPerMSec = sampleRate / 1000.0;
+
+        // --- total buffer length including fractional part
+        bufferLength = static_cast<unsigned>(bufferLength_mSec * (samplesPerMSec)) + 1; // +1 for fractional part
+
+        // --- create new buffer
+        delayBuffer_L.createCircularBuffer(bufferLength);
+        delayBuffer_R.createCircularBuffer(bufferLength);
+    }
 
 private:
-    double getOutputMix(double xn, double yn) const;
-    double filter(double yn);
-    double getDn(double xn, double yn);
-    void updateParameters(const DigitalDelayParameters& _parameters);
-    void resetLpf(double _sampleRate);
+    double getOutputMix(double xn, double yn) const
+    {
+        const double dryMix = 1.0 - mix;
+        const double wetMix = sideChainSignalProcessor.processAudioSample(xn) * mix;
 
-    DigitalDelayParameters parameters; ///< object parameters
+        return (dryMix * xn + wetMix * yn) * level_dB;
+    }
+
+    double filter(double yn)
+    {
+        if (parameters.emulateAnalog)
+        {
+            yn = zvaFilter.processAudioSample(yn);
+        }
+        return yn;
+    }
+
+    double getDn(double xn, double yn)
+    {
+        return xn + filter((parameters.feedback_Pct * 0.01) * yn);
+    }
+
+    void updateParameters(const DigitalDelayParameters<SideChainProcessorParams>& _parameters)
+    {
+        // --- check level in dB for calc
+        if (!isFloatEqual(_parameters.Level_dB, parameters.Level_dB))
+            level_dB = pow(10.0, _parameters.Level_dB / 20.0);
+
+        mix = _parameters.mix;
+
+        // --- check update type first:
+        if (_parameters.updateType == delayUpdateType::kLeftAndRight)
+        {
+            // --- set left and right delay times
+            // --- calculate total delay time in samples + fraction
+            const double newDelayInSamples_L = _parameters.leftDelay_mSec * (samplesPerMSec);
+            const double newDelayInSamples_R = _parameters.rightDelay_mSec * (samplesPerMSec);
+
+            // --- new delay time with fraction
+            delayInSamples_L = newDelayInSamples_L;
+            delayInSamples_R = newDelayInSamples_R;
+        }
+        else if (_parameters.updateType == delayUpdateType::kLeftPlusRatio)
+        {
+            // --- get and validate ratio
+            double delayRatio = _parameters.delayRatio_Pct * 0.01;
+            boundValue(delayRatio, 0.0, 1.0);
+
+            // --- calculate total delay time in samples + fraction
+            const double newDelayInSamples = _parameters.leftDelay_mSec * (samplesPerMSec);
+
+            // --- new delay time with fraction
+            delayInSamples_L = newDelayInSamples;
+            delayInSamples_R = delayInSamples_L * delayRatio;
+        }
+
+        sideChainSignalProcessor.setParameters(_parameters.sideChainSignalProcessorParameters);
+    }
+
+    void resetLpf(double _sampleRate)
+    {
+        zvaFilter.reset(_sampleRate);
+
+        // Set the LPF parameters
+        // --- all objects share  same params, so get first
+        ZVAFilterParameters params;
+
+        // --- update with our GUI parameter variables
+        params.fc = 1000;
+        params.Q = 0;
+        params.filterOutputGain_dB = 0.707;
+
+        // --- Discrete Plugin Variables 
+        params.filterAlgorithm = vaFilterAlgorithm::kLPF1;
+        params.enableGainComp = false;
+        params.matchAnalogNyquistLPF = false;
+        params.selfOscillate = false;
+        params.enableNLP = false;
+
+        // --- apply to parameters to LPF
+        zvaFilter.setParameters(params);
+    }
+
+    DigitalDelayParameters<SideChainProcessorParams> parameters; ///< object parameters
     ZVAFilter zvaFilter;
-    SideChainSignalProcessor& sideChainSignalProcessor;
+    SideChainProcessor& sideChainSignalProcessor;
 
     double sampleRate = 0.0; ///< current sample rate
     double samplesPerMSec = 0.0; ///< samples per millisecond, for easy access calculation

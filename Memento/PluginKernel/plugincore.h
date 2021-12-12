@@ -65,7 +65,7 @@ public:
     PluginCore();
 
 	/** Destructor: empty in default version */
-    virtual ~PluginCore(){}
+    ~PluginCore() override = default;
 
 	// --- PluginBase Overrides ---
 	//
@@ -146,7 +146,8 @@ public:
 	// --- END USER VARIABLES AND FUNCTIONS -------------------------------------- //
 
 protected:
-    DigitalDelay stereoDelay{sideChainSignalProcessor};
+    EnvelopeDetectorSideChainSignalProcessor<EnvelopeDetectorSideChainSignalProcessorParameters> sideChainSignalProcessor;
+    DigitalDelay<EnvelopeDetectorSideChainSignalProcessor<EnvelopeDetectorSideChainSignalProcessorParameters>, EnvelopeDetectorSideChainSignalProcessorParameters> stereoDelay{sideChainSignalProcessor};
     void updateParameters();
 
 private:
@@ -178,7 +179,6 @@ private:
 	// **--0x1A7F--**
     // --- end member variables
     const double delayGoldenRatio = 1 / 1.618 * 100;
-    EnvelopeDetectorSideChainSignalProcessor sideChainSignalProcessor;
 
 public:
     /** static description: bundle folder name
