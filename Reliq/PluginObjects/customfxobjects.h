@@ -733,7 +733,6 @@ public:
     */
     SideChainProcessorParams getParameters() const override
     {
-	    // --- Upcast & return - Is there a better way to achieve polymorphism?
         return parameters;
     }
 
@@ -743,7 +742,6 @@ public:
     */
     void setParameters(const SideChainProcessorParams& _parameters) override
     {
-	    // --- Downcast & save - Is there a better way to achieve polymorphism?
 	    parameters = _parameters;
 
         updateDetectorParameters(parameters);
