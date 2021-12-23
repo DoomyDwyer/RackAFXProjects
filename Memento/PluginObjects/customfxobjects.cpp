@@ -283,10 +283,9 @@ double DelayGainCalculator::processAudioSample(double xn)
 
     if (xn < threshValue)
     {
-        // if below the threshold, amplify the side chain output
-        yn = xn * parameters.sensitivity;
-        // Keep within min & max wet gain bounds
-        boundValue(yn, wetGainMin, wetGainMax);
+        // If below the threshold,
+        // do unipolar modulation to determine side chain output, up to a maximum value of wetGainMax
+        yn  = doUnipolarModulationFromMin(parameters.sensitivity * (threshValue - xn), wetGainMin, wetGainMax);
     }
 
     return yn;
