@@ -16,6 +16,43 @@
 namespace VSTGUI {
 
 /**
+\brief VariableToolTipKnobView constructor
+
+\param size - the control rectangle
+\param listener - the control's listener (usuall PluginGUI object)
+\param tag - the control ID value
+\param subPixmaps - the number of frames in the strip animation
+\param heightOfOneImage- the number of frames in the strip animation
+\param background- the graphics file for the control
+\param offset- positional offset value
+\param bSwitchKnob - flag to enable switch knob
+*/
+VariableToolTipKnobView::VariableToolTipKnobView (const CRect& size, IControlListener* listener, int32_t tag, int32_t subPixmaps, CCoord heightOfOneImage, CBitmap* background, const CPoint &offset, bool bSwitchKnob)
+: CAnimKnob (size, listener, tag, subPixmaps, heightOfOneImage, background, offset)
+{
+}
+
+VariableToolTipKnobView::~VariableToolTipKnobView(void) = default;
+
+void VariableToolTipKnobView::pushDataValue(double data)
+{
+    const std::string str = std::to_string(data);
+    char *cstr = new char[str.length() + 1];
+    strcpy(cstr, str.c_str());
+    const VSTGUI::UTF8StringPtr toolTipData(cstr);
+
+    toolTipText = toolTipData;
+}
+
+void VariableToolTipKnobView::updateView()
+{
+    this->setTooltipText(toolTipText);
+
+    // --- force redraw
+    invalid();
+}
+
+/**
 \brief WaveView constructor
 
 \param size - the control rectangle

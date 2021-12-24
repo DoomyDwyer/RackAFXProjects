@@ -34,7 +34,8 @@ enum controlID {
 	wetGainMin_dB = 10,
 	wetGainMax_dB = 11,
 	fx_On = 12,
-	sensitivity = 13
+	sensitivity = 13,
+	fx_OnOff_Toggle = 14
 };
 
 	// **--0x0F1F--**
@@ -178,9 +179,26 @@ private:
 	int fx_On = 0;
 	enum class fx_OnEnum { SWITCH_OFF,SWITCH_ON };	// to compare: if(compareEnumToInt(fx_OnEnum::SWITCH_OFF, fx_On)) etc... 
 
+	int fx_OnOff_Toggle = 0;
+	enum class fx_OnOff_ToggleEnum { SWITCH_OFF,SWITCH_ON };	// to compare: if(compareEnumToInt(fx_OnOff_ToggleEnum::SWITCH_OFF, fx_OnOff_Toggle)) etc... 
+
 	// **--0x1A7F--**
     // --- end member variables
     const double delayGoldenRatio = 1 / 1.618 * 100;
+
+    // Custom Views for updating the knobs' tooltip texts
+    ICustomView* delayTimeView = nullptr;
+    ICustomView* delayFeedbackView = nullptr;
+    ICustomView* mixView = nullptr;
+    ICustomView* levelView = nullptr;
+    ICustomView* sideChainGainView = nullptr;
+    ICustomView* attackTimeView = nullptr;
+    ICustomView* releaseTimeView = nullptr;
+    ICustomView* thresholdView = nullptr;
+    ICustomView* wetGainMinView = nullptr;
+    ICustomView* wetGainMaxView = nullptr;
+    ICustomView* sensitivityView = nullptr;
+
 
 public:
     /** static description: bundle folder name
