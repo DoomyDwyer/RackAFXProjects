@@ -877,7 +877,7 @@ bool PluginCore::initPluginParameters()
 	// --- continuous control: Level
 	piParam = new PluginParameter(controlID::level_dB, "Level", "dB", controlVariableType::kDouble, -60.000000, 12.000000, -3.000000, taper::kLinearTaper);
 	piParam->setParameterSmoothing(true);
-	piParam->setSmoothingTimeMsec(20.00);
+	piParam->setSmoothingTimeMsec(100.00);
 	piParam->setBoundVariable(&level_dB, boundVariableType::kDouble);
 	addPluginParameter(piParam);
 
@@ -896,7 +896,7 @@ bool PluginCore::initPluginParameters()
 	// --- continuous control: SideChain Gain
 	piParam = new PluginParameter(controlID::sideChainGain_dB, "SideChain Gain", "dB", controlVariableType::kDouble, -60.000000, 12.000000, -3.000000, taper::kLinearTaper);
 	piParam->setParameterSmoothing(true);
-	piParam->setSmoothingTimeMsec(20.00);
+	piParam->setSmoothingTimeMsec(100.00);
 	piParam->setBoundVariable(&sideChainGain_dB, boundVariableType::kDouble);
 	addPluginParameter(piParam);
 
