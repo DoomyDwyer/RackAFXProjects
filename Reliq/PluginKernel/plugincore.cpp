@@ -57,6 +57,7 @@ void PluginCore::updateParameters()
 {
     DigitalDelayParameters<DefaultSideChainSignalProcessorParameters> params = stereoDelay.getParameters();
     params.leftDelay_mSec = delayTime_mSec;
+    params.rightDelay_mSec = delayTime_mSec;
 
     params.Level_dB = level_dB;
     params.mix = mix;
