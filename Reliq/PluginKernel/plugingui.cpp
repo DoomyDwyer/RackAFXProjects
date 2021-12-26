@@ -2,6 +2,7 @@
 #include "plugingui.h"
 
 // --- custom data view example; include more custom views here
+#include "custompedalviews.h"
 #include "customviews.h"
 
 #if MAC
@@ -2469,7 +2470,7 @@ IController* PluginGUI::createSubController(UTF8StringPtr name, const IUIDescrip
 	if (findIt >= 0)
 	{
 		// --- create the sub-controller
-		KickSwitchController* kickSwitchController = new KickSwitchController(this);
+		auto* kickSwitchController = new KickSwitchController(this);
 
 		// --- if the sub-controller has the ICustomView interface,
 		//     we register it with the plugin for updates (unusual for a sub-controller)
@@ -2480,6 +2481,23 @@ IController* PluginGUI::createSubController(UTF8StringPtr name, const IUIDescrip
 		}
 
 		return kickSwitchController;
+	}
+
+    findIt = strName.find("VariableToolTipKnobController");
+	if (findIt >= 0)
+	{
+		// --- create the sub-controller
+		auto* variableToolTipKnobController = new VariableToolTipKnobController(this);
+
+		// --- if the sub-controller has the ICustomView interface,
+		//     we register it with the plugin for updates (unusual for a sub-controller)
+		if (hasICustomView(variableToolTipKnobController))
+		{
+			if (guiPluginConnector)
+				guiPluginConnector->registerSubcontroller(strName, dynamic_cast<ICustomView*>(variableToolTipKnobController));
+		}
+
+		return variableToolTipKnobController;
 	}
 
 	return nullptr;

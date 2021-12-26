@@ -763,13 +763,13 @@ public:
 
     bool parametersUpDated(const SideChainProcessorParams& _parameters) const
     {
-        return !isFloatEqual(parameters.sideChainGain_dB, _parameters.sideChainGain_dB) ||
-            !isFloatEqual(parameters.attackTime_mSec, _parameters.attackTime_mSec) ||
-            !isFloatEqual(parameters.releaseTime_mSec, _parameters.releaseTime_mSec) ||
-            !isFloatEqual(parameters.threshold_dB, _parameters.threshold_dB) ||
-            !isFloatEqual(parameters.sensitivity, _parameters.sensitivity) ||
-            !isFloatEqual(parameters.wetGainMin_dB, _parameters.wetGainMin_dB) ||
-            !isFloatEqual(parameters.wetGainMax_dB, _parameters.wetGainMax_dB);
+        return !isEqual(parameters.sideChainGain_dB, _parameters.sideChainGain_dB) ||
+            !isEqual(parameters.attackTime_mSec, _parameters.attackTime_mSec) ||
+            !isEqual(parameters.releaseTime_mSec, _parameters.releaseTime_mSec) ||
+            !isEqual(parameters.threshold_dB, _parameters.threshold_dB) ||
+            !isEqual(parameters.sensitivity, _parameters.sensitivity) ||
+            !isEqual(parameters.wetGainMin_dB, _parameters.wetGainMin_dB) ||
+            !isEqual(parameters.wetGainMax_dB, _parameters.wetGainMax_dB);
     }
 
     /** set parameters: note use of custom structure for passing param data */
@@ -799,8 +799,8 @@ private:
 
     static bool detectorParametersUpdated(AudioDetectorParameters adParams, const SideChainProcessorParams& params)
     {
-        return !isFloatEqual(adParams.attackTime_mSec, params.attackTime_mSec) ||
-            !isFloatEqual(adParams.releaseTime_mSec, params.releaseTime_mSec);
+        return !isEqual(adParams.attackTime_mSec, params.attackTime_mSec) ||
+            !isEqual(adParams.releaseTime_mSec, params.releaseTime_mSec);
     }
 
     void updateDetectorParameters(const SideChainProcessorParams& params)
@@ -818,10 +818,10 @@ private:
     static bool delayGainCalculatorParametersUpdated(DelayGainCalculatorParameters dgcParams,
                                                      const SideChainProcessorParams& params)
     {
-        return !isFloatEqual(dgcParams.threshold_dB, params.threshold_dB) ||
-            !isFloatEqual(dgcParams.sensitivity, params.sensitivity) ||
-            !isFloatEqual(dgcParams.wetGainMin_dB, params.wetGainMin_dB) ||
-            !isFloatEqual(dgcParams.wetGainMax_dB, params.wetGainMax_dB);
+        return !isEqual(dgcParams.threshold_dB, params.threshold_dB) ||
+            !isEqual(dgcParams.sensitivity, params.sensitivity) ||
+            !isEqual(dgcParams.wetGainMin_dB, params.wetGainMin_dB) ||
+            !isEqual(dgcParams.wetGainMax_dB, params.wetGainMax_dB);
     }
 
     void updateDelayGainCalculatorParameters(const SideChainProcessorParams& params)
@@ -965,7 +965,7 @@ public:
     bool reset(double _sampleRate) override
     {
         // --- if sample rate did not change
-        if (isFloatEqual(sampleRate, _sampleRate))
+        if (isEqual(sampleRate, _sampleRate))
         {
             // --- just flush buffer and return
             delayBuffer_L.flushBuffer();
@@ -1155,7 +1155,7 @@ private:
     void updateParameters(const DigitalDelayParameters<SideChainProcessorParams>& _parameters)
     {
         // --- check level in dB for calc
-        if (!isFloatEqual(_parameters.Level_dB, parameters.Level_dB))
+        if (!isEqual(_parameters.Level_dB, parameters.Level_dB))
             level_dB = pow(10.0, _parameters.Level_dB / 20.0);
 
         mix = _parameters.mix;

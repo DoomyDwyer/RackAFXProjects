@@ -257,6 +257,7 @@
   <ItemGroup>
     <ClInclude Include="..\CustomControls\atomicops.h" />
     <ClInclude Include="..\CustomControls\customcontrols.h" />
+    <ClInclude Include="..\CustomControls\custompedalviews.h" />
     <ClInclude Include="..\CustomControls\readerwriterqueue.h" />
     <ClInclude Include="..\CustomControls\customviews.h" />
     <ClInclude Include="..\PluginKernel\guiconstants.h" />
