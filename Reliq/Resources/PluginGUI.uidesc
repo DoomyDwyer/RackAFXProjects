@@ -11,10 +11,8 @@
 		<view angle-range="270" angle-start="135" background-offset="0, 0" bitmap="Black_pedal_small" circle-drawing="false" class="CAnimKnob" control-tag="controlID::mix" corona-color="~ WhiteCColor" corona-dash-dot="false" corona-drawing="false" corona-from-center="false" corona-inset="0" corona-inverted="false" corona-outline="false" custom-view-name="" default-value="0.5" handle-color="~ WhiteCColor" handle-line-width="1" handle-shadow-color="~ GreyCColor" height-of-one-image="64" max-value="1" min-value="0" mouse-enabled="true" origin="30 ,80" size="64, 64" sub-controller="" sub-pixmaps="31" tooltip="" transparent="false" value-inset="0" wheel-inc-value="0.1" zoom-factor="10.0" />
 		<view angle-range="270" angle-start="135" background-offset="0, 0" bitmap="Black_pedal_small" circle-drawing="false" class="CAnimKnob" control-tag="controlID::level_dB" corona-color="~ WhiteCColor" corona-dash-dot="false" corona-drawing="false" corona-from-center="false" corona-inset="0" corona-inverted="false" corona-outline="false" custom-view-name="" default-value="0.5" handle-color="~ WhiteCColor" handle-line-width="1" handle-shadow-color="~ GreyCColor" height-of-one-image="64" max-value="1" min-value="0" mouse-enabled="true" origin="125 ,80" size="64, 64" sub-controller="" sub-pixmaps="31" tooltip="" transparent="false" value-inset="0" wheel-inc-value="0.1" zoom-factor="10.0" />
 		<view background-offset="0, 0" bitmap="medtoggleswitch" class="COnOffButton" control-tag="controlID::delayType" default-value="0" max-value="1" min-value="0" mouse-enabled="true" origin="88 ,131" size="42, 42" transparent="false" wheel-inc-value="0.1" height-of-one-image="42" custom-view-name="" />
-		<view background-offset="0, 0" bitmap="Kick_Switch_trace_2_states" class="COnOffButton" control-tag="controlID::fx_On" default-value="0" max-value="1" min-value="0" mouse-enabled="true" origin="84 ,275" size="53, 53" transparent="false" wheel-inc-value="0.1" height-of-one-image="53" custom-view-name="" />
 		<view back-color="kLightGreyCColor" background-offset="0, 0" class="COptionMenu" control-tag="SCALE_GUI_SIZE" custom-view-name="" default-value="0.5" font="~ NormalFontVerySmall" font-antialias="true" font-color="~ BlackCColor" frame-color="kDarkGreyCColor" frame-width="1" max-value="" menu-check-style="false" menu-popup-style="false" min-value="0" mouse-enabled="true" origin="90,6" round-rect-radius="6" shadow-color="~ RedCColor" size="40 ,10" style-3D-in="false" style-3D-out="false" style-no-draw="false" style-no-frame="false" style-no-text="false" style-round-rect="false" style-shadow-text="false" sub-controller="" text-alignment="" text-inset="0, 0" title="SEL 1" transparent="false" value-precision="2" wheel-inc-value="0.1" />
-		<view background-offset="0, 0" bitmap="red_led_large" class="COnOffButton" control-tag="controlID::fx_On" default-value="0" max-value="1" min-value="0" mouse-enabled="true" origin="102 ,250" size="17, 18" transparent="false" wheel-inc-value="0.1" height-of-one-image="18" custom-view-name="" />
-		<view background-offset="0, 0" bitmap="led_red" class="COnOffButton" control-tag="controlID::emulateAnalog" default-value="0" max-value="1" min-value="0" mouse-enabled="true" origin="52 ,275" size="9, 9" transparent="false" wheel-inc-value="0.1" height-of-one-image="9" custom-view-name="" />
+		<view background-offset="0, 0" bitmap="led_red" class="COnOffButton" control-tag="controlID::emulateAnalog" default-value="0" max-value="1" min-value="0" mouse-enabled="false" origin="52 ,275" size="9, 9" transparent="false" wheel-inc-value="0.1" height-of-one-image="9" custom-view-name="" />
 		<view background-offset="0, 0" bitmap="medtoggleswitch" class="COnOffButton" control-tag="controlID::emulateAnalog" default-value="0" max-value="1" min-value="0" mouse-enabled="true" origin="35 ,285" size="42, 42" transparent="false" wheel-inc-value="0.1" height-of-one-image="42" custom-view-name="" />
 		<view back-color="~ BlackCColor" background-offset="0, 0" class="CTextLabel" custom-view-name="UnitsLabel" default-value="0.5" font="~ NormalFontVerySmall" font-antialias="true" font-color="~ WhiteCColor" frame-color="~ BlackCColor" frame-width="1" max-value="1" min-value="0" mouse-enabled="true" origin="35 ,315" rafxlabel-type="" round-rect-radius="6" shadow-color="~ RedCColor" size="44 ,16" style-3D-in="false" style-3D-out="false" style-no-draw="false" style-no-frame="false" style-no-text="false" style-round-rect="false" style-shadow-text="false" sub-controller="" text-alignment="center" text-inset="0, 0" title="EMULATE" transparent="true" value-precision="2" wheel-inc-value="0.1" control-tag="" />
 		<view back-color="~ BlackCColor" background-offset="0, 0" class="CTextLabel" custom-view-name="UnitsLabel" default-value="0.5" font="~ NormalFontVerySmall" font-antialias="true" font-color="~ WhiteCColor" frame-color="~ BlackCColor" frame-width="1" max-value="1" min-value="0" mouse-enabled="true" origin="35 ,325" rafxlabel-type="" round-rect-radius="6" shadow-color="~ RedCColor" size="42 ,16" style-3D-in="false" style-3D-out="false" style-no-draw="false" style-no-frame="false" style-no-text="false" style-round-rect="false" style-shadow-text="false" sub-controller="" text-alignment="center" text-inset="0, 0" title="ANALOG" transparent="true" value-precision="2" wheel-inc-value="0.1" control-tag="" />
@@ -24,6 +22,7 @@
 		<view back-color="~ BlackCColor" background-offset="0, 0" class="CTextLabel" custom-view-name="UnitsLabel" default-value="0.5" font="~ NormalFontBig" font-antialias="true" font-color="~ BlackCColor" frame-color="~ BlackCColor" frame-width="1" max-value="1" min-value="0" mouse-enabled="true" origin="117 ,140" rafxlabel-type="" round-rect-radius="6" shadow-color="~ RedCColor" size="80 ,16" style-3D-in="false" style-3D-out="false" style-no-draw="false" style-no-frame="false" style-no-text="false" style-round-rect="false" style-shadow-text="false" sub-controller="" text-alignment="center" text-inset="0, 0" title="LEVEL" transparent="true" value-precision="2" wheel-inc-value="0.1" control-tag="" />
 		<view back-color="~ BlackCColor" background-offset="0, 0" class="CTextLabel" custom-view-name="UnitsLabel" default-value="0.5" font="~ NormalFontVerySmall" font-antialias="true" font-color="~ BlackCColor" frame-color="~ BlackCColor" frame-width="1" max-value="1" min-value="0" mouse-enabled="true" origin="86 ,162" rafxlabel-type="" round-rect-radius="6" shadow-color="~ RedCColor" size="50 ,16" style-3D-in="false" style-3D-out="false" style-no-draw="false" style-no-frame="false" style-no-text="false" style-round-rect="false" style-shadow-text="false" sub-controller="" text-alignment="center" text-inset="0, 0" title="PINGPONG" transparent="true" value-precision="2" wheel-inc-value="0.1" control-tag="" />
 		<view back-color="~ BlackCColor" background-offset="0, 0" class="CTextLabel" custom-view-name="UnitsLabel" default-value="0.5" font="~ NormalFontVerySmall" font-antialias="true" font-color="~ BlackCColor" frame-color="~ BlackCColor" frame-width="1" max-value="1" min-value="0" mouse-enabled="true" origin="90 ,127" rafxlabel-type="" round-rect-radius="6" shadow-color="~ RedCColor" size="42 ,16" style-3D-in="false" style-3D-out="false" style-no-draw="false" style-no-frame="false" style-no-text="false" style-round-rect="false" style-shadow-text="false" sub-controller="" text-alignment="center" text-inset="0, 0" title="NORMAL" transparent="true" value-precision="2" wheel-inc-value="0.1" control-tag="" />
+		<view background-color="~ BlackCColor" background-color-draw-style="filled and stroked" bitmap="" class="CViewContainer" custom-view-name="" mouse-enabled="true" origin="84 ,250" rafxtemplate-type="userViewContainer" size="53 ,78" template="KickSwitchViewContainer" transparent="true" sub-controller="KickSwitchController" />
 	</template>
 	<custom>
 		<attributes Path="" name="ASPiKEditor" />
@@ -44,41 +43,7 @@
 		<attributes RAFXAutosize="false" />
 		<attributes RAFXCanvasWidth="219" />
 		<attributes RAFXCanvasHeight="354" />
-		<attributes rafx-template-name="User ViewContainer 0" rafxtemplate-type="userViewContainer" />
-		<attributes rafx-template-name="User ViewContainer 0" />
-		<attributes rafx-template-name="User ViewContainer 0" />
-		<attributes rafx-template-name="User ViewContainer 0" />
-		<attributes rafx-template-name="User ViewContainer 0" />
-		<attributes rafx-template-name="User ViewContainer 0" />
-		<attributes rafx-template-name="User ViewContainer 0" />
-		<attributes rafx-template-name="User ViewContainer 0" />
-		<attributes rafx-template-name="User ViewContainer 0" />
-		<attributes rafx-template-name="User ViewContainer 0" />
-		<attributes rafx-template-name="User ViewContainer 0" />
-		<attributes rafx-template-name="User ViewContainer 0" />
-		<attributes rafx-template-name="User ViewContainer 0" />
-		<attributes rafx-template-name="User ViewContainer 0" />
-		<attributes rafx-template-name="User ViewContainer 0" />
-		<attributes rafx-template-name="User ViewContainer 0" />
-		<attributes rafx-template-name="User ViewContainer 0" />
-		<attributes rafx-template-name="User ViewContainer 0" />
-		<attributes rafx-template-name="User ViewContainer 0" />
-		<attributes rafx-template-name="User ViewContainer 0" />
-		<attributes rafx-template-name="User ViewContainer 0" />
-		<attributes rafx-template-name="User ViewContainer 0" />
-		<attributes rafx-template-name="User ViewContainer 0" />
-		<attributes rafx-template-name="User ViewContainer 0" />
-		<attributes rafx-template-name="User ViewContainer 0" />
-		<attributes rafx-template-name="User ViewContainer 0" />
-		<attributes rafx-template-name="User ViewContainer 0" />
-		<attributes rafx-template-name="User ViewContainer 0" />
-		<attributes rafx-template-name="User ViewContainer 0" />
-		<attributes rafx-template-name="User ViewContainer 0" />
-		<attributes rafx-template-name="User ViewContainer 0" />
-		<attributes rafx-template-name="User ViewContainer 0" />
-		<attributes rafx-template-name="User ViewContainer 0" />
-		<attributes rafx-template-name="User ViewContainer 0" />
-		<attributes rafx-template-name="User ViewContainer 0" />
+		<attributes rafx-template-name="KickSwitchViewContainer" rafxtemplate-type="userViewContainer" />
 	</custom>
 	<bitmaps>
 		<bitmap name="red_led_large" path="D:\Pictures\Doomsville\red_led_large.png">
@@ -2130,6 +2095,7 @@
 		<control-tag name="controlID::delayType" tag="5" />
 		<control-tag name="controlID::fx_On" tag="6" />
 		<control-tag name="controlID::emulateAnalog" tag="7" />
+		<control-tag name="controlID::fx_OnOff_Toggle" tag="8" />
 		<control-tag name="XY_TRACKPAD" tag="131073" />
 		<control-tag name="VECTOR_JOYSTICK" tag="131074" />
 		<control-tag name="PRESET_NAME" tag="131075" />
@@ -2163,4 +2129,8 @@
 			<color-stop rgba="#646464ff" start="1" />
 		</gradient>
 	</gradients>
+	<template background-color="~ BlackCColor" background-color-draw-style="filled and stroked" bitmap="" class="CViewContainer" custom-view-name="" mouse-enabled="true" name="KickSwitchViewContainer" origin="0, 0" size="53 ,78" transparent="true" sub-controller="KickSwitchController">
+		<view background-offset="0, 0" bitmap="red_led_large" class="COnOffButton" control-tag="controlID::fx_On" default-value="0" max-value="1" min-value="0" mouse-enabled="false" origin="18,0" size="17, 18" transparent="false" wheel-inc-value="0.1" height-of-one-image="18" custom-view-name="" />
+		<view background-offset="0, 0" bitmap="Kick_Switch_trace_2_states" class="CKickButton" control-tag="controlID::fx_OnOff_Toggle" default-value="0" max-value="1" min-value="0" mouse-enabled="true" origin="0,25" size="53, 53" transparent="false" wheel-inc-value="0.1" height-of-one-image="53" custom-view-name="CustomKickButtonDU" />
+	</template>
 </vstgui-ui-description>

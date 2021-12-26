@@ -2465,21 +2465,21 @@ Operation:\n
 IController* PluginGUI::createSubController(UTF8StringPtr name, const IUIDescription* description)
 {
 	std::string strName(name);
-	int findIt = strName.find("KnobLinkController");
+	int findIt = strName.find("KickSwitchController");
 	if (findIt >= 0)
 	{
 		// --- create the sub-controller
-		KnobLinkController* knobLinker = new KnobLinkController(this);
+		KickSwitchController* kickSwitchController = new KickSwitchController(this);
 
 		// --- if the sub-controller has the ICustomView interface,
 		//     we register it with the plugin for updates (unusual for a sub-controller)
-		if (hasICustomView(knobLinker))
+		if (hasICustomView(kickSwitchController))
 		{
 			if (guiPluginConnector)
-				guiPluginConnector->registerSubcontroller(strName, dynamic_cast<ICustomView*>(knobLinker));
+				guiPluginConnector->registerSubcontroller(strName, dynamic_cast<ICustomView*>(kickSwitchController));
 		}
 
-		return knobLinker;
+		return kickSwitchController;
 	}
 
 	return nullptr;
