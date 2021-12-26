@@ -5,7 +5,8 @@
 #include "vstgui/vstgui.h"
 #include "vstgui/vstgui_uidescription.h" // for IController
 
-namespace VSTGUI {
+namespace VSTGUI
+{
     /**
     \class KickSwitchController
     \ingroup Custom-SubControllers
