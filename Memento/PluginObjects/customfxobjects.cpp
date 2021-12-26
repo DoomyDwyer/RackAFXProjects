@@ -82,10 +82,10 @@ bool AutoQEnvelopeFollower::filterParametersUpdated(const ZVAFilterParameters fi
                                                     const AutoQEnvelopeFollowerParameters& params)
 {
     return filterParams.filterAlgorithm != params.filterAlgorithm ||
-        !isFloatEqual(filterParams.fc, params.fc) ||
-        !isFloatEqual(filterParams.Q, params.Q) ||
-        !isFloatEqual(filterParams.enableGainComp, params.enableGainComp) ||
-        !isFloatEqual(filterParams.filterOutputGain_dB, params.filterOutputGain_dB) ||
+        !isEqual(filterParams.fc, params.fc) ||
+        !isEqual(filterParams.Q, params.Q) ||
+        !isEqual(filterParams.filterOutputGain_dB, params.filterOutputGain_dB) ||
+        filterParams.enableGainComp != params.enableGainComp ||
         filterParams.matchAnalogNyquistLPF != params.matchAnalogNyquistLPF ||
         filterParams.enableNLP != params.enableNLP ||
         filterParams.selfOscillate != params.selfOscillate;
@@ -111,8 +111,8 @@ void AutoQEnvelopeFollower::updateFilterParameters(const AutoQEnvelopeFollowerPa
 bool AutoQEnvelopeFollower::detectorParametersUpdated(const AudioDetectorParameters adParams,
                                                       const AutoQEnvelopeFollowerParameters& params)
 {
-    return !isFloatEqual(adParams.attackTime_mSec, params.attackTime_mSec) ||
-        !isFloatEqual(adParams.releaseTime_mSec, params.releaseTime_mSec);
+    return !isEqual(adParams.attackTime_mSec, params.attackTime_mSec) ||
+        !isEqual(adParams.releaseTime_mSec, params.releaseTime_mSec);
 }
 
 void AutoQEnvelopeFollower::updateDetectorParameters(const AutoQEnvelopeFollowerParameters& params)
@@ -239,7 +239,7 @@ PhaserParameters Phaser::getParameters() { return parameters; }
 
 bool Phaser::parametersUpdated(const OscillatorParameters lfoparams, const PhaserParameters& params)
 {
-    return !isFloatEqual(lfoparams.frequency_Hz, params.lfoRate_Hz) ||
+    return !isEqual(lfoparams.frequency_Hz, params.lfoRate_Hz) ||
         lfoparams.waveform != params.lfoWaveform;
 }
 
@@ -317,7 +317,7 @@ AnalogTone::~AnalogTone() = default;
 
 bool AnalogTone::reset(double _sampleRate)
 {
-    if (!isFloatEqual(Fs, _sampleRate))
+    if (!isEqual(Fs, _sampleRate))
     {
         Fs = _sampleRate;
         updateCoefficients();
@@ -343,7 +343,7 @@ AnalogToneParameters AnalogTone::getParameters() const { return parameters; }
 
 bool AnalogTone::parametersUpdated(AnalogToneParameters _parameters) const
 {
-    return !isFloatEqual(parameters.tone, _parameters.tone) || !isFloatEqual(parameters.level, _parameters.level);
+    return !isEqual(parameters.tone, _parameters.tone) || !isEqual(parameters.level, _parameters.level);
 }
 
 void AnalogTone::updateParameters(AnalogToneParameters _parameters)
@@ -401,7 +401,7 @@ AnalogClipper::~AnalogClipper() = default;
 
 bool AnalogClipper::reset(double _sampleRate)
 {
-    if (!isFloatEqual(Fs, _sampleRate))
+    if (!isEqual(Fs, _sampleRate))
     {
         Fs = _sampleRate;
         updateCoefficients();
@@ -447,7 +447,7 @@ AnalogClipperParameters AnalogClipper::getParameters() const { return parameters
 
 bool AnalogClipper::parametersUpdated(AnalogClipperParameters _parameters) const
 {
-    return !isFloatEqual(parameters.drive, _parameters.drive);
+    return !isEqual(parameters.drive, _parameters.drive);
 }
 
 void AnalogClipper::updateParameters(AnalogClipperParameters _parameters)
