@@ -240,6 +240,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\..\..\ASPiKCommon\dsp\customfxobjects.cpp" />
     <ClCompile Include="..\..\vstgui4\vstgui\vstgui_uidescription_win32.cpp" />
     <ClCompile Include="..\..\vstgui4\vstgui\vstgui_win32.cpp" />
     <ClCompile Include="..\CustomControls\customcontrols.cpp" />
@@ -248,16 +249,17 @@
     <ClCompile Include="..\PluginKernel\plugincore.cpp" />
     <ClCompile Include="..\PluginKernel\plugingui.cpp" />
     <ClCompile Include="..\PluginKernel\pluginparameter.cpp" />
-    <ClCompile Include="..\PluginObjects\customfxobjects.cpp" />
     <ClCompile Include="..\PluginObjects\fxobjects.cpp" />
     <ClCompile Include="..\RAFX2 Source\RackAFXDLL.cpp" />
     <ClCompile Include="..\RAFX2 Source\Rafx2Plugin.cpp" />
     <ClCompile Include="..\RAFX2 Source\Rafx2PluginBase.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\..\..\ASPiKCommon\dsp\customfxobjects.h" />
+    <ClInclude Include="..\..\..\..\ASPiKCommon\dsp\utilities.h" />
+    <ClInclude Include="..\..\..\..\ASPiKCommon\gui\custompedalviews.h" />
     <ClInclude Include="..\CustomControls\atomicops.h" />
     <ClInclude Include="..\CustomControls\customcontrols.h" />
-    <ClInclude Include="..\CustomControls\custompedalviews.h" />
     <ClInclude Include="..\CustomControls\readerwriterqueue.h" />
     <ClInclude Include="..\CustomControls\customviews.h" />
     <ClInclude Include="..\PluginKernel\guiconstants.h" />
@@ -267,10 +269,8 @@
     <ClInclude Include="..\PluginKernel\plugingui.h" />
     <ClInclude Include="..\PluginKernel\pluginparameter.h" />
     <ClInclude Include="..\PluginKernel\pluginstructures.h" />
-    <ClInclude Include="..\PluginObjects\customfxobjects.h" />
     <ClInclude Include="..\PluginObjects\fxobjects.h" />
     <ClInclude Include="..\PluginObjects\filters.h" />
-    <ClInclude Include="..\PluginObjects\utilities.h" />
     <ClInclude Include="..\RAFX2 Source\RackAFXDLL.h" />
     <ClInclude Include="..\RAFX2 Source\Rafx2Plugin.h" />
     <ClInclude Include="..\RAFX2 Source\Rafx2PluginBase.h" />
