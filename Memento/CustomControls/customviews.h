@@ -29,36 +29,6 @@ const unsigned int MESSAGE_SET_STRINGLIST = 0;
 const unsigned int MESSAGE_SET_STRING = 1;
 
 /**
-\class VariableToolTipKnobView
-\ingroup Custom-Views
-\brief
-This object can have its tootip text altered at runtime.\n
-
-\author Steve Dwyer
-\remark Adapted from Will Pirkle's CustomKnobView class.
-\version Revision : 1.0
-\date Date : 2021-12-23
-*/
-class VariableToolTipKnobView : public CAnimKnob, public ICustomView
-{
-public:
-    VariableToolTipKnobView(const CRect& size, IControlListener* listener, int32_t tag, int32_t subPixmaps,
-            CCoord heightOfOneImage, CBitmap* background, const CPoint &offset,
-            bool bSwitchKnob = false);
-
-	/** ICustomView method: this repaints the control */
-	virtual void updateView() override;
-
-    virtual void pushDataValue(double data) override;
-
-protected:
-    virtual ~VariableToolTipKnobView(void);
-
-private:
-    UTF8StringPtr toolTipText;
-};
-
-/**
 \class WaveView
 \ingroup Custom-Views
 \brief

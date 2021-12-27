@@ -186,20 +186,6 @@ private:
     // --- end member variables
     const double delayGoldenRatio = 1 / 1.618 * 100;
 
-    // Custom Views for updating the knobs' tooltip texts
-    ICustomView* delayTimeView = nullptr;
-    ICustomView* delayFeedbackView = nullptr;
-    ICustomView* mixView = nullptr;
-    ICustomView* levelView = nullptr;
-    ICustomView* sideChainGainView = nullptr;
-    ICustomView* attackTimeView = nullptr;
-    ICustomView* releaseTimeView = nullptr;
-    ICustomView* thresholdView = nullptr;
-    ICustomView* wetGainMinView = nullptr;
-    ICustomView* wetGainMaxView = nullptr;
-    ICustomView* sensitivityView = nullptr;
-
-
 public:
     /** static description: bundle folder name
 

@@ -12,7 +12,6 @@
 // -----------------------------------------------------------------------------
 #include "plugincore.h"
 
-#include "customviews.h"
 #include "plugindescription.h"
 #pragma warning (disable : 4244)
 
@@ -619,160 +618,13 @@ bool PluginCore::processMessage(MessageInfo& messageInfo)
         // --- update view; this will only be called if the GUI is actually open
     case PLUGINGUI_TIMERPING:
         {
-            if (delayTimeView)
-            {
-                delayTimeView->pushDataValue(delayTime_mSec);
-                delayTimeView->updateView();
-            }
-
-            if (delayFeedbackView)
-            {
-                delayFeedbackView->pushDataValue(delayFeedback_Pct);
-                delayFeedbackView->updateView();
-            }
-
-            if (mixView)
-            {
-                mixView->pushDataValue(mix);
-                mixView->updateView();
-            }
-
-            if (levelView)
-            {
-                levelView->pushDataValue(level_dB);
-                levelView->updateView();
-            }
-
-            if (sideChainGainView)
-            {
-                sideChainGainView->pushDataValue(sideChainGain_dB);
-                sideChainGainView->updateView();
-            }
-
-            if (attackTimeView)
-            {
-                attackTimeView->pushDataValue(attackTime_mSec);
-                attackTimeView->updateView();
-            }
-
-            if (releaseTimeView)
-            {
-                releaseTimeView->pushDataValue(releaseTime_mSec);
-                releaseTimeView->updateView();
-            }
-
-            if (thresholdView)
-            {
-                thresholdView->pushDataValue(threshold_dB);
-                thresholdView->updateView();
-            }
-
-            if (wetGainMinView)
-            {
-                wetGainMinView->pushDataValue(wetGainMin_dB);
-                wetGainMinView->updateView();
-            }
-
-            if (wetGainMaxView)
-            {
-                wetGainMaxView->pushDataValue(wetGainMax_dB);
-                wetGainMaxView->updateView();
-            }
-
-            if (sensitivityView)
-            {
-                sensitivityView->pushDataValue(sensitivity);
-                sensitivityView->updateView();
-            }
-
-            return true;
+            return false;
         }
 
         // --- register the custom view, grab the ICustomView interface
     case PLUGINGUI_REGISTER_CUSTOMVIEW:
         {
-            // --- example of querying plugin for information and getting a pointer to the control
-            //     which is VERY risky - you should use the custom view data structure and messaging
-            //     to call functions on the control at the proper time
-            if (messageInfo.inMessageString.compare("delayTimeView") == 0)
-            {
-                // --- (1) get the custom view interface via incoming message data*
-                if (delayTimeView != static_cast<ICustomView*>(messageInfo.inMessageData))
-                    delayTimeView = static_cast<ICustomView*>(messageInfo.inMessageData);
-                if (!delayTimeView) return false;
-            }
-
-            if (messageInfo.inMessageString.compare("delayFeedbackView") == 0)
-            {
-                if (delayFeedbackView != static_cast<ICustomView*>(messageInfo.inMessageData))
-                    delayFeedbackView = static_cast<ICustomView*>(messageInfo.inMessageData);
-                if (!delayFeedbackView) return false;
-            }
-
-            if (messageInfo.inMessageString.compare("mixView") == 0)
-            {
-                if (mixView != static_cast<ICustomView*>(messageInfo.inMessageData))
-                    mixView = static_cast<ICustomView*>(messageInfo.inMessageData);
-                if (!mixView) return false;
-            }
-
-            if (messageInfo.inMessageString.compare("levelView") == 0)
-            {
-                if (levelView != static_cast<ICustomView*>(messageInfo.inMessageData))
-                    levelView = static_cast<ICustomView*>(messageInfo.inMessageData);
-                if (!levelView) return false;
-            }
-
-            if (messageInfo.inMessageString.compare("sideChainGainView") == 0)
-            {
-                if (sideChainGainView != static_cast<ICustomView*>(messageInfo.inMessageData))
-                    sideChainGainView = static_cast<ICustomView*>(messageInfo.inMessageData);
-                if (!sideChainGainView) return false;
-            }
-
-            if (messageInfo.inMessageString.compare("attackTimeView") == 0)
-            {
-                if (attackTimeView != static_cast<ICustomView*>(messageInfo.inMessageData))
-                    attackTimeView = static_cast<ICustomView*>(messageInfo.inMessageData);
-                if (!attackTimeView) return false;
-            }
-
-            if (messageInfo.inMessageString.compare("releaseTimeView") == 0)
-            {
-                if (releaseTimeView != static_cast<ICustomView*>(messageInfo.inMessageData))
-                    releaseTimeView = static_cast<ICustomView*>(messageInfo.inMessageData);
-                if (!releaseTimeView) return false;
-            }
-
-            if (messageInfo.inMessageString.compare("thresholdView") == 0)
-            {
-                if (thresholdView != static_cast<ICustomView*>(messageInfo.inMessageData))
-                    thresholdView = static_cast<ICustomView*>(messageInfo.inMessageData);
-                if (!thresholdView) return false;
-            }
-
-            if (messageInfo.inMessageString.compare("wetGainMinView") == 0)
-            {
-                if (wetGainMinView != static_cast<ICustomView*>(messageInfo.inMessageData))
-                    wetGainMinView = static_cast<ICustomView*>(messageInfo.inMessageData);
-                if (!wetGainMinView) return false;
-            }
-
-            if (messageInfo.inMessageString.compare("wetGainMaxView") == 0)
-            {
-                if (wetGainMaxView != static_cast<ICustomView*>(messageInfo.inMessageData))
-                    wetGainMaxView = static_cast<ICustomView*>(messageInfo.inMessageData);
-                if (!wetGainMaxView) return false;
-            }
-
-            if (messageInfo.inMessageString.compare("sensitivityView") == 0)
-            {
-                if (sensitivityView != static_cast<ICustomView*>(messageInfo.inMessageData))
-                    sensitivityView = static_cast<ICustomView*>(messageInfo.inMessageData);
-                if (!sensitivityView) return false;
-
-                return true;
-            }
+            return false;
         }
 
     case PLUGINGUI_REGISTER_SUBCONTROLLER:
@@ -1030,7 +882,7 @@ bool PluginCore::initPluginParameters()
 
 	// --- controlID::fx_OnOff_Toggle
 	auxAttribute.reset(auxGUIIdentifier::guiControlData);
-	auxAttribute.setUintAttribute(1073741824);
+	auxAttribute.setUintAttribute(1610612736);
 	setParamAuxAttribute(controlID::fx_OnOff_Toggle, auxAttribute);
 
 
@@ -1126,8 +978,8 @@ bool PluginCore::initPluginPresets()
 	setPresetParameter(preset->presetParameters, controlID::fx_OnOff_Toggle, 0.000000);
 	addPreset(preset);
 
-	// --- Preset: Overdriven guitar II 120bpm
-	preset = new PresetInfo(index++, "Overdriven guitar II 120bpm");
+	// --- Preset: Psychedelic swell 120bpm
+	preset = new PresetInfo(index++, "Psychedelic swell 120bpm");
 	initPresetParameters(preset->presetParameters);
 	setPresetParameter(preset->presetParameters, controlID::delayTime_mSec, 250.000000);
 	setPresetParameter(preset->presetParameters, controlID::delayFeedback_Pct, 75.000000);
@@ -1143,7 +995,7 @@ bool PluginCore::initPluginPresets()
 	setPresetParameter(preset->presetParameters, controlID::wetGainMax_dB, -10.500000);
 	setPresetParameter(preset->presetParameters, controlID::fx_On, 1.000000);
 	setPresetParameter(preset->presetParameters, controlID::sensitivity, 3.400000);
-	setPresetParameter(preset->presetParameters, controlID::fx_OnOff_Toggle, 0.000000);
+	setPresetParameter(preset->presetParameters, controlID::fx_OnOff_Toggle, -0.000000);
 	addPreset(preset);
 
 

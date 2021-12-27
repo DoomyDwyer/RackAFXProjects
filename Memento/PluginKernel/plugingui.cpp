@@ -2,6 +2,7 @@
 #include "plugingui.h"
 
 // --- custom data view example; include more custom views here
+#include "../../../../ASPiKCommon/gui/custompedalviews.h"
 #include "customviews.h"
 
 #if MAC
@@ -1908,91 +1909,6 @@ CView* PluginGUI::createView(const UIAttributes& attributes, const IUIDescriptio
         
         // --- else keep trying other custom views (below)
     }
-
-    // --- Variable ToolTip Knob
-    if (viewname == "VariableToolTipKnobView" ||
-        viewname == "delayTimeView" ||
-        viewname == "delayFeedbackView" ||
-        viewname == "mixView" ||
-        viewname == "levelView" ||
-        viewname == "sideChainGainView" ||
-        viewname == "attackTimeView" ||
-        viewname == "releaseTimeView" ||
-        viewname == "thresholdView" ||
-        viewname == "wetGainMinView" ||
-        viewname == "wetGainMaxView" ||
-        viewname == "sensitivityView")
-    {
-        // --- our wave view testing object
-        const std::string* sizeString = attributes.getAttributeValue("size");
-        const std::string* originString = attributes.getAttributeValue("origin");
-        const std::string* offsetString = attributes.getAttributeValue("background-offset");
-        const std::string* tagString = attributes.getAttributeValue("control-tag");
-        const std::string* bitmapString = attributes.getAttributeValue("bitmap");
-        const std::string* heightOneImageString = attributes.getAttributeValue("height-of-one-image");
-        const std::string* subPixmapsString = attributes.getAttributeValue("sub-pixmaps");
-        if (!sizeString) return nullptr;
-        if (!originString) return nullptr;
-       // if (!offsetString) return nullptr;
-        if (!tagString) return nullptr;
-        if (!bitmapString) return nullptr;
-        if (!heightOneImageString) return nullptr;
-        if (!subPixmapsString) return nullptr;
-        
-        // --- create the rect
-        CPoint origin;
-        CPoint size;
-        parseSize(*sizeString, size);
-        parseSize(*originString, origin);
-        
-        const CRect rect(origin, size);
-        
-        // --- get listener
-        IControlListener* listener = description->getControlListener(tagString->c_str());
-        
-        // --- get tag
-        int32_t tag = description->getTagForName(tagString->c_str());
-        
-        // --- subPixmaps
-        int32_t subPixmaps = strtol(subPixmapsString->c_str(), 0, 10);
-        
-        // --- height of one image
-        CCoord heightOfOneImage = strtod(heightOneImageString->c_str(), 0);
-        
-        // --- bitmap
-        std::string BMString = *bitmapString;
-        BMString += ".png";
-        UTF8StringPtr bmp = BMString.c_str();
-        CResourceDescription bmpRes(bmp);
-        CBitmap* pBMP = new CBitmap(bmpRes);
-        
-        // --- offset
-        CPoint offset(0.0, 0.0);
-        if (offsetString)
-            parseSize(*offsetString, offset);
-        
-        const CPoint offsetPoint(offset);
-        
-        PluginParameter* piParam = getGuiControlWithTag(tag);
-        if (!piParam)
-        {
-            if (pBMP) pBMP->forget();
-            return nullptr;
-        }
-        
-        VariableToolTipKnobView* variableToolTipKnob = new VariableToolTipKnobView(rect, listener, tag, subPixmaps, heightOfOneImage, pBMP, offsetPoint, false);
-        
-        // --- if the view has the ICustomView interface, we register it with the plugin for updates
-        if (hasICustomView(variableToolTipKnob))
-        {
-            if (guiPluginConnector)
-                guiPluginConnector->registerCustomView(viewname, (ICustomView*)variableToolTipKnob);
-        }
-        
-        if (pBMP) pBMP->forget();
-        
-        return variableToolTipKnob;
-    }
     
     // --- example of custom control
     if (viewname == "CustomKnobView")
@@ -2549,21 +2465,38 @@ Operation:\n
 IController* PluginGUI::createSubController(UTF8StringPtr name, const IUIDescription* description)
 {
 	std::string strName(name);
-	int findIt = strName.find("KnobLinkController");
+	int findIt = strName.find("KickSwitchController");
 	if (findIt >= 0)
 	{
 		// --- create the sub-controller
-		KnobLinkController* knobLinker = new KnobLinkController(this);
+		auto* kickSwitchController = new KickSwitchController(this);
 
 		// --- if the sub-controller has the ICustomView interface,
 		//     we register it with the plugin for updates (unusual for a sub-controller)
-		if (hasICustomView(knobLinker))
+		if (hasICustomView(kickSwitchController))
 		{
 			if (guiPluginConnector)
-				guiPluginConnector->registerSubcontroller(strName, dynamic_cast<ICustomView*>(knobLinker));
+				guiPluginConnector->registerSubcontroller(strName, dynamic_cast<ICustomView*>(kickSwitchController));
 		}
 
-		return knobLinker;
+		return kickSwitchController;
+	}
+
+    findIt = strName.find("VariableToolTipKnobController");
+	if (findIt >= 0)
+	{
+		// --- create the sub-controller
+		auto* variableToolTipKnobController = new VariableToolTipKnobController(this);
+
+		// --- if the sub-controller has the ICustomView interface,
+		//     we register it with the plugin for updates (unusual for a sub-controller)
+		if (hasICustomView(variableToolTipKnobController))
+		{
+			if (guiPluginConnector)
+				guiPluginConnector->registerSubcontroller(strName, dynamic_cast<ICustomView*>(variableToolTipKnobController));
+		}
+
+		return variableToolTipKnobController;
 	}
 
 	return nullptr;
