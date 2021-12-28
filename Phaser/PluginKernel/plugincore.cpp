@@ -12,7 +12,6 @@
 // -----------------------------------------------------------------------------
 #include "plugincore.h"
 
-#include "customfxobjects.h"
 #include "plugindescription.h"
 #pragma warning (disable : 4244)
 
@@ -758,6 +757,39 @@ bool PluginCore::initPluginPresets()
 	setPresetParameter(preset->presetParameters, controlID::lfoWaveform, -0.000000);
 	setPresetParameter(preset->presetParameters, controlID::quadPhaseLFO, -0.000000);
 	setPresetParameter(preset->presetParameters, controlID::fx_On, -0.000000);
+	addPreset(preset);
+
+	// --- Preset: Deep Dive
+	preset = new PresetInfo(index++, "Deep Dive");
+	initPresetParameters(preset->presetParameters);
+	setPresetParameter(preset->presetParameters, controlID::lfoRate_Hz, 0.280000);
+	setPresetParameter(preset->presetParameters, controlID::lfoDepth_Pct, 90.500000);
+	setPresetParameter(preset->presetParameters, controlID::intensity_Pct, 75.000000);
+	setPresetParameter(preset->presetParameters, controlID::lfoWaveform, 1.000000);
+	setPresetParameter(preset->presetParameters, controlID::quadPhaseLFO, -0.000000);
+	setPresetParameter(preset->presetParameters, controlID::fx_On, 1.000000);
+	addPreset(preset);
+
+	// --- Preset: Deep Dive (Stereo)
+	preset = new PresetInfo(index++, "Deep Dive (Stereo)");
+	initPresetParameters(preset->presetParameters);
+	setPresetParameter(preset->presetParameters, controlID::lfoRate_Hz, 0.280000);
+	setPresetParameter(preset->presetParameters, controlID::lfoDepth_Pct, 90.500000);
+	setPresetParameter(preset->presetParameters, controlID::intensity_Pct, 75.000000);
+	setPresetParameter(preset->presetParameters, controlID::lfoWaveform, 1.000000);
+	setPresetParameter(preset->presetParameters, controlID::quadPhaseLFO, 1.000000);
+	setPresetParameter(preset->presetParameters, controlID::fx_On, 1.000000);
+	addPreset(preset);
+
+	// --- Preset: Cyclic Swirl (Stereo)
+	preset = new PresetInfo(index++, "Cyclic Swirl (Stereo)");
+	initPresetParameters(preset->presetParameters);
+	setPresetParameter(preset->presetParameters, controlID::lfoRate_Hz, 0.210000);
+	setPresetParameter(preset->presetParameters, controlID::lfoDepth_Pct, 93.019997);
+	setPresetParameter(preset->presetParameters, controlID::intensity_Pct, 90.000000);
+	setPresetParameter(preset->presetParameters, controlID::lfoWaveform, 1.000000);
+	setPresetParameter(preset->presetParameters, controlID::quadPhaseLFO, 1.000000);
+	setPresetParameter(preset->presetParameters, controlID::fx_On, 1.000000);
 	addPreset(preset);
 
 

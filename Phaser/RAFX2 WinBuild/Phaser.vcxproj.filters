@@ -63,7 +63,7 @@
     <ClCompile Include="..\PluginObjects\fxobjects.cpp">
       <Filter>PluginObjects</Filter>
     </ClCompile>
-    <ClCompile Include="..\PluginObjects\customfxobjects.cpp">
+    <ClCompile Include="..\..\..\..\ASPiKCommon\dsp\customfxobjects.cpp">
       <Filter>PluginObjects</Filter>
     </ClCompile>
   </ItemGroup>
@@ -119,13 +119,10 @@
     <ClInclude Include="..\CustomControls\readerwriterqueue.h">
       <Filter>CustomControls</Filter>
     </ClInclude>
-    <ClInclude Include="..\PluginObjects\customfxobjects.h">
+    <ClInclude Include="..\..\..\..\ASPiKCommon\dsp\customfxobjects.h">
       <Filter>PluginObjects</Filter>
     </ClInclude>
-    <ClInclude Include="..\PluginObjects\debug.h">
-      <Filter>PluginObjects</Filter>
-    </ClInclude>
-    <ClInclude Include="..\PluginObjects\utilities.h">
+    <ClInclude Include="..\..\..\..\ASPiKCommon\dsp\utilities.h">
       <Filter>PluginObjects</Filter>
     </ClInclude>
   </ItemGroup>
