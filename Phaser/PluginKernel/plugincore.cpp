@@ -682,6 +682,12 @@ bool PluginCore::initPluginParameters()
 	piParam->setIsDiscreteSwitch(true);
 	addPluginParameter(piParam);
 
+	// --- discrete control: On/Off
+	piParam = new PluginParameter(controlID::fx_OnOff_Toggle, "On/Off", "SWITCH OFF,SWITCH ON", "SWITCH OFF");
+	piParam->setBoundVariable(&fx_OnOff_Toggle, boundVariableType::kInt);
+	piParam->setIsDiscreteSwitch(true);
+	addPluginParameter(piParam);
+
 	// --- Aux Attributes
 	AuxParameterAttribute auxAttribute;
 
@@ -715,6 +721,11 @@ bool PluginCore::initPluginParameters()
 	auxAttribute.reset(auxGUIIdentifier::guiControlData);
 	auxAttribute.setUintAttribute(1073741824);
 	setParamAuxAttribute(controlID::fx_On, auxAttribute);
+
+	// --- controlID::fx_OnOff_Toggle
+	auxAttribute.reset(auxGUIIdentifier::guiControlData);
+	auxAttribute.setUintAttribute(1610612736);
+	setParamAuxAttribute(controlID::fx_OnOff_Toggle, auxAttribute);
 
 
 	// **--0xEDA5--**
@@ -757,6 +768,7 @@ bool PluginCore::initPluginPresets()
 	setPresetParameter(preset->presetParameters, controlID::lfoWaveform, -0.000000);
 	setPresetParameter(preset->presetParameters, controlID::quadPhaseLFO, -0.000000);
 	setPresetParameter(preset->presetParameters, controlID::fx_On, -0.000000);
+	setPresetParameter(preset->presetParameters, controlID::fx_OnOff_Toggle, -0.000000);
 	addPreset(preset);
 
 	// --- Preset: Deep Dive
@@ -768,6 +780,7 @@ bool PluginCore::initPluginPresets()
 	setPresetParameter(preset->presetParameters, controlID::lfoWaveform, 1.000000);
 	setPresetParameter(preset->presetParameters, controlID::quadPhaseLFO, -0.000000);
 	setPresetParameter(preset->presetParameters, controlID::fx_On, 1.000000);
+	setPresetParameter(preset->presetParameters, controlID::fx_OnOff_Toggle, 0.000000);
 	addPreset(preset);
 
 	// --- Preset: Deep Dive (Stereo)
@@ -779,6 +792,7 @@ bool PluginCore::initPluginPresets()
 	setPresetParameter(preset->presetParameters, controlID::lfoWaveform, 1.000000);
 	setPresetParameter(preset->presetParameters, controlID::quadPhaseLFO, 1.000000);
 	setPresetParameter(preset->presetParameters, controlID::fx_On, 1.000000);
+	setPresetParameter(preset->presetParameters, controlID::fx_OnOff_Toggle, 0.000000);
 	addPreset(preset);
 
 	// --- Preset: Cyclic Swirl (Stereo)
@@ -790,6 +804,7 @@ bool PluginCore::initPluginPresets()
 	setPresetParameter(preset->presetParameters, controlID::lfoWaveform, 1.000000);
 	setPresetParameter(preset->presetParameters, controlID::quadPhaseLFO, 1.000000);
 	setPresetParameter(preset->presetParameters, controlID::fx_On, 1.000000);
+	setPresetParameter(preset->presetParameters, controlID::fx_OnOff_Toggle, 0.000000);
 	addPreset(preset);
 
 

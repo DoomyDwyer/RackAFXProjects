@@ -6,12 +6,7 @@
 		<color name="kDarkGreyCColor" rgba="#646464ff" />
 	</colors>
 	<template background-color="~ GreyCColor" background-color-draw-style="filled and stroked" class="CViewContainer" maxSize="219, 354" minSize="219, 354" mouse-enabled="true" name="Editor" opacity="1" origin="0, 0" size="219, 354" transparent="false" bitmap="Phaser_Enclosure">
-		<view background-offset="0, 0" bitmap="Kick_Switch_trace_2_states" class="COnOffButton" control-tag="controlID::fx_On" default-value="0" max-value="1" min-value="0" mouse-enabled="true" origin="84 ,275" size="53, 53" transparent="false" wheel-inc-value="0.1" height-of-one-image="53" custom-view-name="" />
-		<view background-offset="0, 0" bitmap="red_led_large" class="COnOffButton" control-tag="controlID::fx_On" default-value="0" max-value="1" min-value="0" mouse-enabled="true" origin="102 ,225" size="17, 18" transparent="false" wheel-inc-value="0.1" height-of-one-image="18" custom-view-name="" />
-		<view angle-range="270" angle-start="135" background-offset="0, 0" bitmap="Black_pedal_small" circle-drawing="false" class="CAnimKnob" control-tag="controlID::lfoRate_Hz" corona-color="~ WhiteCColor" corona-dash-dot="false" corona-drawing="false" corona-from-center="false" corona-inset="0" corona-inverted="false" corona-outline="false" custom-view-name="" default-value="0.5" handle-color="~ WhiteCColor" handle-line-width="1" handle-shadow-color="~ GreyCColor" height-of-one-image="64" max-value="1" min-value="0" mouse-enabled="true" origin="125 ,10" size="64, 64" sub-controller="" sub-pixmaps="31" tooltip="" transparent="false" value-inset="0" wheel-inc-value="0.1" zoom-factor="10.0" />
 		<view angle-range="270" angle-start="135" background-offset="0, 0" bitmap="Black_pedal_small_3_steps" circle-drawing="false" class="CAnimKnob" control-tag="controlID::lfoWaveform" corona-color="~ WhiteCColor" corona-dash-dot="false" corona-drawing="false" corona-from-center="false" corona-inset="0" corona-inverted="false" corona-outline="false" custom-view-name="" default-value="0.5" handle-color="~ WhiteCColor" handle-line-width="1" handle-shadow-color="~ GreyCColor" height-of-one-image="64" max-value="1" min-value="0" mouse-enabled="true" origin="30 ,10" size="64, 64" sub-controller="" sub-pixmaps="3" tooltip="" transparent="false" value-inset="0" wheel-inc-value="0.1" zoom-factor="10.0" />
-		<view angle-range="270" angle-start="135" background-offset="0, 0" bitmap="Black_pedal_small" circle-drawing="false" class="CAnimKnob" control-tag="controlID::lfoDepth_Pct" corona-color="~ WhiteCColor" corona-dash-dot="false" corona-drawing="false" corona-from-center="false" corona-inset="0" corona-inverted="false" corona-outline="false" custom-view-name="" default-value="0.5" handle-color="~ WhiteCColor" handle-line-width="1" handle-shadow-color="~ GreyCColor" height-of-one-image="64" max-value="1" min-value="0" mouse-enabled="true" origin="30 ,80" size="64, 64" sub-controller="" sub-pixmaps="31" tooltip="" transparent="false" value-inset="0" wheel-inc-value="0.1" zoom-factor="10.0" />
-		<view angle-range="270" angle-start="135" background-offset="0, 0" bitmap="Black_pedal_small" circle-drawing="false" class="CAnimKnob" control-tag="controlID::intensity_Pct" corona-color="~ WhiteCColor" corona-dash-dot="false" corona-drawing="false" corona-from-center="false" corona-inset="0" corona-inverted="false" corona-outline="false" custom-view-name="" default-value="0.5" handle-color="~ WhiteCColor" handle-line-width="1" handle-shadow-color="~ GreyCColor" height-of-one-image="64" max-value="1" min-value="0" mouse-enabled="true" origin="125 ,80" size="64, 64" sub-controller="" sub-pixmaps="31" tooltip="" transparent="false" value-inset="0" wheel-inc-value="0.1" zoom-factor="10.0" />
 		<view background-offset="0, 0" bitmap="medtoggleswitch" class="COnOffButton" control-tag="controlID::quadPhaseLFO" default-value="0" max-value="1" min-value="0" mouse-enabled="true" origin="88 ,140" size="42, 42" transparent="false" wheel-inc-value="0.1" height-of-one-image="42" custom-view-name="" />
 		<view back-color="kLightGreyCColor" background-offset="0, 0" class="COptionMenu" control-tag="SCALE_GUI_SIZE" custom-view-name="" default-value="0.5" font="~ NormalFontVerySmall" font-antialias="true" font-color="~ BlackCColor" frame-color="kDarkGreyCColor" frame-width="1" max-value="" menu-check-style="false" menu-popup-style="false" min-value="0" mouse-enabled="true" origin="90 ,6" round-rect-radius="6" shadow-color="~ RedCColor" size="40 ,9" style-3D-in="false" style-3D-out="false" style-no-draw="false" style-no-frame="false" style-no-text="false" style-round-rect="false" style-shadow-text="false" sub-controller="" text-alignment="" text-inset="0, 0" title="SEL 1" transparent="false" value-precision="2" wheel-inc-value="0.1" />
 		<view back-color="~ BlackCColor" background-offset="0, 0" class="CTextLabel" custom-view-name="UnitsLabel" default-value="0.5" font="~ NormalFontBig" font-antialias="true" font-color="~ BlackCColor" frame-color="~ BlackCColor" frame-width="1" max-value="1" min-value="0" mouse-enabled="true" origin="30 ,70" rafxlabel-type="" round-rect-radius="6" shadow-color="~ RedCColor" size="64 ,16" style-3D-in="false" style-3D-out="false" style-no-draw="false" style-no-frame="false" style-no-text="false" style-round-rect="false" style-shadow-text="false" sub-controller="" text-alignment="center" text-inset="0, 0" title="LFO" transparent="true" value-precision="2" wheel-inc-value="0.1" control-tag="" />
@@ -19,11 +14,12 @@
 		<view back-color="~ BlackCColor" background-offset="0, 0" class="CTextLabel" custom-view-name="UnitsLabel" default-value="0.5" font="~ NormalFontBig" font-antialias="true" font-color="~ BlackCColor" frame-color="~ BlackCColor" frame-width="1" max-value="1" min-value="0" mouse-enabled="true" origin="30 ,140" rafxlabel-type="" round-rect-radius="6" shadow-color="~ RedCColor" size="64 ,16" style-3D-in="false" style-3D-out="false" style-no-draw="false" style-no-frame="false" style-no-text="false" style-round-rect="false" style-shadow-text="false" sub-controller="" text-alignment="center" text-inset="0, 0" title="DEPTH" transparent="true" value-precision="2" wheel-inc-value="0.1" control-tag="" />
 		<view back-color="~ BlackCColor" background-offset="0, 0" class="CTextLabel" custom-view-name="UnitsLabel" default-value="0.5" font="~ NormalFontBig" font-antialias="true" font-color="~ BlackCColor" frame-color="~ BlackCColor" frame-width="1" max-value="1" min-value="0" mouse-enabled="true" origin="117 ,140" rafxlabel-type="" round-rect-radius="6" shadow-color="~ RedCColor" size="80 ,16" style-3D-in="false" style-3D-out="false" style-no-draw="false" style-no-frame="false" style-no-text="false" style-round-rect="false" style-shadow-text="false" sub-controller="" text-alignment="center" text-inset="0, 0" title="INTENSITY" transparent="true" value-precision="2" wheel-inc-value="0.1" control-tag="" />
 		<view back-color="~ BlackCColor" background-offset="0, 0" class="CTextLabel" custom-view-name="UnitsLabel" default-value="0.5" font="~ NormalFontSmall" font-antialias="true" font-color="~ WhiteCColor" frame-color="~ BlackCColor" frame-width="1" max-value="1" min-value="0" mouse-enabled="true" origin="80 ,177" rafxlabel-type="" round-rect-radius="6" shadow-color="~ RedCColor" size="64 ,16" style-3D-in="false" style-3D-out="false" style-no-draw="false" style-no-frame="false" style-no-text="false" style-round-rect="false" style-shadow-text="false" sub-controller="" text-alignment="center" text-inset="0, 0" title="STEREO" transparent="true" value-precision="2" wheel-inc-value="0.1" control-tag="" />
-		<view background-color="~ BlackCColor" background-color-draw-style="filled and stroked" bitmap="Waveform_Tri" class="CViewContainer" custom-view-name="" mouse-enabled="true" origin="30 ,15" rafxtemplate-type="userViewContainer" size="12 ,10" template="User ViewContainer 0" transparent="false" sub-controller="" />
-		<view background-color="~ BlackCColor" background-color-draw-style="filled and stroked" bitmap="Waveform_Sine" class="CViewContainer" custom-view-name="" mouse-enabled="true" origin="56 ,5" rafxtemplate-type="userViewContainer" size="12 ,9" template="User ViewContainer 1" transparent="false" sub-controller="" />
-		<view background-color="~ BlackCColor" background-color-draw-style="filled and stroked" bitmap="Waveform_Saw" class="CViewContainer" custom-view-name="" mouse-enabled="true" origin="82 ,15" rafxtemplate-type="userViewContainer" size="12 ,10" template="User ViewContainer 2" transparent="false" sub-controller="" />
-		<view background-color="~ BlackCColor" background-color-draw-style="filled and stroked" bitmap="DS_Merkurius_small" class="CViewContainer" custom-view-name="" mouse-enabled="true" origin="165 ,280" rafxtemplate-type="userViewContainer" size="29 ,38" template="User ViewContainer 3" transparent="false" sub-controller="" />
-		<view background-offset="0, 0" bitmap="led_red" class="COnOffButton" control-tag="controlID::quadPhaseLFO" default-value="0" max-value="1" min-value="0" mouse-enabled="true" origin="105 ,135" size="9, 9" transparent="false" wheel-inc-value="0.1" height-of-one-image="9" custom-view-name="" />
+		<view background-color="~ BlackCColor" background-color-draw-style="filled and stroked" bitmap="Waveform_Tri" class="CViewContainer" custom-view-name="" mouse-enabled="true" origin="30 ,15" rafxtemplate-type="userViewContainer" size="12 ,10" template="ViewContainerTri" transparent="false" sub-controller="" />
+		<view background-color="~ BlackCColor" background-color-draw-style="filled and stroked" bitmap="Waveform_Sine" class="CViewContainer" custom-view-name="" mouse-enabled="true" origin="56 ,5" rafxtemplate-type="userViewContainer" size="12 ,9" template="ViewContainerSin" transparent="false" sub-controller="" />
+		<view background-color="~ BlackCColor" background-color-draw-style="filled and stroked" bitmap="Waveform_Saw" class="CViewContainer" custom-view-name="" mouse-enabled="true" origin="82 ,15" rafxtemplate-type="userViewContainer" size="12 ,10" template="ViewContainerSaw" transparent="false" sub-controller="" />
+		<view background-offset="0, 0" bitmap="led_red" class="COnOffButton" control-tag="controlID::quadPhaseLFO" default-value="0" max-value="1" min-value="0" mouse-enabled="false" origin="105 ,135" size="9, 9" transparent="false" wheel-inc-value="0.1" height-of-one-image="9" custom-view-name="" />
+		<view background-color="~ BlackCColor" background-color-draw-style="filled and stroked" bitmap="" class="CViewContainer" custom-view-name="" mouse-enabled="true" origin="84 ,225" rafxtemplate-type="userViewContainer" size="53 ,103" template="KickSwitchViewContainer" transparent="true" sub-controller="KickSwitchController" />
+		<view background-color="~ BlackCColor" background-color-draw-style="filled and stroked" bitmap="" class="CViewContainer" custom-view-name="" mouse-enabled="true" origin="0 ,0" rafxtemplate-type="userViewContainer" size="219 ,144" template="VariableToolTipKnobViewContainer" transparent="true" sub-controller="VariableToolTipKnobController" />
 	</template>
 	<custom>
 		<attributes Path="" name="ASPiKEditor" />
@@ -44,110 +40,14 @@
 		<attributes RAFXAutosize="false" />
 		<attributes RAFXCanvasWidth="219" />
 		<attributes RAFXCanvasHeight="354" />
-		<attributes RAFXGridColor="white" />
-		<attributes rafx-template-name="User ViewContainer 0" rafxtemplate-type="userViewContainer" />
-		<attributes rafx-template-name="User ViewContainer 1" rafxtemplate-type="userViewContainer" />
-		<attributes rafx-template-name="User ViewContainer 0" />
-		<attributes rafx-template-name="User ViewContainer 1" />
-		<attributes rafx-template-name="User ViewContainer 0" />
-		<attributes rafx-template-name="User ViewContainer 1" />
-		<attributes rafx-template-name="User ViewContainer 2" rafxtemplate-type="userViewContainer" />
-		<attributes rafx-template-name="User ViewContainer 0" />
-		<attributes rafx-template-name="User ViewContainer 1" />
-		<attributes rafx-template-name="User ViewContainer 2" />
-		<attributes rafx-template-name="User ViewContainer 0" />
-		<attributes rafx-template-name="User ViewContainer 1" />
-		<attributes rafx-template-name="User ViewContainer 2" />
-		<attributes rafx-template-name="User ViewContainer 0" />
-		<attributes rafx-template-name="User ViewContainer 1" />
-		<attributes rafx-template-name="User ViewContainer 2" />
-		<attributes rafx-template-name="User ViewContainer 0" />
-		<attributes rafx-template-name="User ViewContainer 1" />
-		<attributes rafx-template-name="User ViewContainer 2" />
-		<attributes rafx-template-name="User ViewContainer 0" />
-		<attributes rafx-template-name="User ViewContainer 1" />
-		<attributes rafx-template-name="User ViewContainer 2" />
-		<attributes rafx-template-name="User ViewContainer 0" />
-		<attributes rafx-template-name="User ViewContainer 1" />
-		<attributes rafx-template-name="User ViewContainer 2" />
-		<attributes rafx-template-name="User ViewContainer 3" rafxtemplate-type="userViewContainer" />
-		<attributes rafx-template-name="User ViewContainer 0" />
-		<attributes rafx-template-name="User ViewContainer 1" />
-		<attributes rafx-template-name="User ViewContainer 2" />
-		<attributes rafx-template-name="User ViewContainer 3" />
-		<attributes rafx-template-name="User ViewContainer 0" />
-		<attributes rafx-template-name="User ViewContainer 1" />
-		<attributes rafx-template-name="User ViewContainer 2" />
-		<attributes rafx-template-name="User ViewContainer 3" />
-		<attributes rafx-template-name="User ViewContainer 4" rafxtemplate-type="userViewContainer" />
-		<attributes rafx-template-name="User ViewContainer 0" />
-		<attributes rafx-template-name="User ViewContainer 1" />
-		<attributes rafx-template-name="User ViewContainer 2" />
-		<attributes rafx-template-name="User ViewContainer 3" />
-		<attributes rafx-template-name="User ViewContainer 0" />
-		<attributes rafx-template-name="User ViewContainer 1" />
-		<attributes rafx-template-name="User ViewContainer 2" />
-		<attributes rafx-template-name="User ViewContainer 3" />
-		<attributes rafx-template-name="User ViewContainer 0" />
-		<attributes rafx-template-name="User ViewContainer 1" />
-		<attributes rafx-template-name="User ViewContainer 2" />
-		<attributes rafx-template-name="User ViewContainer 3" />
-		<attributes rafx-template-name="User ViewContainer 0" />
-		<attributes rafx-template-name="User ViewContainer 1" />
-		<attributes rafx-template-name="User ViewContainer 2" />
-		<attributes rafx-template-name="User ViewContainer 3" />
-		<attributes rafx-template-name="User ViewContainer 0" />
-		<attributes rafx-template-name="User ViewContainer 1" />
-		<attributes rafx-template-name="User ViewContainer 2" />
-		<attributes rafx-template-name="User ViewContainer 3" />
-		<attributes rafx-template-name="User ViewContainer 0" />
-		<attributes rafx-template-name="User ViewContainer 1" />
-		<attributes rafx-template-name="User ViewContainer 2" />
-		<attributes rafx-template-name="User ViewContainer 3" />
-		<attributes rafx-template-name="User ViewContainer 0" />
-		<attributes rafx-template-name="User ViewContainer 1" />
-		<attributes rafx-template-name="User ViewContainer 2" />
-		<attributes rafx-template-name="User ViewContainer 3" />
-		<attributes rafx-template-name="User ViewContainer 0" />
-		<attributes rafx-template-name="User ViewContainer 1" />
-		<attributes rafx-template-name="User ViewContainer 2" />
-		<attributes rafx-template-name="User ViewContainer 3" />
-		<attributes rafx-template-name="User ViewContainer 0" />
-		<attributes rafx-template-name="User ViewContainer 1" />
-		<attributes rafx-template-name="User ViewContainer 2" />
-		<attributes rafx-template-name="User ViewContainer 3" />
-		<attributes rafx-template-name="User ViewContainer 0" />
-		<attributes rafx-template-name="User ViewContainer 1" />
-		<attributes rafx-template-name="User ViewContainer 2" />
-		<attributes rafx-template-name="User ViewContainer 3" />
-		<attributes rafx-template-name="User ViewContainer 0" />
-		<attributes rafx-template-name="User ViewContainer 1" />
-		<attributes rafx-template-name="User ViewContainer 2" />
-		<attributes rafx-template-name="User ViewContainer 3" />
-		<attributes rafx-template-name="User ViewContainer 0" />
-		<attributes rafx-template-name="User ViewContainer 1" />
-		<attributes rafx-template-name="User ViewContainer 2" />
-		<attributes rafx-template-name="User ViewContainer 3" />
-		<attributes rafx-template-name="User ViewContainer 0" />
-		<attributes rafx-template-name="User ViewContainer 1" />
-		<attributes rafx-template-name="User ViewContainer 2" />
-		<attributes rafx-template-name="User ViewContainer 3" />
-		<attributes rafx-template-name="User ViewContainer 0" />
-		<attributes rafx-template-name="User ViewContainer 1" />
-		<attributes rafx-template-name="User ViewContainer 2" />
-		<attributes rafx-template-name="User ViewContainer 3" />
-		<attributes rafx-template-name="User ViewContainer 0" />
-		<attributes rafx-template-name="User ViewContainer 1" />
-		<attributes rafx-template-name="User ViewContainer 2" />
-		<attributes rafx-template-name="User ViewContainer 3" />
-		<attributes rafx-template-name="User ViewContainer 0" />
-		<attributes rafx-template-name="User ViewContainer 1" />
-		<attributes rafx-template-name="User ViewContainer 2" />
-		<attributes rafx-template-name="User ViewContainer 3" />
-		<attributes rafx-template-name="User ViewContainer 0" />
-		<attributes rafx-template-name="User ViewContainer 1" />
-		<attributes rafx-template-name="User ViewContainer 2" />
-		<attributes rafx-template-name="User ViewContainer 3" />
+		<attributes rafx-template-name="ViewContainerTri" rafxtemplate-type="userViewContainer" />
+		<attributes rafx-template-name="ViewContainerSin" rafxtemplate-type="userViewContainer" />
+		<attributes rafx-template-name="ViewContainerSaw" rafxtemplate-type="userViewContainer" />
+		<attributes rafx-template-name="KickSwitchViewContainer" rafxtemplate-type="userViewContainer" />
+		<attributes rafx-template-name="VariableToolTipKnobViewContainer" rafxtemplate-type="userViewContainer" />
+		<attributes rafx-template-name="RateKnobGroup" rafxtemplate-type="knobgroup" />
+		<attributes rafx-template-name="DepthKnobGroup" rafxtemplate-type="knobgroup" />
+		<attributes rafx-template-name="IntensityKnobGroup" rafxtemplate-type="knobgroup" />
 	</custom>
 	<bitmaps>
 		<bitmap name="Black_pedal_small" path="D:\Pictures\Doomsville\Black_pedal_small.png">
@@ -1623,6 +1523,7 @@
 		<control-tag name="controlID::lfoWaveform" tag="3" />
 		<control-tag name="controlID::quadPhaseLFO" tag="4" />
 		<control-tag name="controlID::fx_On" tag="5" />
+		<control-tag name="controlID::fx_OnOff_Toggle" tag="6" />
 		<control-tag name="XY_TRACKPAD" tag="131073" />
 		<control-tag name="VECTOR_JOYSTICK" tag="131074" />
 		<control-tag name="PRESET_NAME" tag="131075" />
@@ -1656,8 +1557,28 @@
 			<color-stop rgba="#646464ff" start="1" />
 		</gradient>
 	</gradients>
-	<template background-color="~ BlackCColor" background-color-draw-style="filled and stroked" bitmap="Waveform_Tri" class="CViewContainer" custom-view-name="" mouse-enabled="true" name="User ViewContainer 0" origin="0, 0" size="12 ,10" transparent="false" sub-controller="" />
-	<template background-color="~ BlackCColor" background-color-draw-style="filled and stroked" bitmap="Waveform_Sine" class="CViewContainer" custom-view-name="" mouse-enabled="true" name="User ViewContainer 1" origin="0, 0" size="12 ,9" transparent="false" sub-controller="" />
-	<template background-color="~ BlackCColor" background-color-draw-style="filled and stroked" bitmap="Waveform_Saw" class="CViewContainer" custom-view-name="" mouse-enabled="true" name="User ViewContainer 2" origin="0, 0" size="12 ,10" transparent="false" sub-controller="" />
-	<template background-color="~ BlackCColor" background-color-draw-style="filled and stroked" bitmap="DS_Merkurius_small" class="CViewContainer" custom-view-name="" mouse-enabled="true" name="User ViewContainer 3" origin="0, 0" size="29 ,38" transparent="false" sub-controller="" />
+	<template background-color="~ BlackCColor" background-color-draw-style="filled and stroked" bitmap="Waveform_Tri" class="CViewContainer" custom-view-name="" mouse-enabled="true" name="ViewContainerTri" origin="0, 0" size="12 ,10" transparent="false" sub-controller="" />
+	<template background-color="~ BlackCColor" background-color-draw-style="filled and stroked" bitmap="Waveform_Sine" class="CViewContainer" custom-view-name="" mouse-enabled="true" name="ViewContainerSin" origin="0, 0" size="12 ,9" transparent="false" sub-controller="" />
+	<template background-color="~ BlackCColor" background-color-draw-style="filled and stroked" bitmap="Waveform_Saw" class="CViewContainer" custom-view-name="" mouse-enabled="true" name="ViewContainerSaw" origin="0, 0" size="12 ,10" transparent="false" sub-controller="" />
+	<template background-color="~ BlackCColor" background-color-draw-style="filled and stroked" bitmap="" class="CViewContainer" custom-view-name="" mouse-enabled="true" name="KickSwitchViewContainer" origin="0, 0" size="53 ,103" transparent="true" sub-controller="KickSwitchController">
+		<view background-offset="0, 0" bitmap="red_led_large" class="COnOffButton" control-tag="controlID::fx_On" default-value="0" max-value="1" min-value="0" mouse-enabled="false" origin="18, 0" size="17, 18" transparent="false" wheel-inc-value="0.1" height-of-one-image="18" custom-view-name="" />
+		<view background-offset="0, 0" bitmap="Kick_Switch_trace_2_states" class="CKickButton" control-tag="controlID::fx_OnOff_Toggle" default-value="0" max-value="1" min-value="0" mouse-enabled="true" origin="0, 50" size="53, 53" transparent="false" wheel-inc-value="0.1" height-of-one-image="53" custom-view-name="CustomKickButtonDU" />
+	</template>
+	<template background-color="~ BlackCColor" background-color-draw-style="filled and stroked" bitmap="" class="CViewContainer" custom-view-name="" mouse-enabled="true" name="VariableToolTipKnobViewContainer" origin="0, 0" size="219 ,139" transparent="true" sub-controller="VariableToolTipKnobController">
+    <view background-color="" background-color-draw-style="filled and stroked" bitmap="" class="CViewContainer" custom-view-name="" mouse-enabled="true" origin="125, 10" size="64, 64" rafxtemplate-type="knobgroup" template="RateKnobGroup" transparent="true" sub-controller="" />
+    <view background-color="" background-color-draw-style="filled and stroked" bitmap="" class="CViewContainer" custom-view-name="" mouse-enabled="true" origin="30 ,80" size="64, 64" rafxtemplate-type="knobgroup" template="DepthKnobGroup" transparent="true" sub-controller="" />
+    <view background-color="" background-color-draw-style="filled and stroked" bitmap="" class="CViewContainer" custom-view-name="" mouse-enabled="true" origin="125, 80" size="64, 64" rafxtemplate-type="knobgroup" template="IntensityKnobGroup" transparent="true" sub-controller="" />
+	</template>
+	<template background-color="" background-color-draw-style="filled and stroked" bitmap="" class="CViewContainer" custom-view-name="" mouse-enabled="true" name="RateKnobGroup" origin="0, 0" size="64 ,80" transparent="true" sub-controller="">
+		<view angle-range="270" angle-start="135" background-offset="0, 0" bitmap="Black_pedal_small" circle-drawing="false" class="CAnimKnob" control-tag="controlID::lfoRate_Hz" corona-color="~ WhiteCColor" corona-dash-dot="false" corona-drawing="false" corona-from-center="false" corona-inset="0" corona-inverted="false" corona-outline="false" custom-view-name="" default-value="0.5" handle-color="~ WhiteCColor" handle-line-width="1" handle-shadow-color="~ GreyCColor" height-of-one-image="64" max-value="1" min-value="0" mouse-enabled="true" origin="0, 0" size="64, 64" sub-controller="" sub-pixmaps="31" tooltip="" transparent="false" value-inset="0" wheel-inc-value="0.1" zoom-factor="10.0" />
+		<view back-color="~ BlackCColor" background-offset="0, 0" class="CTextEdit" control-tag="controlID::lfoRate_Hz" custom-view-name="UnitsEdit" default-value="0" font="~ NormalFontSmaller" font-antialias="true" font-color="~ WhiteCColor" frame-color="~ BlackCColor" frame-width="1" immediate-text-change="false" max-value="1" min-value="0" mouse-enabled="true" origin="0, 65" round-rect-radius="6" shadow-color="~ RedCColor" size="75, 15" style-3D-in="false" style-3D-out="false" style-no-draw="false" style-no-frame="true" style-no-text="false" style-round-rect="false" style-shadow-text="false" sub-controller="" text-alignment="" text-inset="0, 0" title="1234.56" tooltip="" transparent="true" value-precision="2" wheel-inc-value="0.1" />
+	</template>
+	<template background-color="" background-color-draw-style="filled and stroked" bitmap="" class="CViewContainer" custom-view-name="" mouse-enabled="true" name="DepthKnobGroup" origin="0, 0" size="64 ,80" transparent="true" sub-controller="">
+		<view angle-range="270" angle-start="135" background-offset="0, 0" bitmap="Black_pedal_small" circle-drawing="false" class="CAnimKnob" control-tag="controlID::lfoDepth_Pct" corona-color="~ WhiteCColor" corona-dash-dot="false" corona-drawing="false" corona-from-center="false" corona-inset="0" corona-inverted="false" corona-outline="false" custom-view-name="" default-value="0.5" handle-color="~ WhiteCColor" handle-line-width="1" handle-shadow-color="~ GreyCColor" height-of-one-image="64" max-value="1" min-value="0" mouse-enabled="true" origin="0, 0" size="64, 64" sub-controller="" sub-pixmaps="31" tooltip="" transparent="false" value-inset="0" wheel-inc-value="0.1" zoom-factor="10.0" />
+		<view back-color="~ BlackCColor" background-offset="0, 0" class="CTextEdit" control-tag="controlID::lfoDepth_Pct" custom-view-name="UnitsEdit" default-value="0" font="~ NormalFontSmaller" font-antialias="true" font-color="~ WhiteCColor" frame-color="~ BlackCColor" frame-width="1" immediate-text-change="false" max-value="1" min-value="0" mouse-enabled="true" origin="0, 65" round-rect-radius="6" shadow-color="~ RedCColor" size="75, 15" style-3D-in="false" style-3D-out="false" style-no-draw="false" style-no-frame="true" style-no-text="false" style-round-rect="false" style-shadow-text="false" sub-controller="" text-alignment="" text-inset="0, 0" title="1234.56" tooltip="" transparent="true" value-precision="2" wheel-inc-value="0.1" />
+	</template>
+	<template background-color="" background-color-draw-style="filled and stroked" bitmap="" class="CViewContainer" custom-view-name="" mouse-enabled="true" name="IntensityKnobGroup" origin="0, 0" size="64 ,80" transparent="true" sub-controller="">
+		<view angle-range="270" angle-start="135" background-offset="0, 0" bitmap="Black_pedal_small" circle-drawing="false" class="CAnimKnob" control-tag="controlID::intensity_Pct" corona-color="~ WhiteCColor" corona-dash-dot="false" corona-drawing="false" corona-from-center="false" corona-inset="0" corona-inverted="false" corona-outline="false" custom-view-name="" default-value="0.5" handle-color="~ WhiteCColor" handle-line-width="1" handle-shadow-color="~ GreyCColor" height-of-one-image="64" max-value="1" min-value="0" mouse-enabled="true" origin="0, 0" size="64, 64" sub-controller="" sub-pixmaps="31" tooltip="" transparent="false" value-inset="0" wheel-inc-value="0.1" zoom-factor="10.0" />
+		<view back-color="~ BlackCColor" background-offset="0, 0" class="CTextEdit" control-tag="controlID::intensity_Pct" custom-view-name="UnitsEdit" default-value="0" font="~ NormalFontSmaller" font-antialias="true" font-color="~ WhiteCColor" frame-color="~ BlackCColor" frame-width="1" immediate-text-change="false" max-value="1" min-value="0" mouse-enabled="true" origin="0, 65" round-rect-radius="6" shadow-color="~ RedCColor" size="75, 15" style-3D-in="false" style-3D-out="false" style-no-draw="false" style-no-frame="true" style-no-text="false" style-round-rect="false" style-shadow-text="false" sub-controller="" text-alignment="" text-inset="0, 0" title="1234.56" tooltip="" transparent="true" value-precision="2" wheel-inc-value="0.1" />
+	</template>
 </vstgui-ui-description>

@@ -257,6 +257,7 @@
   <ItemGroup>
     <ClInclude Include="..\..\..\..\ASPiKCommon\dsp\customfxobjects.h" />
     <ClInclude Include="..\..\..\..\ASPiKCommon\dsp\utilities.h" />
+    <ClInclude Include="..\..\..\..\ASPiKCommon\gui\custompedalviews.h" />
     <ClInclude Include="..\CustomControls\atomicops.h" />
     <ClInclude Include="..\CustomControls\customcontrols.h" />
     <ClInclude Include="..\CustomControls\readerwriterqueue.h" />

@@ -125,6 +125,9 @@
     <ClInclude Include="..\..\..\..\ASPiKCommon\dsp\utilities.h">
       <Filter>PluginObjects</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\..\ASPiKCommon\gui\custompedalviews.h">
+      <Filter>CustomControls</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Resources\PluginGUI.uidesc">
