@@ -14,6 +14,7 @@ set(MAC_ROOT "../../mac/au")
 set(SOURCE_ROOT "../../source")
 set(RESOURCE_ROOT "../../resources")
 set(FFTW_SOURCE_ROOT "${SOURCE_ROOT}/FFTW")
+set(COMMON_SOURCE_ROOT "../../../../../../ASPiKCommon")
 
 # --- local roots
 set(KERNEL_SOURCE_ROOT "${SOURCE_ROOT}/PluginKernel")
@@ -21,6 +22,8 @@ set(OBJECTS_SOURCE_ROOT "${SOURCE_ROOT}/PluginObjects")
 set(VSTGUI_SOURCE_ROOT "${SOURCE_ROOT}/CustomControls")
 set(AU_SOURCE_ROOT "${SOURCE_ROOT}/au_source")
 set(COCOA_SOURCE_ROOT "${SOURCE_ROOT}/au_source/cocoa_ui")
+set(COMMON_OBJECTS_SOURCE_ROOT "${COMMON_SOURCE_ROOT}/dsp")
+set(COMMON_VSTGUI_SOURCE_ROOT "${COMMON_SOURCE_ROOT}/gui")
 
 # ---------------------------------------------------------------------------------
 #
@@ -38,6 +41,9 @@ set(kernel_sources
 # ---------------------------------------------------------------------------------
 set(plugin_object_sources
 	$$$OBJECT_SOURCES$$$
+	${COMMON_OBJECTS_SOURCE_ROOT}/customfxobjects.h
+	${COMMON_OBJECTS_SOURCE_ROOT}/customfxobjects.cpp
+	${COMMON_OBJECTS_SOURCE_ROOT}/utilities
 )
 
 # ---------------------------------------------------------------------------------
@@ -47,6 +53,7 @@ set(plugin_object_sources
 # ---------------------------------------------------------------------------------
 set(custom_vstgui_sources
 	$$$CUSTOM_CONTROL_SOURCES$$$
+	${COMMON_VSTGUI_SOURCE_ROOT}/custompedalviews.h
 )
 
 # ---------------------------------------------------------------------------------
