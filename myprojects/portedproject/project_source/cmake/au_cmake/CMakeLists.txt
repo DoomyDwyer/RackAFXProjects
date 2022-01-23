@@ -227,7 +227,7 @@ if(XCODE)
 	set_target_properties(${cocoatarget} PROPERTIES BUNDLE TRUE)
 	set_target_properties(${cocoatarget} PROPERTIES CXX_VISIBILITY_PRESET default)
 	set_target_properties(${cocoatarget} PROPERTIES CMAKE_C_VISIBILITY_PRESET default)
-  set_target_properties(${cocoatarget} PROPERTIES XCODE_ATTRIBUTE_GENERATE_PKGINFO_FILE "YES")
+	set_target_properties(${cocoatarget} PROPERTIES XCODE_ATTRIBUTE_GENERATE_PKGINFO_FILE "YES")
 	set_target_properties(${cocoatarget} PROPERTIES XCODE_ATTRIBUTE_GENERATE_MASTER_OBJECT_FILE "YES")
 	set_target_properties(${cocoatarget} PROPERTIES XCODE_ATTRIBUTE_OTHER_LDFLAGS "-all_load")
 
@@ -271,8 +271,8 @@ endif()
 set_target_properties(${target} PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/${AU_PLUGIN_FOLDER})
 
 # Set AU file name
-set_target_properties(${target} PROPERTIES OUTPUT_NAME ${PLUGIN_PROJECT_NAME})
-message(STATUS "set_target_properties ---> OUTPUT_NAME is set to : " ${PLUGIN_PROJECT_NAME})
+#set_target_properties(${target} PROPERTIES OUTPUT_NAME ${PLUGIN_PROJECT_NAME})
+#message(STATUS "set_target_properties ---> OUTPUT_NAME is set to : " ${PLUGIN_PROJECT_NAME})
 
 # --- add the exported symbol file
 if(IS_SYNTH_PLUGIN)
