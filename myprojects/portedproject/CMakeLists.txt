@@ -239,6 +239,21 @@ set(VST_CMAKE_FOLDER cmake/vst_cmake)
 # --- BUNDLE IDs and other variables for <plugindescription.h>
 #
 # ---------------------------------------------------------------------------------
+
+# Read in version.txt and set up variables appropriately
+file (STRINGS "../version.txt" VERSION_STRING)
+# Report results to the console
+message(STATUS "VERSION_STRING is set to : " ${VERSION_STRING})
+# Perform some maths to get the version number in a correct format for Audio Unit Info.plist files
+string(REPLACE "." ";" VERSION_LIST ${VERSION_STRING})
+list(GET VERSION_LIST 0 VERSION_MAJOR)
+list(GET VERSION_LIST 1 VERSION_MINOR)
+list(GET VERSION_LIST 2 VERSION_PATCH)
+# Then perform the actual calculation
+math(EXPR VERSION_AU "${VERSION_PATCH} + ${VERSION_MINOR} * 256 + ${VERSION_MAJOR} * 65536" OUTPUT_FORMAT DECIMAL)
+# Report results to the console
+message(STATUS "VERSION_AU is set to : " ${VERSION_AU})
+
 string(REPLACE "_" "" CLEAN_PROJECT_NAME ${PLUGIN_PROJECT_NAME})
 string(TOLOWER ${CLEAN_PROJECT_NAME} CLEAN_PROJECT_NAME_LC)
 
