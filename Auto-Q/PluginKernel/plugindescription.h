@@ -15,16 +15,16 @@
 #define AU_COCOA_VIEW_NAME AUCocoaView_919FACCD32764793B7D6B219A7E9870E
 
 // --- BUNDLE IDs (MacOS Only)
-const char* kAAXBundleID = "doomsvillesoundscapes.aax.Auto-Q.bundleID";
-const char* kAUBundleID = "doomsvillesoundscapes.au.Auto-Q.bundleID";
-const char* kVST3BundleID = "doomsvillesoundscapes.vst3.Auto-Q.bundleID";
+const char* kAAXBundleID = "doomsvillesoundscapes.aax.autoq.bundleID";
+const char* kAUBundleID = "doomsvillesoundscapes.au.autoq.bundleID";
+const char* kVST3BundleID = "doomsvillesoundscapes.vst3.autoq.bundleID";
 
 // --- Plugin Names
 const char* kPluginName = "Auto-Q";
 const char* kShortPluginName = "Auto-Q";
-const char* kAUBundleName = "Auto-Q";
-const char* kAAXBundleName = "Auto-Q";
-const char* kVSTBundleName = "Auto-Q";
+const char* kAUBundleName = "AutoQ";
+const char* kAAXBundleName = "AutoQ";
+const char* kVSTBundleName = "AutoQ";
 
 // --- bundle name helper
 inline static const char* getPluginDescBundleName()

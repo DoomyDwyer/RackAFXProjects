@@ -274,7 +274,7 @@
     <ClInclude Include="..\RAFX2 Source\RackAFXDLL.h" />
     <ClInclude Include="..\RAFX2 Source\Rafx2Plugin.h" />
     <ClInclude Include="..\RAFX2 Source\Rafx2PluginBase.h" />
-    <ClInclude Include="..\Resources\resource.h" />
+    <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Resources\PluginGUI.uidesc">

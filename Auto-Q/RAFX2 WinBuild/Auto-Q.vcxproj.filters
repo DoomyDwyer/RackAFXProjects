@@ -77,9 +77,6 @@
     <ClInclude Include="..\CustomControls\customviews.h">
       <Filter>CustomControls</Filter>
     </ClInclude>
-    <ClInclude Include="..\Resources\resource.h">
-      <Filter>Resources</Filter>
-    </ClInclude>
     <ClInclude Include="..\RAFX2 Source\Rafx2PluginBase.h">
       <Filter>RAFX2 Source</Filter>
     </ClInclude>
@@ -127,6 +124,9 @@
     </ClInclude>
     <ClInclude Include="..\..\..\..\ASPiKCommon\dsp\utilities.h">
       <Filter>PluginObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>Resources</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

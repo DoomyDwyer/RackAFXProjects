@@ -15,9 +15,9 @@
 #define AU_COCOA_VIEW_NAME AUCocoaView_E3CC20DF94F44256A654A5CD8068AF01
 
 // --- BUNDLE IDs (MacOS Only)
-const char* kAAXBundleID = "doomsvillesoundscapes.aax.Memento.bundleID";
-const char* kAUBundleID = "doomsvillesoundscapes.au.Memento.bundleID";
-const char* kVST3BundleID = "doomsvillesoundscapes.vst3.Memento.bundleID";
+const char* kAAXBundleID = "doomsvillesoundscapes.aax.memento.bundleID";
+const char* kAUBundleID = "doomsvillesoundscapes.au.memento.bundleID";
+const char* kVST3BundleID = "doomsvillesoundscapes.vst3.memento.bundleID";
 
 // --- Plugin Names
 const char* kPluginName = "Memento";

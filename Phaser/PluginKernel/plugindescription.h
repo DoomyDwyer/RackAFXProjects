@@ -15,16 +15,16 @@
 #define AU_COCOA_VIEW_NAME AUCocoaView_B645FD1893FC4C60995A8CF29FD9D925
 
 // --- BUNDLE IDs (MacOS Only)
-const char* kAAXBundleID = "doomsvillesoundscapes.aax.Phaser.bundleID";
-const char* kAUBundleID = "doomsvillesoundscapes.au.Phaser.bundleID";
-const char* kVST3BundleID = "doomsvillesoundscapes.vst3.Phaser.bundleID";
+const char* kAAXBundleID = "doomsvillesoundscapes.aax.unphased.bundleID";
+const char* kAUBundleID = "doomsvillesoundscapes.au.unphased.bundleID";
+const char* kVST3BundleID = "doomsvillesoundscapes.vst3.unphased.bundleID";
 
 // --- Plugin Names
-const char* kPluginName = "Phaser";
-const char* kShortPluginName = "Phaser";
-const char* kAUBundleName = "Phaser";
-const char* kAAXBundleName = "Phaser";
-const char* kVSTBundleName = "Phaser";
+const char* kPluginName = "Unphased";
+const char* kShortPluginName = "Unphased";
+const char* kAUBundleName = "Unphased";
+const char* kAAXBundleName = "Unphased";
+const char* kVSTBundleName = "Unphased";
 
 // --- bundle name helper
 inline static const char* getPluginDescBundleName()
