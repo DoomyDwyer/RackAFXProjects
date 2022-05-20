@@ -241,6 +241,8 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\..\ASPiKCommon\dsp\customfxobjects.cpp" />
+    <ClCompile Include="..\..\..\..\ASPiKCommon\utils\observable.cpp" />
+    <ClCompile Include="..\..\..\..\ASPiKCommon\utils\observer.cpp" />
     <ClCompile Include="..\..\vstgui4\vstgui\vstgui_uidescription_win32.cpp" />
     <ClCompile Include="..\..\vstgui4\vstgui\vstgui_win32.cpp" />
     <ClCompile Include="..\CustomControls\customcontrols.cpp" />
@@ -258,6 +260,8 @@
     <ClInclude Include="..\..\..\..\ASPiKCommon\dsp\customfxobjects.h" />
     <ClInclude Include="..\..\..\..\ASPiKCommon\dsp\utilities.h" />
     <ClInclude Include="..\..\..\..\ASPiKCommon\gui\custompedalviews.h" />
+    <ClInclude Include="..\..\..\..\ASPiKCommon\utils\observable.h" />
+    <ClInclude Include="..\..\..\..\ASPiKCommon\utils\observer.h" />
     <ClInclude Include="..\CustomControls\atomicops.h" />
     <ClInclude Include="..\CustomControls\customcontrols.h" />
     <ClInclude Include="..\CustomControls\readerwriterqueue.h" />
