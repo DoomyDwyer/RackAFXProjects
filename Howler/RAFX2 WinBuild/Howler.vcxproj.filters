@@ -66,6 +66,12 @@
     <ClCompile Include="..\..\..\..\ASPiKCommon\dsp\customfxobjects.cpp">
       <Filter>PluginObjects</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\..\ASPiKCommon\utils\observable.cpp">
+      <Filter>PluginObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\ASPiKCommon\utils\observer.cpp">
+      <Filter>PluginObjects</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\RAFX2 Source\RackAFXDLL.h">
@@ -125,7 +131,13 @@
     <ClInclude Include="..\..\..\..\ASPiKCommon\dsp\customfxobjects.h">
       <Filter>PluginObjects</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\ASPiKCommon\dsp\utilities.h">
+    <ClInclude Include="..\..\..\..\ASPiKCommon\utils\observable.h">
+      <Filter>PluginObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\ASPiKCommon\utils\observer.h">
+      <Filter>PluginObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\ASPiKCommon\utils\utilities.h">
       <Filter>PluginObjects</Filter>
     </ClInclude>
   </ItemGroup>
